@@ -1,0 +1,1 @@
+const String BASE_URL = 'https://finnet.sisca.id/api/v1/';
