@@ -76,6 +76,9 @@ class Monitoring {
     data['current_budget'] = this.currentBudget;
     return data;
   }
+  bool isEqual(Monitoring model) {
+    return this?.serialNumber == model?.serialNumber;
+  }
 }
 
 class Asset {

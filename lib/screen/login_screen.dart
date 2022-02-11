@@ -1,12 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:sisca_finnet/model/asset_model.dart';
 import 'package:sisca_finnet/model/login_model.dart';
 import 'package:sisca_finnet/screen/main/asset_screen.dart';
-import 'package:sisca_finnet/screen/main/voucher_screen.dart';
 
 class LoginScreen extends StatefulWidget {
-
   @override
   _LoginScreenState createState() => _LoginScreenState();
 }
@@ -24,48 +21,67 @@ class _LoginScreenState extends State<LoginScreen> {
   TextEditingController nikController = TextEditingController();
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
+  FocusNode focusNode = FocusNode();
+
   Future<bool> showPopGagal(String title, String message) => showDialog(
-    barrierDismissible: false,
-    context: context,
-    builder: (context) => AlertDialog(
-      title: Text(
-        title,
-        style: TextStyle(fontSize: 18),
-      ),
-      content: Text(
-        message,
-        style: TextStyle(fontSize: 14),
-        // textAlign: TextAlign.center,
-      ),
-      actions: [
-        TextButton(
-          onPressed: () {
-            Navigator.pop(context);
-          },
-          child: Text('TUTUP'),
+        barrierDismissible: false,
+        context: context,
+        builder: (context) => AlertDialog(
+          title: Text(
+            title,
+            style: TextStyle(fontSize: 18),
+          ),
+          content: Text(
+            message,
+            style: TextStyle(fontSize: 14),
+            // textAlign: TextAlign.center,
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              child: Text('TUTUP'),
+            ),
+          ],
         ),
-      ],
-    ),
-  );
-  void _postLogin() async{
-    await postRequestLogin(_method,_value == 0 ? nikController.text : emailController.text, passwordController.text).then((value){
-      if(value != null){
-        // return;
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(
-              builder: (context) => AssetScreen()),
-        );
-      }else {
-        showPopGagal('Login Gagal', 'Username dan Password Salah');
+      );
+
+  void _postLogin() async {
+    await postRequestLogin(
+            _method,
+            _value == 0 ? nikController.text : emailController.text,
+            passwordController.text)
+        .then((value) {
+      if (value != null) {
+        if (value.accessToken != null) {
+          //TODO TAMBAHKAN VALIDASI LOGIN KARYAWAN
+          var roles = value.roles[0].isAssetHolder;
+          if (roles == 1) {
+            return Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (context) => AssetScreen()),
+            );
+          } else {
+            showPopGagal(
+                'Login Failed', 'your role is not eligible to use this app');
+          }
+        } else {
+          showPopGagal(
+              'Login Failed', 'Something wrong, please try again later');
+        }
+      } else {
+        showPopGagal('Login Failed', 'email or password is wrong');
       }
     });
   }
+
   @override
   Widget build(BuildContext context) {
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
       statusBarColor: Colors.transparent,
     ));
+    final Size size = MediaQuery.of(context).size;
     return Scaffold(
       backgroundColor: Color(0xFFFFFFFF),
       resizeToAvoidBottomInset: true,
@@ -74,7 +90,7 @@ class _LoginScreenState extends State<LoginScreen> {
         child: SingleChildScrollView(
           child: Center(
             child: Container(
-              height: MediaQuery.of(context).size.height,
+              height: size.height,
               child: Column(
                 children: [
                   SizedBox(height: 69),
@@ -84,7 +100,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     height: 44,
                     color: Color(0xFFD71A21),
                   ),
-                  SizedBox(height: 45),
+                  SizedBox(height: 35),
                   Card(
                     margin: EdgeInsets.symmetric(horizontal: 23),
                     shape: RoundedRectangleBorder(
@@ -93,8 +109,8 @@ class _LoginScreenState extends State<LoginScreen> {
                     elevation: 1,
                     child: Container(
                       padding: EdgeInsets.only(left: 16, right: 16, bottom: 55),
-                      height: 315,
-                      width: 314,
+                      height: size.height / 2,
+                      width: size.width,
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
@@ -114,17 +130,20 @@ class _LoginScreenState extends State<LoginScreen> {
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 Container(
+                                  width: size.width / 2.7,
                                   padding: EdgeInsets.symmetric(
                                       horizontal: 20, vertical: 11),
                                   decoration: BoxDecoration(
                                     color: Color(0xFFF12A32),
-                                    border: Border.all(color: Color(0xFFF12A32)),
+                                    border:
+                                        Border.all(color: Color(0xFFF12A32)),
                                     borderRadius: BorderRadius.only(
                                         topLeft: Radius.circular(20),
                                         bottomLeft: Radius.circular(20)),
                                   ),
                                   child: Text(
                                     'SSO (NIK)',
+                                    textAlign: TextAlign.center,
                                     style: TextStyle(
                                         fontSize: 12,
                                         color: Color(0xFFFFFFFF),
@@ -133,24 +152,27 @@ class _LoginScreenState extends State<LoginScreen> {
                                   ),
                                 ),
                                 GestureDetector(
-                                  onTap: (){
+                                  onTap: () {
                                     setState(() {
                                       _method = 'user_account';
                                       _value = 1;
                                     });
                                   },
                                   child: Container(
+                                    width: size.width / 2.7,
                                     padding: EdgeInsets.symmetric(
                                         horizontal: 20, vertical: 11),
                                     decoration: BoxDecoration(
                                       color: Colors.white,
-                                      border: Border.all(color: Color(0xFFF12A32)),
+                                      border:
+                                          Border.all(color: Color(0xFFF12A32)),
                                       borderRadius: BorderRadius.only(
                                           topRight: Radius.circular(20),
                                           bottomRight: Radius.circular(20)),
                                     ),
                                     child: Text(
                                       'USER ACCOUNT',
+                                      textAlign: TextAlign.center,
                                       style: TextStyle(
                                           fontSize: 12,
                                           color: Color(0xFFF12A32),
@@ -168,24 +190,27 @@ class _LoginScreenState extends State<LoginScreen> {
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 GestureDetector(
-                                  onTap: (){
+                                  onTap: () {
                                     setState(() {
                                       _method = 'nik';
                                       _value = 0;
                                     });
                                   },
                                   child: Container(
+                                    width: size.width / 2.7,
                                     padding: EdgeInsets.symmetric(
                                         horizontal: 20, vertical: 11),
                                     decoration: BoxDecoration(
                                       color: Colors.white,
-                                      border: Border.all(color: Color(0xFFF12A32)),
+                                      border:
+                                          Border.all(color: Color(0xFFF12A32)),
                                       borderRadius: BorderRadius.only(
                                           topLeft: Radius.circular(20),
                                           bottomLeft: Radius.circular(20)),
                                     ),
                                     child: Text(
                                       'SSO (NIK)',
+                                      textAlign: TextAlign.center,
                                       style: TextStyle(
                                           fontSize: 12,
                                           color: Color(0xFFF12A32),
@@ -195,18 +220,20 @@ class _LoginScreenState extends State<LoginScreen> {
                                   ),
                                 ),
                                 Container(
+                                  width: size.width / 2.7,
                                   padding: EdgeInsets.symmetric(
                                       horizontal: 20, vertical: 11),
                                   decoration: BoxDecoration(
                                     color: Color(0xFFF12A32),
-                                    border: Border.all(color: Color(0xFFF12A32)),
-
+                                    border:
+                                        Border.all(color: Color(0xFFF12A32)),
                                     borderRadius: BorderRadius.only(
                                         topRight: Radius.circular(20),
                                         bottomRight: Radius.circular(20)),
                                   ),
                                   child: Text(
                                     'USER ACCOUNT',
+                                    textAlign: TextAlign.center,
                                     style: TextStyle(
                                         fontSize: 12,
                                         color: Color(0xFFFFFFFF),
@@ -218,37 +245,73 @@ class _LoginScreenState extends State<LoginScreen> {
                             ),
                           ),
                           SizedBox(height: 33),
-                          TextFormField(
-                            keyboardType: _value == 0 ? TextInputType.number : TextInputType.emailAddress,
-                            controller: _value == 0 ? nikController : emailController,
-                            decoration: InputDecoration(
-                              labelText: _value == 0 ? _labelNik : _labelEmail,
-                              hintText: '',
-                              filled: true,
-                              fillColor: Color(0xFFFFFFFF),
+                          Visibility(
+                            visible: _value == 0 ? true : false,
+                            child: TextFormField(
+                              autofocus: true,
+                              keyboardType: TextInputType.number,
+                              controller: nikController,
+                              decoration: InputDecoration(
+                                labelText: _labelNik,
+                                hintText: '',
+                                filled: true,
+                                fillColor: Color(0xFFFFFFFF),
+                              ),
+                              onTap: () {
+                                setState(() {
+                                  _labelNik = 'Identity & Access Number (NIK)';
+                                });
+                              },
+                              onChanged: (value) {
+                                setState(() {
+                                  _nik = nikController.text;
+                                });
+                              },
+                              validator: (value) {
+                                if (value.isEmpty) {
+                                  return 'Tidak boleh kosong';
+                                }
+                                return null;
+                              },
                             ),
-                            onTap: () {
-                              setState(() {
-                                _labelNik = 'Identity & Access Number (NIK)';
-                                _labelEmail = 'Email';
-                              });
-                            },
-                            onChanged: (value) {
-                              setState(() {
-                                _nik = nikController.text;
-                                _email = emailController.text;
-                              });
-                            },
-                            validator: (value) {
-                              if (value.isEmpty) {
-                                return 'Tidak boleh kosong';
-                              }
-                              return null;
-                            },
+                          ),
+                          Visibility(
+                            visible: _value == 1 ? true : false,
+                            child: TextFormField(
+                              autofocus: true,
+                              keyboardType: TextInputType.emailAddress,
+                              controller: emailController,
+                              decoration: InputDecoration(
+                                labelText: _labelEmail,
+                                hintText: '',
+                                filled: true,
+                                fillColor: Color(0xFFFFFFFF),
+                              ),
+                              onTap: () {
+                                setState(() {
+                                  _labelEmail = 'Email';
+                                });
+                              },
+                              onChanged: (value) {
+                                setState(() {
+                                  _nik = nikController.text;
+                                  _email = emailController.text;
+                                });
+                              },
+                              validator: (value) {
+                                if (value.isEmpty) {
+                                  return 'Tidak boleh kosong';
+                                }
+                                return null;
+                              },
+                            ),
                           ),
                           TextFormField(
                             controller: passwordController,
                             obscureText: _isShowPassword,
+                            // autofocus: false,
+                            // autofocus: _value == 0 ? false : false,
+                            // focusNode: focusNode,
                             decoration: InputDecoration(
                               labelText: _labelPassword,
                               suffixIcon: GestureDetector(
@@ -307,7 +370,6 @@ class _LoginScreenState extends State<LoginScreen> {
                       onPressed: () {
                         setState(() {
                           _postLogin();
-                          postRequestAsset();
                         });
                       },
                     ),

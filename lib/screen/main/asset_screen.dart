@@ -21,10 +21,10 @@ class _AssetScreenState extends State<AssetScreen> {
 
   @override
   void initState() {
-    setState(() {
-      postRequestAsset();
-    });
     super.initState();
+    setState(() {
+      postRequestAssetMonitoring();
+    });
   }
 
   @override
@@ -66,137 +66,127 @@ class _AssetScreenState extends State<AssetScreen> {
                 child: RefreshIndicator(
                   key: _refreshIndicatorKey,
                   onRefresh: postRequestAssetMonitoring,
-                  child: SingleChildScrollView(
-                    physics: const BouncingScrollPhysics(
-                        parent: AlwaysScrollableScrollPhysics()),
-                    child: FutureBuilder<List<Monitoring>>(
-                      future: postRequestAssetMonitoring(),
-                      builder: (context, snapshot) {
-                        if (snapshot.hasData) {
-                          List<Monitoring> data = snapshot.data;
-                          return ListView.builder(
-                              itemCount: data.length,
-                              physics: NeverScrollableScrollPhysics(),
-                              shrinkWrap: true,
-                              itemBuilder: (context, index) {
-                                return Card(
-                                  elevation: 1,
-                                  child: Container(
-                                    padding: EdgeInsets.symmetric(
-                                        horizontal: 15, vertical: 15),
-                                    width: size.width,
-                                    child: Row(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            Text(
-                                              data[index].name,
-                                              style: TextStyle(
-                                                  fontSize: 12,
-                                                  color: Color(0xFF595D64),
-                                                  fontWeight: FontWeight.w400,
-                                                  fontFamily: 'Roboto'),
-                                            ),
-                                            SizedBox(height: 5),
-                                            Text(
+                  child: Container(
+                    width: size.width,
+                    height: size.height,
+                    child: SingleChildScrollView(
+                      physics: const BouncingScrollPhysics(
+                          parent: AlwaysScrollableScrollPhysics()),
+                      child: FutureBuilder<List<Monitoring>>(
+                        future: postRequestAssetMonitoring(),
+                        builder: (context, snapshot) {
+                          if (snapshot.hasData) {
+                            List<Monitoring> data = snapshot.data;
+                            return ListView.builder(
+                                itemCount: data.length,
+                                physics: NeverScrollableScrollPhysics(),
+                                shrinkWrap: true,
+                                itemBuilder: (context, index) {
+                                  return Card(
+                                    elevation: 1,
+                                    child: Container(
+                                      padding: EdgeInsets.symmetric(
+                                          horizontal: 15, vertical: 15),
+                                      width: size.width,
+                                      child: Row(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Text(
+                                                data[index].name,
+                                                style: TextStyle(
+                                                    fontSize: 10,
+                                                    color: Color(0xFF595D64),
+                                                    fontWeight: FontWeight.w400,
+                                                    fontFamily: 'Roboto'),
+                                              ),
+                                              SizedBox(height: 5),
+                                              Text(
                                                 data[index].serialNumber,
-                                              style: TextStyle(
-                                                  fontSize: 10,
-                                                  color: Color(0xFF595D64),
-                                                  fontWeight: FontWeight.w300,
-                                                  fontFamily: 'Roboto'),
-                                            ),
-                                            Text(
+                                                style: TextStyle(
+                                                    fontSize: 10,
+                                                    color: Color(0xFF595D64),
+                                                    fontWeight: FontWeight.w300,
+                                                    fontFamily: 'Roboto'),
+                                              ),
+                                              SizedBox(height: 5),
+                                              Row(
+                                                children: [
+                                                  Text(
+                                                    'Maintenance budget : ',
+                                                    style: TextStyle(
+                                                        fontSize: 8,
+                                                        color: Color(0xFF595D64),
+                                                        fontWeight:
+                                                            FontWeight.w500,
+                                                        fontFamily: 'Roboto'),
+                                                  ),
+                                                  Text(
                                                     NumberFormat.currency(
                                                             locale: 'id',
                                                             symbol: 'IDR ',
                                                             decimalDigits: 0)
-                                                        .format(data[index].currentBudget)
+                                                        .format(data[index]
+                                                            .currentBudget)
                                                         .toString(),
                                                     // 'IDR 18.981.000',
                                                     style: TextStyle(
-                                                        fontSize: 10,
+                                                        fontSize: 8,
                                                         color: Color(0xFF595D64),
-                                                        fontWeight: FontWeight.w500,
+                                                        fontWeight:
+                                                            FontWeight.w400,
                                                         fontFamily: 'Roboto'),
                                                   ),
-                                            SizedBox(height: 8),
-                                            // Row(
-                                            //   children: [
-                                            //     Column(
-                                            //       crossAxisAlignment:
-                                            //           CrossAxisAlignment.start,
-                                            //       children: [
-                                            //         Text(
-                                            //           '${data[index].pic.firstName} ${data[index].pic.lastName}',
-                                            //           style: TextStyle(
-                                            //               fontSize: 10,
-                                            //               color:
-                                            //                   Color(0xFF595D64),
-                                            //               fontWeight:
-                                            //                   FontWeight.w400,
-                                            //               fontFamily: 'Roboto'),
-                                            //         ),
-                                            //         Text(
-                                            //           '${data[index].pic.level == null ? '' : data[index].pic.level} ${data[index].pic.department == null ? '' : data[index].pic.department}',
-                                            //           style: TextStyle(
-                                            //               fontSize: 8,
-                                            //               color:
-                                            //                   Color(0xFF595D64),
-                                            //               fontWeight:
-                                            //                   FontWeight.w400,
-                                            //               fontFamily: 'Roboto'),
-                                            //         ),
-                                            //       ],
-                                            //     ),
-                                            //   ],
-                                            // ),
-                                          ],
-                                        ),
-                                        // Column(
-                                        //   crossAxisAlignment:
-                                        //       CrossAxisAlignment.end,
-                                        //   children: [
-                                        //     Text(
-                                        //       data[index].procurement,
-                                        //       style: TextStyle(
-                                        //           fontSize: 8,
-                                        //           color: Color(0xFF9AA1AC),
-                                        //           fontWeight: FontWeight.w400,
-                                        //           fontFamily: 'Roboto'),
-                                        //     ),
-                                        //     SizedBox(height: 8),
-                                        //     Text(
-                                        //       NumberFormat.currency(
-                                        //               locale: 'id',
-                                        //               symbol: 'IDR ',
-                                        //               decimalDigits: 0)
-                                        //           .format(data[index].amount)
-                                        //           .toString(),
-                                        //       // 'IDR 18.981.000',
-                                        //       style: TextStyle(
-                                        //           fontSize: 10,
-                                        //           color: Color(0xFF595D64),
-                                        //           fontWeight: FontWeight.w500,
-                                        //           fontFamily: 'Roboto'),
-                                        //     ),
-                                        //   ],
-                                        // ),
-                                      ],
+                                                ],
+                                              ),
+                                              SizedBox(height: 8),
+                                            ],
+                                          ),
+                                          // Column(
+                                          //   crossAxisAlignment:
+                                          //       CrossAxisAlignment.end,
+                                          //   children: [
+                                          //     Text(
+                                          //       data[index].procurement,
+                                          //       style: TextStyle(
+                                          //           fontSize: 8,
+                                          //           color: Color(0xFF9AA1AC),
+                                          //           fontWeight: FontWeight.w400,
+                                          //           fontFamily: 'Roboto'),
+                                          //     ),
+                                          //     SizedBox(height: 8),
+                                          //     Text(
+                                          //       NumberFormat.currency(
+                                          //               locale: 'id',
+                                          //               symbol: 'IDR ',
+                                          //               decimalDigits: 0)
+                                          //           .format(data[index].amount)
+                                          //           .toString(),
+                                          //       // 'IDR 18.981.000',
+                                          //       style: TextStyle(
+                                          //           fontSize: 10,
+                                          //           color: Color(0xFF595D64),
+                                          //           fontWeight: FontWeight.w500,
+                                          //           fontFamily: 'Roboto'),
+                                          //     ),
+                                          //   ],
+                                          // ),
+                                        ],
+                                      ),
                                     ),
-                                  ),
-                                );
-                              });
-                        } else {
-                          return Text('');
-                        }
-                      },
+                                  );
+                                });
+                          } else {
+                            return Text('');
+                          }
+                        },
+                      ),
                     ),
                   ),
                 ),
@@ -260,13 +250,13 @@ class _AssetScreenState extends State<AssetScreen> {
                                 context,
                                 MaterialPageRoute(
                                     builder: (context) => VoucherScreen()),
-                                    (route) => false,
+                                (route) => false,
                               );
                               bottomIcons = BottomIcons.Voucher;
                             });
                           },
                           bottomIcons:
-                          bottomIcons == BottomIcons.Voucher ? true : false,
+                              bottomIcons == BottomIcons.Voucher ? true : false,
                           text: 'Voucher',
                           icons: 'assets/images/voucher.png'),
                       CustomBottomBar(
