@@ -2,26 +2,36 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:sisca_finnet/screen/main/main_screen.dart';
 
 import 'login_screen.dart';
 
 class SplashScreen extends StatefulWidget {
-
   @override
   _SplashScreenState createState() => _SplashScreenState();
 }
 
 class _SplashScreenState extends State<SplashScreen> {
   void splashScreenStart() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
     var duration = const Duration(seconds: 3);
     Timer(duration, () {
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(
-            builder: (context) => LoginScreen()),
-      );
+      int _valueSession = prefs.getInt('value');
+      _valueSession == 1
+          ? Navigator.pushAndRemoveUntil(
+              context,
+              MaterialPageRoute(builder: (context) => MainScreen()),
+              (route) => false,
+            )
+          : Navigator.pushAndRemoveUntil(
+              context,
+              MaterialPageRoute(builder: (context) => LoginScreen()),
+              (route) => false,
+            );
     });
   }
+
   @override
   void initState() {
     setState(() {
@@ -29,6 +39,7 @@ class _SplashScreenState extends State<SplashScreen> {
     });
     super.initState();
   }
+
   @override
   Widget build(BuildContext context) {
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
@@ -72,7 +83,10 @@ class _SplashScreenState extends State<SplashScreen> {
                         fontWeight: FontWeight.w500,
                         fontFamily: 'Roboto'),
                   ),
-                  Image.asset('assets/images/logo_name.png', width: 52,),
+                  Image.asset(
+                    'assets/images/logo_name.png',
+                    width: 52,
+                  ),
                 ],
               ),
             ],

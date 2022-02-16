@@ -4,11 +4,6 @@ import 'package:intl/intl.dart';
 import 'package:sisca_finnet/model/maintenance_model.dart';
 import 'package:sisca_finnet/screen/main/test_screen.dart';
 import 'package:sisca_finnet/widget/form_maintenance.dart';
-import 'package:sisca_finnet/widget/custom_bottom_bar.dart';
-
-import 'account_screen.dart';
-import 'asset_screen.dart';
-import 'voucher_screen.dart';
 
 class MaintenanceScreen extends StatefulWidget {
   @override
@@ -20,7 +15,7 @@ enum BottomIcons { Asset, Maintenance, Voucher, Account }
 class _MaintenanceScreenState extends State<MaintenanceScreen> {
   BottomIcons bottomIcons = BottomIcons.Maintenance;
   final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey =
-  new GlobalKey<RefreshIndicatorState>();
+      new GlobalKey<RefreshIndicatorState>();
 
   @override
   void initState() {
@@ -182,8 +177,18 @@ class _MaintenanceScreenState extends State<MaintenanceScreen> {
                                                                 .name,
                                                             style: TextStyle(
                                                                 fontSize: 10,
-                                                                color: Color(
-                                                                    0xFF595D64),
+                                                                color: data[index]
+                                                                            .status
+                                                                            .color ==
+                                                                        'green'
+                                                                    ? Color(
+                                                                        0xFF52C829)
+                                                                    : data[index].status.color ==
+                                                                            'default'
+                                                                        ? Color(
+                                                                            0xFF595D64)
+                                                                        : Color(
+                                                                            0xFF598BD7),
                                                                 fontWeight:
                                                                     FontWeight
                                                                         .w300,
@@ -273,7 +278,9 @@ class _MaintenanceScreenState extends State<MaintenanceScreen> {
                             //       builder: (context) => AlertPopUp()),
                             // );
                             // showPopRequestData(context);
-                            showDialog(context: context, builder: (context) => FormMaintenance());
+                            showDialog(
+                                context: context,
+                                builder: (context) => FormMaintenance());
                             // FormMaintenance();
                           });
                         },
@@ -294,90 +301,6 @@ class _MaintenanceScreenState extends State<MaintenanceScreen> {
                         ),
                       ),
                     ),
-                    Positioned(
-                      bottom: -5,
-                      left: -5,
-                      child: Card(
-                        elevation: 1,
-                        child: Container(
-                          width: size.width,
-                          height: 60,
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              CustomBottomBar(
-                                  onPressed: () {
-                                    setState(() {
-                                      Navigator.pushAndRemoveUntil(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (context) =>
-                                                AssetScreen()),
-                                        (route) => false,
-                                      );
-                                      bottomIcons = BottomIcons.Asset;
-                                    });
-                                  },
-                                  bottomIcons: bottomIcons == BottomIcons.Asset
-                                      ? true
-                                      : false,
-                                  text: 'Asset',
-                                  icons: 'assets/images/box.png'),
-                              CustomBottomBar(
-                                  onPressed: () {
-                                    setState(() {
-                                      bottomIcons = BottomIcons.Maintenance;
-                                    });
-                                  },
-                                  bottomIcons:
-                                      bottomIcons == BottomIcons.Maintenance
-                                          ? true
-                                          : false,
-                                  text: 'Maintenance',
-                                  icons: 'assets/images/tools.png'),
-                              CustomBottomBar(
-                                  onPressed: () {
-                                    setState(() {
-                                      Navigator.pushAndRemoveUntil(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (context) =>
-                                                VoucherScreen()),
-                                        (route) => false,
-                                      );
-                                      bottomIcons = BottomIcons.Voucher;
-                                    });
-                                  },
-                                  bottomIcons:
-                                      bottomIcons == BottomIcons.Voucher
-                                          ? true
-                                          : false,
-                                  text: 'Voucher',
-                                  icons: 'assets/images/voucher.png'),
-                              CustomBottomBar(
-                                  onPressed: () {
-                                    setState(() {
-                                      Navigator.pushAndRemoveUntil(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (context) =>
-                                                AccountScreen()),
-                                        (route) => false,
-                                      );
-                                      bottomIcons = BottomIcons.Account;
-                                    });
-                                  },
-                                  bottomIcons:
-                                      bottomIcons == BottomIcons.Account
-                                          ? true
-                                          : false,
-                                  text: 'Account',
-                                  icons: 'assets/images/user.png'),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
                   ],
                 ),
               ),
@@ -388,4 +311,3 @@ class _MaintenanceScreenState extends State<MaintenanceScreen> {
     );
   }
 }
-

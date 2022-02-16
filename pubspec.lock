@@ -43,6 +43,34 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.15.0"
+  connectivity:
+    dependency: "direct main"
+    description:
+      name: connectivity
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "3.0.6"
+  connectivity_for_web:
+    dependency: transitive
+    description:
+      name: connectivity_for_web
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.4.0+1"
+  connectivity_macos:
+    dependency: transitive
+    description:
+      name: connectivity_macos
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.2.1+2"
+  connectivity_platform_interface:
+    dependency: transitive
+    description:
+      name: connectivity_platform_interface
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "2.0.1"
   cupertino_icons:
     dependency: "direct main"
     description:
@@ -50,6 +78,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.0.4"
+  currency_text_input_formatter:
+    dependency: "direct main"
+    description:
+      name: currency_text_input_formatter
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "2.1.5"
   dio:
     dependency: "direct main"
     description:
@@ -85,18 +120,39 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "6.1.2"
+  file_picker:
+    dependency: "direct main"
+    description:
+      name: file_picker
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "4.4.0"
   flutter:
     dependency: "direct main"
     description: flutter
     source: sdk
     version: "0.0.0"
+  flutter_easyloading:
+    dependency: "direct main"
+    description:
+      name: flutter_easyloading
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "3.0.3"
   flutter_plugin_android_lifecycle:
     dependency: transitive
     description:
       name: flutter_plugin_android_lifecycle
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.0.11"
+    version: "2.0.5"
+  flutter_spinkit:
+    dependency: transitive
+    description:
+      name: flutter_spinkit
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "5.1.0"
   flutter_test:
     dependency: "direct dev"
     description: flutter
@@ -107,6 +163,13 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
+  font_awesome_flutter:
+    dependency: "direct main"
+    description:
+      name: font_awesome_flutter
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "9.2.0"
   http:
     dependency: "direct main"
     description:
@@ -121,13 +184,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "4.0.0"
-  image_picker:
-    dependency: "direct main"
-    description:
-      name: image_picker
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.6.5+3"
   intl:
     dependency: "direct main"
     description:

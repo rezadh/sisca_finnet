@@ -48,6 +48,7 @@ class DataBawah {
 }
 
 class UserLeader {
+  String id;
   String username;
   String firstName;
   String lastName;
@@ -60,7 +61,8 @@ class UserLeader {
   }
 
   UserLeader(
-      {this.username,
+      {this.id,
+      this.username,
       this.firstName,
       this.lastName,
       this.level,
@@ -68,6 +70,7 @@ class UserLeader {
       this.userPosition});
 
   UserLeader.fromJson(Map<String, dynamic> json) {
+    id = json['id'];
     username = json['username'];
     firstName = json['first_name'];
     lastName = json['last_name'];
@@ -80,6 +83,7 @@ class UserLeader {
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['id'] = this.id;
     data['username'] = this.username;
     data['first_name'] = this.firstName;
     data['last_name'] = this.lastName;

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:sisca_finnet/screen/login_screen.dart';
 import 'package:sisca_finnet/screen/main/asset_screen.dart';
 import 'package:sisca_finnet/widget/custom_bottom_bar.dart';
 
@@ -29,13 +31,24 @@ class _AccountScreenState extends State<AccountScreen> {
       appBar: AppBar(
         centerTitle: true,
         elevation: 0.0,
-        title: Text(
-          'Account',
-          style: TextStyle(
-              fontSize: 18,
-              color: Colors.white,
-              fontWeight: FontWeight.w700,
-              fontFamily: 'Roboto'),
+        title: GestureDetector(
+          onTap: () async{
+            SharedPreferences prefs = await SharedPreferences.getInstance();
+            prefs.setInt('value', 0);
+            Navigator.pushAndRemoveUntil(
+              context,
+              MaterialPageRoute(builder: (context) => LoginScreen()),
+                  (route) => false,
+            );
+          },
+          child: Text(
+            'Account',
+            style: TextStyle(
+                fontSize: 18,
+                color: Colors.white,
+                fontWeight: FontWeight.w700,
+                fontFamily: 'Roboto'),
+          ),
         ),
         backgroundColor: Colors.transparent,
       ),
@@ -53,81 +66,6 @@ class _AccountScreenState extends State<AccountScreen> {
                   height: size.height / 5,
                   width: size.width,
                   fit: BoxFit.cover,
-                ),
-              ),
-            ),
-            Positioned(
-              bottom: -5,
-              left: -5,
-              child: Card(
-                elevation: 1,
-                child: Container(
-                  width: size.width,
-                  height: 60,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      CustomBottomBar(
-                          onPressed: () {
-                            setState(() {
-                              Navigator.pushAndRemoveUntil(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => AssetScreen()),
-                                (route) => false,
-                              );
-                              bottomIcons = BottomIcons.Asset;
-                            });
-                          },
-                          bottomIcons:
-                              bottomIcons == BottomIcons.Asset ? true : false,
-                          text: 'Asset',
-                          icons: 'assets/images/box.png'),
-                      CustomBottomBar(
-                          onPressed: () {
-                            setState(() {
-                              Navigator.pushAndRemoveUntil(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => MaintenanceScreen()),
-                                (route) => false,
-                              );
-                              bottomIcons = BottomIcons.Maintenance;
-                            });
-                          },
-                          bottomIcons: bottomIcons == BottomIcons.Maintenance
-                              ? true
-                              : false,
-                          text: 'Maintenance',
-                          icons: 'assets/images/tools.png'),
-                      CustomBottomBar(
-                          onPressed: () {
-                            setState(() {
-                              Navigator.pushAndRemoveUntil(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => VoucherScreen()),
-                                    (route) => false,
-                              );
-                              bottomIcons = BottomIcons.Voucher;
-                            });
-                          },
-                          bottomIcons:
-                          bottomIcons == BottomIcons.Voucher ? true : false,
-                          text: 'Voucher',
-                          icons: 'assets/images/voucher.png'),
-                      CustomBottomBar(
-                          onPressed: () {
-                            setState(() {
-                              bottomIcons = BottomIcons.Account;
-                            });
-                          },
-                          bottomIcons:
-                              bottomIcons == BottomIcons.Account ? true : false,
-                          text: 'Account',
-                          icons: 'assets/images/user.png'),
-                    ],
-                  ),
                 ),
               ),
             ),

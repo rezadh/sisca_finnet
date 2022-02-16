@@ -48,6 +48,7 @@ class DataBawah {
 }
 
 class UserVp {
+  String id;
   String username;
   String firstName;
   String lastName;
@@ -60,7 +61,7 @@ class UserVp {
   }
 
   UserVp(
-      {this.username,
+      {this.id, this.username,
         this.firstName,
         this.lastName,
         this.level,
@@ -68,6 +69,7 @@ class UserVp {
         this.userPosition});
 
   UserVp.fromJson(Map<String, dynamic> json) {
+    id = json['id'];
     username = json['username'];
     firstName = json['first_name'];
     lastName = json['last_name'];
@@ -80,6 +82,7 @@ class UserVp {
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['id'] = this.id;
     data['username'] = this.username;
     data['first_name'] = this.firstName;
     data['last_name'] = this.lastName;

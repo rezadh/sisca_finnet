@@ -59,18 +59,21 @@ class DataBawah {
 }
 
 class Monitoring {
+  String id;
   String name;
   String serialNumber;
   int currentBudget;
 
-  Monitoring({this.name, this.serialNumber, this.currentBudget});
+  Monitoring({this.id, this.name, this.serialNumber, this.currentBudget});
   Monitoring.fromJson(Map<String, dynamic> json){
+    id = json['id'];
     name = json['name'];
     serialNumber = json['serial_number'];
     currentBudget = json['current_budget'];
   }
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['id'] = this.id;
     data['name'] = this.name;
     data['serial_number'] = this.serialNumber;
     data['current_budget'] = this.currentBudget;
