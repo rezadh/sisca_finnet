@@ -2,20 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import 'package:sisca_finnet/model/asset_model.dart';
-import 'package:sisca_finnet/screen/main/account_screen.dart';
-import 'package:sisca_finnet/screen/main/voucher_screen.dart';
-import 'package:sisca_finnet/screen/main/maintenance_screen.dart';
-import 'package:sisca_finnet/widget/custom_bottom_bar.dart';
 
 class AssetScreen extends StatefulWidget {
   @override
   _AssetScreenState createState() => _AssetScreenState();
 }
 
-enum BottomIcons { Asset, Maintenance, Voucher, Account }
 
 class _AssetScreenState extends State<AssetScreen> {
-  BottomIcons bottomIcons = BottomIcons.Asset;
   final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey =
       new GlobalKey<RefreshIndicatorState>();
 

@@ -49,24 +49,38 @@ class DataBawah {
 
 class Maintenance {
   String id;
+  String description;
   int requestedAmount;
+  String requestEvidence;
   UserRequestedBy userRequestedBy;
+  UserReviewedTo userReviewedTo;
+  UserRequestedTo userRequestedTo;
   Status status;
   MonitoringMaintenance monitoringMaintenance;
 
   Maintenance(
       {this.id,
+        this.description,
       this.requestedAmount,
       this.userRequestedBy,
+        this.userReviewedTo,
+        this.userRequestedTo,
       this.status,
-      this.monitoringMaintenance});
+      this.monitoringMaintenance, this.requestEvidence});
 
   Maintenance.fromJson(Map<String, dynamic> json) {
     id = json['id'];
+    description = json['requested_description'];
     requestedAmount = json['requested_amount'];
-
+    requestEvidence = json['requested_evidence'];
     userRequestedBy = json['user_requested_by'] != null
         ? new UserRequestedBy.fromJson(json['user_requested_by'])
+        : null;
+    userReviewedTo = json['user_reviewed_to'] != null
+        ? new UserReviewedTo.fromJson(json['user_reviewed_to'])
+        : null;
+    userRequestedTo = json['user_requested_to'] != null
+        ? new UserRequestedTo.fromJson(json['user_requested_to'])
         : null;
     status =
         json['status'] != null ? new Status.fromJson(json['status']) : null;
@@ -78,9 +92,16 @@ class Maintenance {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['id'] = this.id;
+    data['requested_description'] = this.description;
     data['requested_amount'] = this.requestedAmount;
     if (this.userRequestedBy != null) {
       data['user_requested_by'] = this.userRequestedBy.toJson();
+    }
+    if (this.userReviewedTo != null) {
+      data['user_reviewed_to'] = this.userReviewedTo.toJson();
+    }
+    if (this.userReviewedTo != null) {
+      data['user_requested_to'] = this.userReviewedTo.toJson();
     }
     if (this.status != null) {
       data['status'] = this.status.toJson();
@@ -91,21 +112,106 @@ class Maintenance {
     return data;
   }
 }
-
-class UserRequestedBy {
+class UserRequestedTo {
   String username;
-
-  UserRequestedBy.fromJson(Map<String, dynamic> json) {
+  String avatar;
+  String firstname;
+  String lastname;
+  String level;
+  UserPosition userPosition;
+  UserRequestedTo({this.username, this.avatar, this.firstname, this.lastname, this.level, this.userPosition});
+  UserRequestedTo.fromJson(Map<String, dynamic> json) {
     username = json['username'];
+    avatar = json['avatar'];
+    firstname = json['first_name'];
+    lastname = json['last_name'];
+    level = json['level'];
+    userPosition = json['user_position'] != null
+        ? new UserPosition.fromJson(json['user_position'])
+        : null;
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['username'] = this.username;
+    data['avatar'] = this.avatar;
+    data['first_name'] = this.firstname;
+    data['last_name'] = this.lastname;
+    data['level'] = this.level;
+    return data;
+  }
+}
+class UserReviewedTo {
+  String username;
+  String avatar;
+  String firstname;
+  String lastname;
+  String level;
+  UserPosition userPosition;
+  UserReviewedTo({this.username, this.avatar, this.firstname, this.lastname, this.level, this.userPosition});
+  UserReviewedTo.fromJson(Map<String, dynamic> json) {
+    username = json['username'];
+    avatar = json['avatar'];
+    firstname = json['first_name'];
+    lastname = json['last_name'];
+    level = json['level'];
+    userPosition = json['user_position'] != null
+        ? new UserPosition.fromJson(json['user_position'])
+        : null;
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['username'] = this.username;
+    data['avatar'] = this.avatar;
+    data['first_name'] = this.firstname;
+    data['last_name'] = this.lastname;
+    data['level'] = this.level;
     return data;
   }
 }
 
+class UserRequestedBy {
+  String username;
+  String avatar;
+  String firstname;
+  String lastname;
+  String level;
+  UserPosition userPosition;
+  UserRequestedBy({this.username, this.avatar, this.firstname, this.lastname, this.level, this.userPosition});
+  UserRequestedBy.fromJson(Map<String, dynamic> json) {
+    username = json['username'];
+    avatar = json['avatar'];
+    firstname = json['first_name'];
+    lastname = json['last_name'];
+    level = json['level'];
+    userPosition = json['user_position'] != null
+        ? new UserPosition.fromJson(json['user_position'])
+        : null;
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['username'] = this.username;
+    data['avatar'] = this.avatar;
+    data['first_name'] = this.firstname;
+    data['last_name'] = this.lastname;
+    data['level'] = this.level;
+    return data;
+  }
+}
+class UserPosition {
+  String name;
+  UserPosition({this.name});
+  UserPosition.fromJson(Map<String, dynamic> json){
+    name = json['name'];
+  }
+  Map<String, dynamic> toJson(){
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['name'] = this.name;
+    return data;
+  }
+}
 class MonitoringMaintenance {
   String name;
   String serialNumber;
@@ -378,7 +484,7 @@ class UserCurrentProgress {
 Future<List<Maintenance>> postRequestMaintenance() async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
   String url = BASE_URL +
-      'maintenances?page=1&per_page=50&is_requested=1&with[]=monitoring&with[]=user_requested_by&with[]=user_requested_by.user_position&with[]=user_requested_to&with[]=user_requested_to.user_position&with[]=monitoring.asset';
+      'maintenances?page=1&per_page=50&is_requested=1&with[]=monitoring&with[]=user_requested_by.user_position&with[]=user_reviewed_to.user_position&with[]=user_requested_to&with[]=user_requested_to.user_position&with[]=monitoring.asset';
   var token = prefs.getString('token');
   Map<String, String> h = {
     'Content-Type': 'application/json',

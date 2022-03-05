@@ -67,6 +67,14 @@ class _LoginScreenState extends State<LoginScreen> {
       if (value != null) {
         if (value.accessToken != null) {
           prefs.setInt('value', 1);
+          prefs.setString('role', value.roles[0].name);
+          prefs.setString('last_logged_in', value.user.lastLoggedIn);
+          prefs.setString('position', value.user.userPosition.name);
+          prefs.setString('division', value.user.userPosition.userDivision.name);
+          prefs.setString('directorate', value.user.userPosition.userDivision.userDirectorate.name);
+          // prefs.setString('method', _method);
+          // prefs.setString('username', _value == 0 ? nikController.text : emailController.text);
+          // prefs.setString('password', passwordController.text);
           var roles = value.roles[0].isAssetHolder;
           if (roles == 1) {
             return Navigator.pushAndRemoveUntil(
@@ -89,16 +97,21 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   Future getConnect() async {
+    _loading = true;
+    print(_loading);
     var connectivityResult = await (Connectivity().checkConnectivity());
     if (connectivityResult == ConnectivityResult.none) {
       setState(() {
         EasyLoading.showError('No Connection');
+        print(_loading);
+        _loading = false;
         isInternetOn = false;
       });
     } else {
       setState(() {
+        print(_loading);
         isInternetOn = true;
-        _loading = true;
+        _loading = false;
         _postLogin();
       });
     }
@@ -413,6 +426,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         onPressed: () {
                           setState(() {
                             EasyLoading.show(status: 'Loading');
+                            _loading = true;
                             getConnect();
                           });
                         },

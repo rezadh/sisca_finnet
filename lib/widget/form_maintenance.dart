@@ -10,6 +10,7 @@ import 'package:sisca_finnet/model/asset_model.dart';
 import 'package:sisca_finnet/model/maintenance_model.dart';
 import 'package:sisca_finnet/model/user_leader_model.dart';
 import 'package:sisca_finnet/model/user_vp_model.dart';
+import 'package:sisca_finnet/util/const.dart';
 import 'package:sisca_finnet/widget/custom_dropdown_unit.dart';
 import 'package:sisca_finnet/widget/custom_dropdown_user_leader.dart';
 import 'package:sisca_finnet/widget/custom_dropdown_user_vp.dart';
@@ -130,11 +131,16 @@ class _FormMaintenanceState extends State<FormMaintenance> {
       'reviewed_to': _idApprover,
       'requested_evidence': _filePath,
     };
+    print(body);
     await postStoreMaintenance(body).then((value) {
       EasyLoading.dismiss();
+      print(value.data);
       if (value.data != null) {
         EasyLoading.showSuccess('Sukses');
         Navigator.pop(context);
+        setState(() {
+          postRequestMaintenance();
+        });
         return;
       } else {
         EasyLoading.showError('Failed');
@@ -686,7 +692,7 @@ class _FormMaintenanceState extends State<FormMaintenance> {
                                                       'assets/images/placeholder.png',
                                                       width: 20)
                                                   : Image.network(
-                                                      _avatarReviewer)),
+                                                      BASE_URL_STORAGE + _avatarReviewer)),
                                         ),
                                   SizedBox(width: 5),
                                   Container(
@@ -792,7 +798,7 @@ class _FormMaintenanceState extends State<FormMaintenance> {
                                                       'assets/images/placeholder.png',
                                                       width: 20)
                                                   : Image.network(
-                                                      _avatarApprover)),
+                                                  BASE_URL_STORAGE + _avatarApprover)),
                                         ),
                                   SizedBox(width: 5),
                                   Container(

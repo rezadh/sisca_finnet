@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import 'package:sisca_finnet/model/maintenance_model.dart';
+import 'package:sisca_finnet/screen/detail/maintenance_detail_screen.dart';
 import 'package:sisca_finnet/screen/main/test_screen.dart';
 import 'package:sisca_finnet/widget/form_maintenance.dart';
 
@@ -85,142 +86,185 @@ class _MaintenanceScreenState extends State<MaintenanceScreen> {
                                                 NeverScrollableScrollPhysics(),
                                             shrinkWrap: true,
                                             itemBuilder: (context, index) {
-                                              return Card(
-                                                elevation: 1,
-                                                child: Container(
-                                                  padding: EdgeInsets.symmetric(
-                                                      horizontal: 15,
-                                                      vertical: 15),
-                                                  width: size.width,
-                                                  child: Row(
-                                                    crossAxisAlignment:
-                                                        CrossAxisAlignment
-                                                            .start,
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment
-                                                            .spaceBetween,
-                                                    children: [
-                                                      Column(
-                                                        crossAxisAlignment:
-                                                            CrossAxisAlignment
-                                                                .start,
-                                                        children: [
-                                                          Row(
-                                                            children: [
-                                                              Text(
-                                                                '${data[index].id.substring(data[index].id.length - 4).toUpperCase().toString()} - ',
-                                                                style: TextStyle(
-                                                                    fontSize:
-                                                                        10,
-                                                                    color: Color(
-                                                                        0xFF595D64),
-                                                                    fontWeight:
-                                                                        FontWeight
-                                                                            .w500,
-                                                                    fontFamily:
-                                                                        'Roboto'),
-                                                              ),
-                                                              Text(
-                                                                data[index]
-                                                                    .userRequestedBy
-                                                                    .username,
-                                                                style: TextStyle(
-                                                                    fontSize:
-                                                                        10,
-                                                                    color: Color(
-                                                                        0xFF595D64),
-                                                                    fontWeight:
-                                                                        FontWeight
-                                                                            .w500,
-                                                                    fontFamily:
-                                                                        'Roboto'),
-                                                              ),
-                                                            ],
-                                                          ),
-                                                          SizedBox(height: 8),
-                                                          Text(
-                                                            data[index]
-                                                                .monitoringMaintenance
-                                                                .name,
-                                                            style: TextStyle(
-                                                                fontSize: 10,
-                                                                color: Color(
-                                                                    0xFF595D64),
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .w500,
-                                                                fontFamily:
-                                                                    'Roboto'),
-                                                          ),
-                                                          SizedBox(height: 5),
-                                                          Text(
-                                                            data[index]
-                                                                .monitoringMaintenance
-                                                                .serialNumber,
-                                                            style: TextStyle(
-                                                                fontSize: 8,
-                                                                color: Color(
-                                                                    0xFF595D64),
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .w300,
-                                                                fontFamily:
-                                                                    'Roboto'),
-                                                          ),
-                                                        ],
-                                                      ),
-                                                      Column(
-                                                        children: [
-                                                          Text(
-                                                            data[index]
-                                                                .status
-                                                                .name,
-                                                            style: TextStyle(
-                                                                fontSize: 10,
-                                                                color: data[index]
-                                                                            .status
-                                                                            .color ==
-                                                                        'green'
-                                                                    ? Color(
-                                                                        0xFF52C829)
-                                                                    : data[index].status.color ==
-                                                                            'default'
-                                                                        ? Color(
-                                                                            0xFF595D64)
-                                                                        : Color(
-                                                                            0xFF598BD7),
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .w300,
-                                                                fontFamily:
-                                                                    'Roboto'),
-                                                          ),
-                                                          SizedBox(height: 8),
-                                                          Text(
-                                                            NumberFormat.currency(
-                                                                    locale:
-                                                                        'id',
-                                                                    symbol:
-                                                                        'IDR ',
-                                                                    decimalDigits:
-                                                                        0)
-                                                                .format(data[
+                                              return GestureDetector(
+                                                onTap: () {
+                                                  Navigator.push(
+                                                      context,
+                                                      MaterialPageRoute(
+                                                          builder: (context) =>
+                                                              MaintenanceDetailScreen(
+                                                                id: data[index].id,
+                                                                name: data[
                                                                         index]
-                                                                    .requestedAmount)
-                                                                .toString(),
-                                                            style: TextStyle(
-                                                                fontSize: 8,
-                                                                color: Color(
-                                                                    0xFF595D64),
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .w400,
-                                                                fontFamily:
-                                                                    'Roboto'),
-                                                          ),
-                                                        ],
-                                                      ),
-                                                    ],
+                                                                    .monitoringMaintenance
+                                                                    .name,
+                                                                serialNumber: data[
+                                                                        index]
+                                                                    .monitoringMaintenance
+                                                                    .serialNumber,
+                                                                requestAmount: data[index].requestedAmount,
+                                                                statusName: data[index].status.name,
+                                                                statusColor: data[index].status.color,
+                                                                description: data[index].description,
+                                                                evidenceDownload: data[index].requestEvidence,
+                                                                userRequestAvatar: data[index].userRequestedBy.avatar,
+                                                                userRequestUsername: data[index].userRequestedBy.username,
+                                                                userRequestFirstname: data[index].userRequestedBy.firstname,
+                                                                userRequestLastname: data[index].userRequestedBy.lastname,
+                                                                userRequestLevel: data[index].userRequestedBy.level,
+                                                                userRequestPositionName: data[index].userRequestedBy.userPosition.name,
+                                                                userReviewAvatar: data[index].userReviewedTo.avatar,
+                                                                userReviewUsername: data[index].userReviewedTo.username,
+                                                                userReviewFirstname: data[index].userReviewedTo.firstname,
+                                                                userReviewLastname: data[index].userReviewedTo.lastname,
+                                                                userReviewLevel: data[index].userReviewedTo.level,
+                                                                userReviewPositionName: data[index].userReviewedTo.userPosition.name,
+                                                                userApproveAvatar: data[index].userRequestedTo.avatar,
+                                                                userApproveUsername: data[index].userRequestedTo.username,
+                                                                userApproveFirstname: data[index].userRequestedTo.firstname,
+                                                                userApproveLastname: data[index].userRequestedTo.lastname,
+                                                                userApproveLevel: data[index].userRequestedTo.level,
+                                                                userApprovePositionName: data[index].userRequestedTo.userPosition.name,
+                                                              )));
+                                                },
+                                                child: Card(
+                                                  elevation: 1,
+                                                  child: Container(
+                                                    padding:
+                                                        EdgeInsets.symmetric(
+                                                            horizontal: 15,
+                                                            vertical: 15),
+                                                    width: size.width,
+                                                    child: Row(
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .start,
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .spaceBetween,
+                                                      children: [
+                                                        Column(
+                                                          crossAxisAlignment:
+                                                              CrossAxisAlignment
+                                                                  .start,
+                                                          children: [
+                                                            Row(
+                                                              children: [
+                                                                Text(
+                                                                  '${data[index].id.substring(data[index].id.length - 4).toUpperCase().toString()} - ',
+                                                                  style: TextStyle(
+                                                                      fontSize:
+                                                                          10,
+                                                                      color: Color(
+                                                                          0xFF595D64),
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .w500,
+                                                                      fontFamily:
+                                                                          'Roboto'),
+                                                                ),
+                                                                Text(
+                                                                  data[index]
+                                                                      .userRequestedBy
+                                                                      .username,
+                                                                  style: TextStyle(
+                                                                      fontSize:
+                                                                          10,
+                                                                      color: Color(
+                                                                          0xFF595D64),
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .w500,
+                                                                      fontFamily:
+                                                                          'Roboto'),
+                                                                ),
+                                                              ],
+                                                            ),
+                                                            SizedBox(height: 8),
+                                                            Text(
+                                                              data[index]
+                                                                  .monitoringMaintenance
+                                                                  .name,
+                                                              style: TextStyle(
+                                                                  fontSize: 10,
+                                                                  color: Color(
+                                                                      0xFF595D64),
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .w500,
+                                                                  fontFamily:
+                                                                      'Roboto'),
+                                                            ),
+                                                            SizedBox(height: 5),
+                                                            Text(
+                                                              data[index]
+                                                                  .monitoringMaintenance
+                                                                  .serialNumber,
+                                                              style: TextStyle(
+                                                                  fontSize: 8,
+                                                                  color: Color(
+                                                                      0xFF595D64),
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .w300,
+                                                                  fontFamily:
+                                                                      'Roboto'),
+                                                            ),
+                                                          ],
+                                                        ),
+                                                        Column(
+                                                          children: [
+                                                            Text(
+                                                              data[index]
+                                                                  .status
+                                                                  .name,
+                                                              style: TextStyle(
+                                                                  fontSize: 10,
+                                                                  color: data[index]
+                                                                              .status
+                                                                              .color ==
+                                                                          'green'
+                                                                      ? Color(
+                                                                          0xFF52C829)
+                                                                      : data[index].status.color ==
+                                                                              'default'
+                                                                          ? Color(
+                                                                              0xFF595D64)
+                                                                          : Color(
+                                                                              0xFF598BD7),
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .w300,
+                                                                  fontFamily:
+                                                                      'Roboto'),
+                                                            ),
+                                                            SizedBox(height: 8),
+                                                            Text(
+                                                              NumberFormat.currency(
+                                                                      locale:
+                                                                          'id',
+                                                                      symbol:
+                                                                          'IDR ',
+                                                                      decimalDigits:
+                                                                          0)
+                                                                  .format(data[
+                                                                          index]
+                                                                      .requestedAmount)
+                                                                  .toString(),
+                                                              style: TextStyle(
+                                                                  fontSize: 8,
+                                                                  color: Color(
+                                                                      0xFF595D64),
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .w400,
+                                                                  fontFamily:
+                                                                      'Roboto'),
+                                                            ),
+                                                          ],
+                                                        ),
+                                                      ],
+                                                    ),
                                                   ),
                                                 ),
                                               );

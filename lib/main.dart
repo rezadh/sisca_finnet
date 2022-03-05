@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_downloader/flutter_downloader.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:sisca_finnet/screen/login_screen.dart';
 import 'package:sisca_finnet/screen/splash_screen.dart';
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await FlutterDownloader.initialize();
   runApp(MyApp());
   configLoading();
 }

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:sisca_finnet/model/user_leader_model.dart';
+import 'package:sisca_finnet/util/const.dart';
 
 Widget customDropDownUserLeader(BuildContext context, UserLeader item) {
   if (item == null) {
@@ -28,7 +29,7 @@ Widget customDropDownUserLeader(BuildContext context, UserLeader item) {
                       child: item.avatar == null
                           ? Image.asset('assets/images/placeholder.png',
                               width: 20)
-                          : Image.network(item.avatar)),
+                          : Image.network(BASE_URL_STORAGE + item.avatar)),
                 ),
                 SizedBox(width: 5),
                 Container(
@@ -114,16 +115,21 @@ Widget customPopupItemBuilderUserLeader(
         // mainAxisAlignment: MainAxisAlignment.start,
         children: [
           Container(
-            padding: EdgeInsets.symmetric(horizontal: 5, vertical: 5),
-            width: MediaQuery.of(context).size.width / 11,
-            decoration: BoxDecoration(
-              color: Color(0xFFDDDDDD),
-              border: Border.all(color:Color(0xFFDDDDDD)),
-              borderRadius: BorderRadius.all(Radius.circular(20)),
-            ),
-            child: item.avatar == null
-                ? Image.asset('assets/images/placeholder.png', width: 25)
-                : Image.network(item.avatar)),
+              padding: EdgeInsets.symmetric(horizontal: 5, vertical: 5),
+              width: MediaQuery.of(context).size.width / 11,
+              decoration: BoxDecoration(
+                color: Color(0xFFDDDDDD),
+                border: Border.all(color: Color(0xFFDDDDDD)),
+                borderRadius: BorderRadius.all(Radius.circular(20)),
+              ),
+              child: ClipRRect(
+                borderRadius: BorderRadius.all(
+                  Radius.circular(50),
+                ),
+                child: item.avatar == null
+                    ? Image.asset('assets/images/placeholder.png', width: 25)
+                    : Image.network(BASE_URL_STORAGE + item.avatar),
+              )),
           SizedBox(width: 5),
           Container(
             // width: MediaQuery.of(context).size.width / 2.7,
