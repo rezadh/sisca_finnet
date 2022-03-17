@@ -61,7 +61,7 @@ class _AccountScreenState extends State<AccountScreen> {
       _firstName = value.data.firstName;
       _lastName = value.data.lastName;
       _avatar = value.data.avatar;
-      _splitAvatar = _avatar.split('/').last;
+      // _splitAvatar = _avatar.split('/').last;
       firstNameController.text = value.data.firstName;
       lastNameController.text = value.data.lastName;
       usernameController.text = value.data.username;
@@ -113,8 +113,8 @@ class _AccountScreenState extends State<AccountScreen> {
       'username': usernameController.text,
       'code': _code,
       'email': emailController.text,
-      'first_name': _firstName,
-      'last_name': _lastName,
+      'first_name': firstNameController.text,
+      'last_name': lastNameController.text,
       'address': personalAddressController.text ?? '',
       'avatar': _profileAvatar != null ? _profileAvatar.path : _profileAvatar,
     };
@@ -173,11 +173,11 @@ class _AccountScreenState extends State<AccountScreen> {
         builder: (context) => AlertDialog(
           title: Text(
             title,
-            style: TextStyle(fontSize: 18),
+            style: TextStyle(fontSize: 19),
           ),
           content: Text(
             message,
-            style: TextStyle(fontSize: 14),
+            style: TextStyle(fontSize: 15),
             // textAlign: TextAlign.center,
           ),
           actions: [
@@ -238,7 +238,7 @@ class _AccountScreenState extends State<AccountScreen> {
         title: Text(
           'Account',
           style: TextStyle(
-              fontSize: 18,
+              fontSize: 19,
               color: Colors.white,
               fontWeight: FontWeight.w700,
               fontFamily: 'Roboto'),
@@ -342,7 +342,7 @@ class _AccountScreenState extends State<AccountScreen> {
                                             Text(
                                               '$_firstName $_lastName',
                                               style: TextStyle(
-                                                  fontSize: 12,
+                                                  fontSize: 13,
                                                   color: Color(0xFF595D64),
                                                   fontWeight: FontWeight.w400,
                                                   fontFamily: 'Roboto'),
@@ -361,7 +361,7 @@ class _AccountScreenState extends State<AccountScreen> {
                                               child: Text(
                                                 _roles ?? '',
                                                 style: TextStyle(
-                                                    fontSize: 8,
+                                                    fontSize: 9,
                                                     color: Color(0xFFF14722),
                                                     fontWeight: FontWeight.w300,
                                                     fontFamily: 'Roboto'),
@@ -377,7 +377,7 @@ class _AccountScreenState extends State<AccountScreen> {
                                             Text(
                                               'Position',
                                               style: TextStyle(
-                                                  fontSize: 9,
+                                                  fontSize: 10,
                                                   color: Color(0xFF595D64),
                                                   fontWeight: FontWeight.w400,
                                                   fontFamily: 'Roboto'),
@@ -385,7 +385,7 @@ class _AccountScreenState extends State<AccountScreen> {
                                             Text(
                                               'Level $_position',
                                               style: TextStyle(
-                                                  fontSize: 9,
+                                                  fontSize: 10,
                                                   color: Color(0xFF595D64),
                                                   fontWeight: FontWeight.w400,
                                                   fontFamily: 'Roboto'),
@@ -400,7 +400,7 @@ class _AccountScreenState extends State<AccountScreen> {
                                             Text(
                                               'Division',
                                               style: TextStyle(
-                                                  fontSize: 9,
+                                                  fontSize: 10,
                                                   color: Color(0xFF595D64),
                                                   fontWeight: FontWeight.w400,
                                                   fontFamily: 'Roboto'),
@@ -408,7 +408,7 @@ class _AccountScreenState extends State<AccountScreen> {
                                             Text(
                                               _division ?? '',
                                               style: TextStyle(
-                                                  fontSize: 9,
+                                                  fontSize: 10,
                                                   color: Color(0xFF595D64),
                                                   fontWeight: FontWeight.w400,
                                                   fontFamily: 'Roboto'),
@@ -423,7 +423,7 @@ class _AccountScreenState extends State<AccountScreen> {
                                             Text(
                                               'Directorate',
                                               style: TextStyle(
-                                                  fontSize: 9,
+                                                  fontSize: 10,
                                                   color: Color(0xFF595D64),
                                                   fontWeight: FontWeight.w400,
                                                   fontFamily: 'Roboto'),
@@ -431,7 +431,7 @@ class _AccountScreenState extends State<AccountScreen> {
                                             Text(
                                               _directorate ?? '',
                                               style: TextStyle(
-                                                  fontSize: 9,
+                                                  fontSize: 10,
                                                   color: Color(0xFF595D64),
                                                   fontWeight: FontWeight.w400,
                                                   fontFamily: 'Roboto'),
@@ -446,7 +446,7 @@ class _AccountScreenState extends State<AccountScreen> {
                                             Text(
                                               'Last Logged in',
                                               style: TextStyle(
-                                                  fontSize: 9,
+                                                  fontSize: 10,
                                                   color: Color(0xFF595D64),
                                                   fontWeight: FontWeight.w400,
                                                   fontFamily: 'Roboto'),
@@ -454,7 +454,7 @@ class _AccountScreenState extends State<AccountScreen> {
                                             Text(
                                               _lastLoggedIn.toString(),
                                               style: TextStyle(
-                                                  fontSize: 9,
+                                                  fontSize: 10,
                                                   color: Color(0xFF595D64),
                                                   fontWeight: FontWeight.w400,
                                                   fontFamily: 'Roboto'),
@@ -479,7 +479,7 @@ class _AccountScreenState extends State<AccountScreen> {
                                         keyboardType: TextInputType.text,
                                         controller: firstNameController,
                                         style: TextStyle(
-                                            fontSize: 10,
+                                            fontSize: 11,
                                             color: Color(0xFF595D64),
                                             fontWeight: FontWeight.w400,
                                             fontFamily: 'Roboto'),
@@ -511,7 +511,7 @@ class _AccountScreenState extends State<AccountScreen> {
                                             filled: true,
                                             fillColor: Color(0xFFFFFFFF),
                                             errorStyle: TextStyle(
-                                                fontSize: 10,
+                                                fontSize: 11,
                                                 color: Color(0xFFF12A32),
                                                 fontWeight: FontWeight.w400,
                                                 fontFamily: 'Roboto')),
@@ -537,7 +537,7 @@ class _AccountScreenState extends State<AccountScreen> {
                                         keyboardType: TextInputType.text,
                                         controller: lastNameController,
                                         style: TextStyle(
-                                            fontSize: 10,
+                                            fontSize: 11,
                                             color: Color(0xFF595D64),
                                             fontWeight: FontWeight.w400,
                                             fontFamily: 'Roboto'),
@@ -569,7 +569,7 @@ class _AccountScreenState extends State<AccountScreen> {
                                             filled: true,
                                             fillColor: Color(0xFFFFFFFF),
                                             errorStyle: TextStyle(
-                                                fontSize: 10,
+                                                fontSize: 11,
                                                 color: Color(0xFFF12A32),
                                                 fontWeight: FontWeight.w400,
                                                 fontFamily: 'Roboto')),
@@ -598,7 +598,7 @@ class _AccountScreenState extends State<AccountScreen> {
                                   keyboardType: TextInputType.text,
                                   controller: usernameController,
                                   style: TextStyle(
-                                      fontSize: 10,
+                                      fontSize: 11,
                                       color: Color(0xFFBAC1CC),
                                       fontWeight: FontWeight.w400,
                                       fontFamily: 'Roboto'),
@@ -628,7 +628,7 @@ class _AccountScreenState extends State<AccountScreen> {
                                       filled: true,
                                       fillColor: Color(0xFFFFFFFF),
                                       errorStyle: TextStyle(
-                                          fontSize: 10,
+                                          fontSize: 11,
                                           color: Color(0xFFF12A32),
                                           fontWeight: FontWeight.w400,
                                           fontFamily: 'Roboto')),
@@ -643,7 +643,7 @@ class _AccountScreenState extends State<AccountScreen> {
                               Text(
                                 'Username related to SSO account',
                                 style: TextStyle(
-                                    fontSize: 8,
+                                    fontSize: 9,
                                     color: Color(0xFFBAC1CC),
                                     fontWeight: FontWeight.w400,
                                     fontFamily: 'Roboto'),
@@ -656,7 +656,7 @@ class _AccountScreenState extends State<AccountScreen> {
                                   keyboardType: TextInputType.text,
                                   controller: userIdentityNumberController,
                                   style: TextStyle(
-                                      fontSize: 10,
+                                      fontSize: 11,
                                       color: Color(0xFFBAC1CC),
                                       fontWeight: FontWeight.w400,
                                       fontFamily: 'Roboto'),
@@ -686,7 +686,7 @@ class _AccountScreenState extends State<AccountScreen> {
                                       filled: true,
                                       fillColor: Color(0xFFFFFFFF),
                                       errorStyle: TextStyle(
-                                          fontSize: 10,
+                                          fontSize: 11,
                                           color: Color(0xFFF12A32),
                                           fontWeight: FontWeight.w400,
                                           fontFamily: 'Roboto')),
@@ -702,7 +702,7 @@ class _AccountScreenState extends State<AccountScreen> {
                               Text(
                                 'Unique user identity number',
                                 style: TextStyle(
-                                    fontSize: 8,
+                                    fontSize: 9,
                                     color: Color(0xFFBAC1CC),
                                     fontWeight: FontWeight.w400,
                                     fontFamily: 'Roboto'),
@@ -714,7 +714,7 @@ class _AccountScreenState extends State<AccountScreen> {
                                   keyboardType: TextInputType.emailAddress,
                                   controller: emailController,
                                   style: TextStyle(
-                                      fontSize: 10,
+                                      fontSize: 11,
                                       color: Color(0xFF595D64),
                                       fontWeight: FontWeight.w400,
                                       fontFamily: 'Roboto'),
@@ -744,7 +744,7 @@ class _AccountScreenState extends State<AccountScreen> {
                                       filled: true,
                                       fillColor: Color(0xFFFFFFFF),
                                       errorStyle: TextStyle(
-                                          fontSize: 10,
+                                          fontSize: 11,
                                           color: Color(0xFFF12A32),
                                           fontWeight: FontWeight.w400,
                                           fontFamily: 'Roboto')),
@@ -765,7 +765,7 @@ class _AccountScreenState extends State<AccountScreen> {
                               Text(
                                 'Work email. Notification and information would send to this email',
                                 style: TextStyle(
-                                    fontSize: 8,
+                                    fontSize: 9,
                                     color: Color(0xFFBAC1CC),
                                     fontWeight: FontWeight.w400,
                                     fontFamily: 'Roboto'),
@@ -778,7 +778,7 @@ class _AccountScreenState extends State<AccountScreen> {
                                   controller: personalAddressController,
                                   maxLines: 5,
                                   style: TextStyle(
-                                      fontSize: 10,
+                                      fontSize: 11,
                                       color: Color(0xFF595D64),
                                       fontWeight: FontWeight.w400,
                                       fontFamily: 'Roboto'),
@@ -808,7 +808,7 @@ class _AccountScreenState extends State<AccountScreen> {
                                       filled: true,
                                       fillColor: Color(0xFFFFFFFF),
                                       errorStyle: TextStyle(
-                                          fontSize: 10,
+                                          fontSize: 11,
                                           color: Color(0xFFF12A32),
                                           fontWeight: FontWeight.w400,
                                           fontFamily: 'Roboto')),
@@ -830,7 +830,7 @@ class _AccountScreenState extends State<AccountScreen> {
                               Text(
                                 'Additional information related to user located',
                                 style: TextStyle(
-                                    fontSize: 8,
+                                    fontSize: 9,
                                     color: Color(0xFFBAC1CC),
                                     fontWeight: FontWeight.w400,
                                     fontFamily: 'Roboto'),
@@ -852,7 +852,7 @@ class _AccountScreenState extends State<AccountScreen> {
                                   child: Text(
                                     'Save changes',
                                     style: TextStyle(
-                                        fontSize: 14,
+                                        fontSize: 15,
                                         color: Color(0xFFFFFFFF),
                                         fontWeight: FontWeight.w700,
                                         fontFamily: 'Roboto'),
@@ -893,7 +893,7 @@ class _AccountScreenState extends State<AccountScreen> {
                                   child: Text(
                                     'Log out',
                                     style: TextStyle(
-                                        fontSize: 14,
+                                        fontSize: 15,
                                         color: Color(0xFFF12A32),
                                         fontWeight: FontWeight.w700,
                                         fontFamily: 'Roboto'),

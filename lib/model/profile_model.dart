@@ -76,7 +76,7 @@ class Data {
     jobTitle = json['job_title'];
     department = json['department'];
     division = json['division'];
-    level = json['level'];
+    level = json['level'].toString();
     avatar = json['avatar'];
     lastLoggedIn = json['last_logged_in'];
     emailVerifiedAt = json['email_verified_at'];

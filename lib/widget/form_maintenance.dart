@@ -36,18 +36,19 @@ class _FormMaintenanceState extends State<FormMaintenance> {
   String _avatarReviewer;
   String _firstnameReviewer;
   String _lastnameReviewer;
-  String _levelReviewer;
+  var _levelReviewer;
   String _userPositionReviewer;
   String _idApprover;
   String _usernameApprover;
   String _avatarApprover;
   String _firstnameApprover;
   String _lastnameApprover;
-  String _levelApprover;
+  var _levelApprover;
   String _userPositionApprover;
   String _description;
   int _currentBudget = 0;
   int _requestAmount = 0;
+  var _temp;
   final _formKey = GlobalKey<FormState>();
   final _formKeyAmount = GlobalKey<FormState>();
   bool _value = false;
@@ -124,7 +125,7 @@ class _FormMaintenanceState extends State<FormMaintenance> {
   void _postStoreMaintenance() async {
     Map body = {
       'monitoring_id': _idMonitoring,
-      'requested_amount': _requestAmount,
+      'requested_amount': _temp,
       'requested_description': _description ?? '',
       'maintenance_option': 'logistic_support',
       'requested_to': _idReviewer,
@@ -134,7 +135,7 @@ class _FormMaintenanceState extends State<FormMaintenance> {
     print(body);
     await postStoreMaintenance(body).then((value) {
       EasyLoading.dismiss();
-      print(value.data);
+      print(value.status);
       if (value.data != null) {
         EasyLoading.showSuccess('Sukses');
         Navigator.pop(context);
@@ -259,6 +260,7 @@ class _FormMaintenanceState extends State<FormMaintenance> {
                           .replaceAll('IDR ', '')
                           .replaceAll('.', '');
                       _requestAmount = int.parse(temp);
+                      _temp = temp;
                       if (!_formKeyAmount.currentState.validate() ||
                           !_formKey.currentState.validate() ||
                           _file == null) {
@@ -269,7 +271,7 @@ class _FormMaintenanceState extends State<FormMaintenance> {
                           _file != null) {
                         _submitRequest = true;
                       }
-                      print(_file);
+                      print(_requestAmount);
                     });
                   },
 
@@ -592,7 +594,6 @@ class _FormMaintenanceState extends State<FormMaintenance> {
                             fontWeight: FontWeight.w400,
                             fontFamily: 'Roboto'),
                       ),
-                      Divider(color: Colors.white, height: 15),
                     ],
                   ),
                 ),
@@ -680,19 +681,25 @@ class _FormMaintenanceState extends State<FormMaintenance> {
                                       : Container(
                                           padding:
                                               EdgeInsets.symmetric(vertical: 5),
-                                          width: MediaQuery.of(context)
-                                                  .size
-                                                  .width /
-                                              12,
-                                          child: CircleAvatar(
-                                              backgroundColor:
-                                                  Color(0xFFDDDDDD),
-                                              child: _avatarReviewer == null
-                                                  ? Image.asset(
-                                                      'assets/images/placeholder.png',
-                                                      width: 20)
-                                                  : Image.network(
-                                                      BASE_URL_STORAGE + _avatarReviewer)),
+                                          child: ClipRRect(
+                                            borderRadius: BorderRadius.all(
+                                              Radius.circular(50),
+                                            ),
+                                            child: _avatarReviewer == null
+                                                ? Image.asset(
+                                                    'assets/images/placeholder.png',
+                                                    width: 30,
+                                                    height: 30,
+                                                    fit: BoxFit.cover,
+                                                  )
+                                                : Image.network(
+                                                    BASE_URL_STORAGE +
+                                                        _avatarReviewer,
+                                                    width: 30,
+                                                    height: 30,
+                                                    fit: BoxFit.cover,
+                                                  ),
+                                          ),
                                         ),
                                   SizedBox(width: 5),
                                   Container(
@@ -786,19 +793,25 @@ class _FormMaintenanceState extends State<FormMaintenance> {
                                       : Container(
                                           padding:
                                               EdgeInsets.symmetric(vertical: 5),
-                                          width: MediaQuery.of(context)
-                                                  .size
-                                                  .width /
-                                              12,
-                                          child: CircleAvatar(
-                                              backgroundColor:
-                                                  Color(0xFFDDDDDD),
-                                              child: _avatarApprover == null
-                                                  ? Image.asset(
-                                                      'assets/images/placeholder.png',
-                                                      width: 20)
-                                                  : Image.network(
-                                                  BASE_URL_STORAGE + _avatarApprover)),
+                                          child: ClipRRect(
+                                            borderRadius: BorderRadius.all(
+                                              Radius.circular(50),
+                                            ),
+                                            child: _avatarApprover == null
+                                                ? Image.asset(
+                                                    'assets/images/placeholder.png',
+                                                    width: 30,
+                                                    height: 30,
+                                                    fit: BoxFit.cover,
+                                                  )
+                                                : Image.network(
+                                                    BASE_URL_STORAGE +
+                                                        _avatarApprover,
+                                                    width: 30,
+                                                    height: 30,
+                                                    fit: BoxFit.cover,
+                                                  ),
+                                          ),
                                         ),
                                   SizedBox(width: 5),
                                   Container(

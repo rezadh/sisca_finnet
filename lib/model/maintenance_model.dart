@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sisca_finnet/util/const.dart';
 import 'package:http/http.dart' as http;
@@ -125,7 +126,7 @@ class UserRequestedTo {
     avatar = json['avatar'];
     firstname = json['first_name'];
     lastname = json['last_name'];
-    level = json['level'];
+    level = json['level'].toString();
     userPosition = json['user_position'] != null
         ? new UserPosition.fromJson(json['user_position'])
         : null;
@@ -154,7 +155,7 @@ class UserReviewedTo {
     avatar = json['avatar'];
     firstname = json['first_name'];
     lastname = json['last_name'];
-    level = json['level'];
+    level = json['level'].toString();
     userPosition = json['user_position'] != null
         ? new UserPosition.fromJson(json['user_position'])
         : null;
@@ -184,7 +185,7 @@ class UserRequestedBy {
     avatar = json['avatar'];
     firstname = json['first_name'];
     lastname = json['last_name'];
-    level = json['level'];
+    level = json['level'].toString();
     userPosition = json['user_position'] != null
         ? new UserPosition.fromJson(json['user_position'])
         : null;
@@ -317,14 +318,14 @@ class DataMaintenance {
     requestedBy = json['requested_by'];
     requestedAmount = json['requested_amount'];
     requestedDescription = json['requested_description'];
-    requestedLevelSnapshot = json['requested_level_snapshot'];
+    requestedLevelSnapshot = json['requested_level_snapshot'].toString();
     requestedPositionIdSnapshot = json['requested_position_id_snapshot'];
     requestedEvidence = json['requested_evidence'];
     reviewedTo = json['reviewed_to'];
     requestedTo = json['requested_to'];
-    reviewedLevelSnapshot = json['reviewed_level_snapshot'];
+    reviewedLevelSnapshot = json['reviewed_level_snapshot'].toString();
     reviewedPositionIdSnapshot = json['reviewed_position_id_snapshot'];
-    respondedLevelSnapshot = json['responded_level_snapshot'];
+    respondedLevelSnapshot = json['responded_level_snapshot'].toString();
     respondedPositionIdSnapshot = json['responded_position_id_snapshot'];
     id = json['id'];
     updatedAt = json['updated_at'];
@@ -408,7 +409,7 @@ class UserCurrentProgress {
   String jobTitle;
   String department;
   String division;
-  String level;
+  int level;
   String avatar;
   String lastLoggedIn;
   String emailVerifiedAt;
@@ -484,7 +485,7 @@ class UserCurrentProgress {
 Future<List<Maintenance>> postRequestMaintenance() async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
   String url = BASE_URL +
-      'maintenances?page=1&per_page=50&is_requested=1&with[]=monitoring&with[]=user_requested_by.user_position&with[]=user_reviewed_to.user_position&with[]=user_requested_to&with[]=user_requested_to.user_position&with[]=monitoring.asset';
+      'maintenances?page=1&per_page=500&is_requested=1&with[]=monitoring&with[]=user_requested_by.user_position&with[]=user_reviewed_to.user_position&with[]=user_requested_to&with[]=user_requested_to.user_position&with[]=monitoring.asset';
   var token = prefs.getString('token');
   Map<String, String> h = {
     'Content-Type': 'application/json',
@@ -527,6 +528,7 @@ Future<PostMaintenance> postStoreMaintenance(Map body) async {
     print(response.body);
     return PostMaintenance.fromJson(json.decode(response.body));
   }else{
+    EasyLoading.showError('Something Wrong');
     print(response.body);
     return null;
   }

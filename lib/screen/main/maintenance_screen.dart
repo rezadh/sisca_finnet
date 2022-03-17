@@ -4,6 +4,7 @@ import 'package:intl/intl.dart';
 import 'package:sisca_finnet/model/maintenance_model.dart';
 import 'package:sisca_finnet/screen/detail/maintenance_detail_screen.dart';
 import 'package:sisca_finnet/screen/main/test_screen.dart';
+import 'package:sisca_finnet/util/const.dart';
 import 'package:sisca_finnet/widget/form_maintenance.dart';
 
 class MaintenanceScreen extends StatefulWidget {
@@ -11,10 +12,8 @@ class MaintenanceScreen extends StatefulWidget {
   _MaintenanceScreenState createState() => _MaintenanceScreenState();
 }
 
-enum BottomIcons { Asset, Maintenance, Voucher, Account }
 
 class _MaintenanceScreenState extends State<MaintenanceScreen> {
-  BottomIcons bottomIcons = BottomIcons.Maintenance;
   final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey =
       new GlobalKey<RefreshIndicatorState>();
 
@@ -40,7 +39,7 @@ class _MaintenanceScreenState extends State<MaintenanceScreen> {
         title: Text(
           'Maintenance request',
           style: TextStyle(
-              fontSize: 18,
+              fontSize: 19,
               color: Colors.white,
               fontWeight: FontWeight.w700,
               fontFamily: 'Roboto'),
@@ -78,7 +77,6 @@ class _MaintenanceScreenState extends State<MaintenanceScreen> {
                                 builder: (context, snapshot) {
                                   if (snapshot.hasData) {
                                     List<Maintenance> data = snapshot.data;
-                                    print(data);
                                     return data.isNotEmpty
                                         ? ListView.builder(
                                             itemCount: data.length,
@@ -86,6 +84,9 @@ class _MaintenanceScreenState extends State<MaintenanceScreen> {
                                                 NeverScrollableScrollPhysics(),
                                             shrinkWrap: true,
                                             itemBuilder: (context, index) {
+                                              for(int i = 0; i < data.length; i++){
+                                                print(data[i].requestedAmount);
+                                              }
                                               return GestureDetector(
                                                 onTap: () {
                                                   Navigator.push(
@@ -152,16 +153,7 @@ class _MaintenanceScreenState extends State<MaintenanceScreen> {
                                                               children: [
                                                                 Text(
                                                                   '${data[index].id.substring(data[index].id.length - 4).toUpperCase().toString()} - ',
-                                                                  style: TextStyle(
-                                                                      fontSize:
-                                                                          10,
-                                                                      color: Color(
-                                                                          0xFF595D64),
-                                                                      fontWeight:
-                                                                          FontWeight
-                                                                              .w500,
-                                                                      fontFamily:
-                                                                          'Roboto'),
+                                                                  style: TITLE,
                                                                 ),
                                                                 Text(
                                                                   data[index]
@@ -169,7 +161,7 @@ class _MaintenanceScreenState extends State<MaintenanceScreen> {
                                                                       .username,
                                                                   style: TextStyle(
                                                                       fontSize:
-                                                                          10,
+                                                                          11,
                                                                       color: Color(
                                                                           0xFF595D64),
                                                                       fontWeight:
@@ -186,7 +178,7 @@ class _MaintenanceScreenState extends State<MaintenanceScreen> {
                                                                   .monitoringMaintenance
                                                                   .name,
                                                               style: TextStyle(
-                                                                  fontSize: 10,
+                                                                  fontSize: 11,
                                                                   color: Color(
                                                                       0xFF595D64),
                                                                   fontWeight:
@@ -201,7 +193,7 @@ class _MaintenanceScreenState extends State<MaintenanceScreen> {
                                                                   .monitoringMaintenance
                                                                   .serialNumber,
                                                               style: TextStyle(
-                                                                  fontSize: 8,
+                                                                  fontSize: 9,
                                                                   color: Color(
                                                                       0xFF595D64),
                                                                   fontWeight:
@@ -219,7 +211,7 @@ class _MaintenanceScreenState extends State<MaintenanceScreen> {
                                                                   .status
                                                                   .name,
                                                               style: TextStyle(
-                                                                  fontSize: 10,
+                                                                  fontSize: 11,
                                                                   color: data[index]
                                                                               .status
                                                                               .color ==
@@ -252,7 +244,7 @@ class _MaintenanceScreenState extends State<MaintenanceScreen> {
                                                                       .requestedAmount)
                                                                   .toString(),
                                                               style: TextStyle(
-                                                                  fontSize: 8,
+                                                                  fontSize: 9,
                                                                   color: Color(
                                                                       0xFF595D64),
                                                                   fontWeight:
@@ -275,7 +267,7 @@ class _MaintenanceScreenState extends State<MaintenanceScreen> {
                                             margin: EdgeInsets.only(
                                                 top: size.height / 3),
                                             width: size.width,
-                                            height: size.height,
+                                            height: size.height / 2,
                                             child: Center(
                                               child: Column(
                                                 children: [
@@ -284,7 +276,7 @@ class _MaintenanceScreenState extends State<MaintenanceScreen> {
                                                   Text(
                                                     'No Requests yet..',
                                                     style: TextStyle(
-                                                        fontSize: 12,
+                                                        fontSize: 13,
                                                         color:
                                                             Color(0xFF595D64),
                                                         fontWeight:

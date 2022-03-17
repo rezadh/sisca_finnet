@@ -11,6 +11,7 @@ Widget customDropDownUserVp(BuildContext context, UserVp item) {
 
   return Container(
     width: MediaQuery.of(context).size.width,
+    padding: EdgeInsets.only(top: 8),
     child: (item.firstName == null)
         ? ListTile(
             contentPadding: EdgeInsets.all(0),
@@ -23,14 +24,27 @@ Widget customDropDownUserVp(BuildContext context, UserVp item) {
               // mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 Container(
-                  padding: EdgeInsets.symmetric(vertical: 5),
-                  width: MediaQuery.of(context).size.width / 12,
-                  child: CircleAvatar(
-                      backgroundColor: Color(0xFFDDDDDD),
-                      child: item.avatar == null
-                          ? Image.asset('assets/images/placeholder.png',
-                              width: 20)
-                          : Image.network(BASE_URL_STORAGE + item.avatar)),
+                  padding: EdgeInsets.symmetric(vertical: 5, horizontal: 5),
+                  height: 45,
+                  width: 45,
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.all(
+                      Radius.circular(50),
+                    ),
+                    child: item.avatar == null
+                        ? Image.asset(
+                            'assets/images/placeholder.png',
+                            width: 20,
+                            height: 20,
+                            fit: BoxFit.cover,
+                          )
+                        : Image.network(
+                            BASE_URL_STORAGE + item.avatar,
+                            width: 20,
+                            height: 20,
+                            fit: BoxFit.cover,
+                          ),
+                  ),
                 ),
                 SizedBox(width: 5),
                 Container(
@@ -116,7 +130,8 @@ Widget customPopupItemBuilderUserVp(
         // mainAxisAlignment: MainAxisAlignment.start,
         children: [
           Container(
-              width: MediaQuery.of(context).size.width / 11,
+              height: 45,
+              width: 45,
               decoration: BoxDecoration(
                 color: Color(0xFFDDDDDD),
                 border: Border.all(color: Color(0xFFDDDDDD)),
@@ -127,8 +142,17 @@ Widget customPopupItemBuilderUserVp(
                   Radius.circular(50),
                 ),
                 child: item.avatar == null
-                    ? Image.asset('assets/images/placeholder.png', width: 25)
-                    : Image.network(BASE_URL_STORAGE + item.avatar),
+                    ? Image.asset(
+                        'assets/images/placeholder.png',
+                        width: 30,
+                        height: 30,
+                      )
+                    : Image.network(
+                        BASE_URL_STORAGE + item.avatar,
+                        width: 25,
+                        height: 25,
+                        fit: BoxFit.cover,
+                      ),
               )),
           SizedBox(width: 5),
           Container(

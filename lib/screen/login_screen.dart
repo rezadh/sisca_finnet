@@ -35,11 +35,11 @@ class _LoginScreenState extends State<LoginScreen> {
         builder: (context) => AlertDialog(
           title: Text(
             title,
-            style: TextStyle(fontSize: 18),
+            style: TextStyle(fontSize: 19),
           ),
           content: Text(
             message,
-            style: TextStyle(fontSize: 14),
+            style: TextStyle(fontSize: 15),
             // textAlign: TextAlign.center,
           ),
           actions: [
@@ -72,6 +72,7 @@ class _LoginScreenState extends State<LoginScreen> {
           prefs.setString('position', value.user.userPosition.name);
           prefs.setString('division', value.user.userPosition.userDivision.name);
           prefs.setString('directorate', value.user.userPosition.userDivision.userDirectorate.name);
+          prefs.setString('level', value.user.level);
           // prefs.setString('method', _method);
           // prefs.setString('username', _value == 0 ? nikController.text : emailController.text);
           // prefs.setString('password', passwordController.text);
@@ -173,7 +174,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             Text(
                               'Welcome',
                               style: TextStyle(
-                                  fontSize: 24,
+                                  fontSize: 25,
                                   color: Color(0xFF595D64),
                                   fontWeight: FontWeight.bold,
                                   fontFamily: 'Roboto'),
@@ -200,7 +201,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                       'SSO (NIK)',
                                       textAlign: TextAlign.center,
                                       style: TextStyle(
-                                          fontSize: 12,
+                                          fontSize: 13,
                                           color: Color(0xFFFFFFFF),
                                           fontWeight: FontWeight.w500,
                                           fontFamily: 'Roboto'),
@@ -229,7 +230,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                         'USER ACCOUNT',
                                         textAlign: TextAlign.center,
                                         style: TextStyle(
-                                            fontSize: 12,
+                                            fontSize: 13,
                                             color: Color(0xFFF12A32),
                                             fontWeight: FontWeight.w500,
                                             fontFamily: 'Roboto'),
@@ -267,7 +268,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                         'SSO (NIK)',
                                         textAlign: TextAlign.center,
                                         style: TextStyle(
-                                            fontSize: 12,
+                                            fontSize: 13,
                                             color: Color(0xFFF12A32),
                                             fontWeight: FontWeight.w500,
                                             fontFamily: 'Roboto'),
@@ -290,7 +291,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                       'USER ACCOUNT',
                                       textAlign: TextAlign.center,
                                       style: TextStyle(
-                                          fontSize: 12,
+                                          fontSize: 13,
                                           color: Color(0xFFFFFFFF),
                                           fontWeight: FontWeight.w500,
                                           fontFamily: 'Roboto'),
@@ -418,7 +419,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         child: Text(
                           'Log in',
                           style: TextStyle(
-                              fontSize: 14,
+                              fontSize: 15,
                               color: Color(0xFFFFFFFF),
                               fontWeight: FontWeight.w700,
                               fontFamily: 'Roboto'),
@@ -436,7 +437,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     Text(
                       'Asset Management System - PT Finnet Indonesia',
                       style: TextStyle(
-                          fontSize: 14,
+                          fontSize: 15,
                           color: Color(0xFF595D64),
                           fontWeight: FontWeight.w700,
                           fontFamily: 'Roboto'),
@@ -448,7 +449,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         Text(
                           'Powered by',
                           style: TextStyle(
-                              fontSize: 10,
+                              fontSize: 11,
                               color: Color(0xFF595D64),
                               fontWeight: FontWeight.w500,
                               fontFamily: 'Roboto'),

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import 'package:sisca_finnet/model/asset_model.dart';
+import 'package:sisca_finnet/util/const.dart';
 
 class AssetScreen extends StatefulWidget {
   @override
@@ -35,7 +36,7 @@ class _AssetScreenState extends State<AssetScreen> {
         title: Text(
           'Asset Information',
           style: TextStyle(
-              fontSize: 18,
+              fontSize: 19,
               color: Colors.white,
               fontWeight: FontWeight.w700,
               fontFamily: 'Roboto'),
@@ -94,17 +95,13 @@ class _AssetScreenState extends State<AssetScreen> {
                                             children: [
                                               Text(
                                                 data[index].name,
-                                                style: TextStyle(
-                                                    fontSize: 10,
-                                                    color: Color(0xFF595D64),
-                                                    fontWeight: FontWeight.w400,
-                                                    fontFamily: 'Roboto'),
+                                                style: TITLE,
                                               ),
                                               SizedBox(height: 5),
                                               Text(
                                                 data[index].serialNumber,
                                                 style: TextStyle(
-                                                    fontSize: 10,
+                                                    fontSize: 11,
                                                     color: Color(0xFF595D64),
                                                     fontWeight: FontWeight.w300,
                                                     fontFamily: 'Roboto'),
@@ -115,7 +112,7 @@ class _AssetScreenState extends State<AssetScreen> {
                                                   Text(
                                                     'Maintenance budget : ',
                                                     style: TextStyle(
-                                                        fontSize: 8,
+                                                        fontSize: 9,
                                                         color: Color(0xFF595D64),
                                                         fontWeight:
                                                             FontWeight.w500,
@@ -131,7 +128,7 @@ class _AssetScreenState extends State<AssetScreen> {
                                                         .toString(),
                                                     // 'IDR 18.981.000',
                                                     style: TextStyle(
-                                                        fontSize: 8,
+                                                        fontSize: 9,
                                                         color: Color(0xFF595D64),
                                                         fontWeight:
                                                             FontWeight.w400,
