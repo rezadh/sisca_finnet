@@ -174,7 +174,7 @@ class Data {
   }
 }
 
-class DataBawah {
+class DataBawahVoucher {
   String id;
   String voucherId;
   String requestedBy;
@@ -202,7 +202,7 @@ class DataBawah {
   UserCurrentProgress userRequestedBy;
   UserCurrentProgress userReviewedTo;
 
-  DataBawah(
+  DataBawahVoucher(
       {this.id,
       this.voucherId,
       this.requestedBy,
@@ -230,7 +230,7 @@ class DataBawah {
       this.userRequestedBy,
       this.userReviewedTo});
 
-  DataBawah.fromJson(Map<String, dynamic> json) {
+  DataBawahVoucher.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     voucherId = json['voucher_id'];
     requestedBy = json['requested_by'];
@@ -474,7 +474,7 @@ class VoucherData {
   }
 }
 
-Future<List<DataBawah>> getRequestVoucher() async {
+Future<List<DataBawahVoucher>> getRequestVoucher() async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
   String url = BASE_URL +
       'voucher-requests?page=1&per_page=500&q=&is_requester=1&with[]=voucher&with[]=user_requested_to&with[]=user_requested_by';
@@ -488,7 +488,7 @@ Future<List<DataBawah>> getRequestVoucher() async {
     print(response.reasonPhrase);
     Map responseJson = json.decode(response.body)['data'];
     List data = responseJson['data'];
-    List<DataBawah> daftar = data.map((e) => DataBawah.fromJson(e)).toList();
+    List<DataBawahVoucher> daftar = data.map((e) => DataBawahVoucher.fromJson(e)).toList();
     return daftar;
   } else {
     print(response.body);
@@ -506,8 +506,7 @@ Future<Voucher> postRequestStoreVoucher(Map body) async {
   };
   var request = http.MultipartRequest('POST', Uri.parse(url));
   request.headers.addAll(h);
-  request.fields['requested_description'] =
-      body['requested_description'].toString();
+  request.fields['requested_description'] = body['requested_description'].toString();
   if (body['requested_to'] != null) {
     request.fields['requested_to'] = body['requested_to'].toString();
   }
