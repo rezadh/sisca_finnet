@@ -54,7 +54,7 @@ class _SplashScreenState extends State<SplashScreen> {
           child: Column(
             children: [
               SizedBox(height: MediaQuery.of(context).size.height / 2),
-              Image.asset('assets/images/logo.png'),
+              Image.asset('assets/images/logo.png', width: 111, height: 65, color: Colors.white,),
               SizedBox(height: 194),
               Text(
                 'Asset Management System',

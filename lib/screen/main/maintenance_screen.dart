@@ -56,6 +56,8 @@ class _MaintenanceScreenState extends State<MaintenanceScreen> {
   bool _value = false;
   bool _visible = false;
   bool _submitRequest = false;
+  bool _isInternetOn = true;
+  final _scrollController = ScrollController();
 
   void pickImage() async {
     final result = await FilePicker.platform.pickFiles();
@@ -77,7 +79,7 @@ class _MaintenanceScreenState extends State<MaintenanceScreen> {
     }
   }
 
-  Future getConnect() async {
+  Future _isConnected() async {
     var connectivityResult = await (Connectivity().checkConnectivity());
     if (connectivityResult == ConnectivityResult.none) {
       setState(() {
@@ -86,6 +88,20 @@ class _MaintenanceScreenState extends State<MaintenanceScreen> {
     } else {
       setState(() {
         _postStoreMaintenance();
+      });
+    }
+  }
+
+  Future _getConnect() async {
+    var connectivityResult = await (Connectivity().checkConnectivity());
+    if (connectivityResult == ConnectivityResult.none) {
+      setState(() {
+        EasyLoading.showError('No Connection');
+        _isInternetOn = false;
+      });
+    } else {
+      setState(() {
+        _isInternetOn = true;
       });
     }
   }
@@ -123,14 +139,25 @@ class _MaintenanceScreenState extends State<MaintenanceScreen> {
   void initState() {
     super.initState();
     setState(() {
-      postRequestMaintenance();
+      _getConnect();
       futureMaintenance = postRequestMaintenance();
     });
   }
 
   Future<void> refreshMaintenance() async {
     // await postRequestMaintenance();
-    await Future.delayed(Duration(seconds: 2));
+    // await Future.delayed(Duration(seconds: 2));
+    var connectivityResult = await (Connectivity().checkConnectivity());
+    if (connectivityResult == ConnectivityResult.none) {
+      setState(() {
+        _isInternetOn = false;
+      });
+    } else {
+      await postRequestMaintenance();
+      setState(() {
+        _isInternetOn = true;
+      });
+    }
     setState(() {
       futureMaintenance = postRequestMaintenance();
     });
@@ -171,266 +198,323 @@ class _MaintenanceScreenState extends State<MaintenanceScreen> {
                 padding: EdgeInsets.only(left: 15, right: 15, top: 100),
                 child: RefreshIndicator(
                   onRefresh: refreshMaintenance,
-                  child: Container(
-                    width: size.width,
-                    height: size.height,
-                    child: FutureBuilder<List<Maintenance>>(
-                      future: postRequestMaintenance(),
-                      builder: (context, snapshot) {
-                        if (snapshot.hasData) {
-                          List<Maintenance> data = snapshot.data;
-                          return data.isNotEmpty
-                              ? ListView.builder(
-                                  itemCount: data.length,
-                                  physics: const BouncingScrollPhysics(
-                                      parent: AlwaysScrollableScrollPhysics()),
-                                  // shrinkWrap: false,
-                                  itemBuilder: (context, index) {
-                                    return GestureDetector(
-                                      onTap: () {
-                                        Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                                builder: (context) =>
-                                                    MaintenanceDetailScreen(
-                                                      id: data[index].id,
-                                                      name: data[index]
-                                                          .monitoringMaintenance
-                                                          .name,
-                                                      serialNumber: data[index]
-                                                          .monitoringMaintenance
-                                                          .serialNumber,
-                                                      requestAmount: data[index]
-                                                          .requestedAmount,
-                                                      statusName: data[index]
-                                                          .status
-                                                          .name,
-                                                      statusColor: data[index]
-                                                          .status
-                                                          .color,
-                                                      description: data[index]
-                                                          .description,
-                                                      evidenceDownload:
-                                                          data[index]
-                                                              .requestEvidence,
-                                                      userRequestAvatar:
-                                                          data[index]
-                                                              .userRequestedBy
-                                                              .avatar,
-                                                      userRequestUsername:
-                                                          data[index]
-                                                              .userRequestedBy
-                                                              .username,
-                                                      userRequestFirstname:
-                                                          data[index]
-                                                              .userRequestedBy
-                                                              .firstname,
-                                                      userRequestLastname:
-                                                          data[index]
-                                                              .userRequestedBy
-                                                              .lastname,
-                                                      userRequestLevel:
-                                                          data[index]
-                                                              .userRequestedBy
-                                                              .level,
-                                                      userRequestPositionName:
-                                                          data[index]
-                                                              .userRequestedBy
-                                                              .userPosition
-                                                              .name,
-                                                      userReviewAvatar:
-                                                          data[index]
-                                                              .userReviewedTo
-                                                              .avatar,
-                                                      userReviewUsername:
-                                                          data[index]
-                                                              .userReviewedTo
-                                                              .username,
-                                                      userReviewFirstname:
-                                                          data[index]
-                                                              .userReviewedTo
-                                                              .firstname,
-                                                      userReviewLastname:
-                                                          data[index]
-                                                              .userReviewedTo
-                                                              .lastname,
-                                                      userReviewLevel:
-                                                          data[index]
-                                                              .userReviewedTo
-                                                              .level,
-                                                      userReviewPositionName:
-                                                          data[index]
-                                                              .userReviewedTo
-                                                              .userPosition
-                                                              .name,
-                                                      userApproveAvatar:
-                                                          data[index]
-                                                              .userRequestedTo
-                                                              .avatar,
-                                                      userApproveUsername:
-                                                          data[index]
-                                                              .userRequestedTo
-                                                              .username,
-                                                      userApproveFirstname:
-                                                          data[index]
-                                                              .userRequestedTo
-                                                              .firstname,
-                                                      userApproveLastname:
-                                                          data[index]
-                                                              .userRequestedTo
-                                                              .lastname,
-                                                      userApproveLevel:
-                                                          data[index]
-                                                              .userRequestedTo
-                                                              .level,
-                                                      userApprovePositionName:
-                                                          data[index]
-                                                              .userRequestedTo
-                                                              .userPosition
-                                                              .name,
-                                                    )));
-                                      },
-                                      child: Card(
-                                        elevation: 1,
-                                        child: Container(
-                                          padding: EdgeInsets.symmetric(
-                                              horizontal: 15, vertical: 15),
-                                          width: size.width,
-                                          child: Row(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceBetween,
-                                            children: [
-                                              Column(
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.start,
-                                                children: [
-                                                  Row(
-                                                    children: [
-                                                      Text(
-                                                        '${data[index].id.substring(data[index].id.length - 4).toUpperCase().toString()} - ',
-                                                        style: TITLE,
-                                                      ),
-                                                      Text(
-                                                        data[index]
-                                                            .userRequestedBy
-                                                            .username,
-                                                        style: TextStyle(
-                                                            fontSize: 11,
-                                                            color: Color(
-                                                                0xFF595D64),
-                                                            fontWeight:
-                                                                FontWeight.w500,
-                                                            fontFamily:
-                                                                'Roboto'),
-                                                      ),
-                                                    ],
-                                                  ),
-                                                  SizedBox(height: 8),
-                                                  Text(
-                                                    data[index]
-                                                        .monitoringMaintenance
-                                                        .name,
-                                                    style: TextStyle(
-                                                        fontSize: 11,
-                                                        color:
-                                                            Color(0xFF595D64),
-                                                        fontWeight:
-                                                            FontWeight.w500,
-                                                        fontFamily: 'Roboto'),
-                                                  ),
-                                                  SizedBox(height: 5),
-                                                  Text(
-                                                    data[index]
-                                                        .monitoringMaintenance
-                                                        .serialNumber,
-                                                    style: TextStyle(
-                                                        fontSize: 9,
-                                                        color:
-                                                            Color(0xFF595D64),
-                                                        fontWeight:
-                                                            FontWeight.w300,
-                                                        fontFamily: 'Roboto'),
-                                                  ),
-                                                ],
-                                              ),
-                                              Column(
-                                                children: [
-                                                  Text(
-                                                    data[index].status.name,
-                                                    style: TextStyle(
-                                                        fontSize: 11,
-                                                        color: data[index]
+                  child: _isInternetOn
+                      ? Container(
+                          width: size.width,
+                          height: size.height,
+                          child: FutureBuilder<List<Maintenance>>(
+                            future: postRequestMaintenance(),
+                            builder: (context, snapshot) {
+                              if (snapshot.hasData) {
+                                List<Maintenance> data = snapshot.data;
+                                return data.isNotEmpty
+                                    ? ListView.builder(
+                                        itemCount: data.length,
+                                        physics: const BouncingScrollPhysics(
+                                            parent:
+                                                AlwaysScrollableScrollPhysics()),
+                                        // shrinkWrap: false,
+                                        itemBuilder: (context, index) {
+                                          return GestureDetector(
+                                            onTap: () {
+                                              Navigator.push(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                      builder: (context) =>
+                                                          MaintenanceDetailScreen(
+                                                            id: data[index].id,
+                                                            name: data[index]
+                                                                .monitoringMaintenance
+                                                                .name,
+                                                            serialNumber: data[
+                                                                    index]
+                                                                .monitoringMaintenance
+                                                                .serialNumber,
+                                                            requestAmount: data[
+                                                                    index]
+                                                                .requestedAmount,
+                                                            statusName:
+                                                                data[index]
                                                                     .status
-                                                                    .color ==
-                                                                'green'
-                                                            ? Color(0xFF52C829)
-                                                            : data[index]
-                                                                        .status
-                                                                        .color ==
-                                                                    'default'
-                                                                ? Color(
-                                                                    0xFF595D64)
-                                                                : Color(
-                                                                    0xFF598BD7),
-                                                        fontWeight:
-                                                            FontWeight.w300,
-                                                        fontFamily: 'Roboto'),
-                                                  ),
-                                                  SizedBox(height: 8),
-                                                  Text(
-                                                    NumberFormat.currency(
-                                                            locale: 'id',
-                                                            symbol: 'IDR ',
-                                                            decimalDigits: 0)
-                                                        .format(data[index]
-                                                            .requestedAmount)
-                                                        .toString(),
-                                                    style: TextStyle(
-                                                        fontSize: 9,
-                                                        color:
-                                                            Color(0xFF595D64),
-                                                        fontWeight:
-                                                            FontWeight.w400,
-                                                        fontFamily: 'Roboto'),
-                                                  ),
-                                                ],
+                                                                    .name,
+                                                            statusColor:
+                                                                data[index]
+                                                                    .status
+                                                                    .color,
+                                                            description: data[
+                                                                    index]
+                                                                .description,
+                                                            evidenceDownload: data[
+                                                                    index]
+                                                                .requestEvidence,
+                                                            userRequestAvatar:
+                                                                data[index]
+                                                                    .userRequestedBy
+                                                                    .avatar,
+                                                            userRequestUsername:
+                                                                data[index]
+                                                                    .userRequestedBy
+                                                                    .username,
+                                                            userRequestFirstname:
+                                                                data[index]
+                                                                    .userRequestedBy
+                                                                    .firstname,
+                                                            userRequestLastname:
+                                                                data[index]
+                                                                    .userRequestedBy
+                                                                    .lastname,
+                                                            userRequestLevel: data[
+                                                                    index]
+                                                                .userRequestedBy
+                                                                .level,
+                                                            userRequestPositionName:
+                                                                data[index]
+                                                                    .userRequestedBy
+                                                                    .userPosition
+                                                                    .name,
+                                                            userReviewAvatar:
+                                                                data[index]
+                                                                    .userReviewedTo
+                                                                    .avatar,
+                                                            userReviewUsername:
+                                                                data[index]
+                                                                    .userReviewedTo
+                                                                    .username,
+                                                            userReviewFirstname:
+                                                                data[index]
+                                                                    .userReviewedTo
+                                                                    .firstname,
+                                                            userReviewLastname:
+                                                                data[index]
+                                                                    .userReviewedTo
+                                                                    .lastname,
+                                                            userReviewLevel: data[
+                                                                    index]
+                                                                .userReviewedTo
+                                                                .level,
+                                                            userReviewPositionName:
+                                                                data[index]
+                                                                    .userReviewedTo
+                                                                    .userPosition
+                                                                    .name,
+                                                            userApproveAvatar:
+                                                                data[index]
+                                                                    .userRequestedTo
+                                                                    .avatar,
+                                                            userApproveUsername:
+                                                                data[index]
+                                                                    .userRequestedTo
+                                                                    .username,
+                                                            userApproveFirstname:
+                                                                data[index]
+                                                                    .userRequestedTo
+                                                                    .firstname,
+                                                            userApproveLastname:
+                                                                data[index]
+                                                                    .userRequestedTo
+                                                                    .lastname,
+                                                            userApproveLevel: data[
+                                                                    index]
+                                                                .userRequestedTo
+                                                                .level,
+                                                            userApprovePositionName:
+                                                                data[index]
+                                                                    .userRequestedTo
+                                                                    .userPosition
+                                                                    .name,
+                                                          )));
+                                            },
+                                            child: Card(
+                                              elevation: 1,
+                                              child: Container(
+                                                padding: EdgeInsets.symmetric(
+                                                    horizontal: 15,
+                                                    vertical: 15),
+                                                width: size.width,
+                                                child: Row(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment
+                                                          .spaceBetween,
+                                                  children: [
+                                                    Column(
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .start,
+                                                      children: [
+                                                        Row(
+                                                          children: [
+                                                            Text(
+                                                              '${data[index].id.substring(data[index].id.length - 4).toUpperCase().toString()} - ',
+                                                              style: TITLE,
+                                                            ),
+                                                            Text(
+                                                              data[index]
+                                                                  .userRequestedBy
+                                                                  .username,
+                                                              style: TextStyle(
+                                                                  fontSize: 11,
+                                                                  color: Color(
+                                                                      0xFF595D64),
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .w500,
+                                                                  fontFamily:
+                                                                      'Roboto'),
+                                                            ),
+                                                          ],
+                                                        ),
+                                                        SizedBox(height: 8),
+                                                        Text(
+                                                          data[index]
+                                                              .monitoringMaintenance
+                                                              .name,
+                                                          style: TextStyle(
+                                                              fontSize: 11,
+                                                              color: Color(
+                                                                  0xFF595D64),
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w500,
+                                                              fontFamily:
+                                                                  'Roboto'),
+                                                        ),
+                                                        SizedBox(height: 5),
+                                                        Text(
+                                                          data[index]
+                                                              .monitoringMaintenance
+                                                              .serialNumber,
+                                                          style: TextStyle(
+                                                              fontSize: 9,
+                                                              color: Color(
+                                                                  0xFF595D64),
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w300,
+                                                              fontFamily:
+                                                                  'Roboto'),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                    Column(
+                                                      children: [
+                                                        Text(
+                                                          data[index]
+                                                              .status
+                                                              .name,
+                                                          style: TextStyle(
+                                                              fontSize: 11,
+                                                              color: data[index]
+                                                                          .status
+                                                                          .color ==
+                                                                      'green'
+                                                                  ? Color(
+                                                                      0xFF52C829)
+                                                                  : data[index]
+                                                                              .status
+                                                                              .color ==
+                                                                          'default'
+                                                                      ? Color(
+                                                                          0xFF595D64)
+                                                                      : Color(
+                                                                          0xFF598BD7),
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w300,
+                                                              fontFamily:
+                                                                  'Roboto'),
+                                                        ),
+                                                        SizedBox(height: 8),
+                                                        Text(
+                                                          NumberFormat.currency(
+                                                                  locale: 'id',
+                                                                  symbol:
+                                                                      'IDR ',
+                                                                  decimalDigits:
+                                                                      0)
+                                                              .format(data[
+                                                                      index]
+                                                                  .requestedAmount)
+                                                              .toString(),
+                                                          style: TextStyle(
+                                                              fontSize: 9,
+                                                              color: Color(
+                                                                  0xFF595D64),
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w400,
+                                                              fontFamily:
+                                                                  'Roboto'),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                            ),
+                                          );
+                                        })
+                                    : Container(
+                                        padding: EdgeInsets.symmetric(
+                                            horizontal: 50),
+                                        margin: EdgeInsets.only(
+                                            top: size.height / 3),
+                                        width: size.width,
+                                        height: size.height / 2,
+                                        child: Center(
+                                          child: Column(
+                                            children: [
+                                              Image.asset(
+                                                  'assets/images/empty_data.png'),
+                                              Text(
+                                                'No Requests yet..',
+                                                style: TextStyle(
+                                                    fontSize: 13,
+                                                    color: Color(0xFF595D64),
+                                                    fontWeight: FontWeight.w700,
+                                                    fontFamily: 'Roboto'),
                                               ),
                                             ],
                                           ),
                                         ),
-                                      ),
-                                    );
-                                  })
-                              : Container(
-                                  padding: EdgeInsets.symmetric(horizontal: 50),
-                                  margin: EdgeInsets.only(top: size.height / 3),
-                                  width: size.width,
-                                  height: size.height / 2,
-                                  child: Center(
-                                    child: Column(
-                                      children: [
-                                        Image.asset(
-                                            'assets/images/empty_data.png'),
-                                        Text(
-                                          'No Requests yet..',
-                                          style: TextStyle(
-                                              fontSize: 13,
-                                              color: Color(0xFF595D64),
-                                              fontWeight: FontWeight.w700,
-                                              fontFamily: 'Roboto'),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                );
-                        } else {
-                          return Center(child: CircularProgressIndicator());
-                        }
-                      },
-                    ),
-                  ),
+                                      );
+                              } else {
+                                return Container(
+                                    width: size.width,
+                                    height: size.height,
+                                    child: Center(
+                                        child: CircularProgressIndicator()));
+                              }
+                            },
+                          ),
+                        )
+                      : ScrollConfiguration(
+                          behavior: MyBehavior(),
+                          child: SingleChildScrollView(
+                            controller: _scrollController,
+                            physics: AlwaysScrollableScrollPhysics(),
+                            child: Container(
+                              width: size.width,
+                              height: size.height / 1.2,
+                              child: Center(
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Image.asset(
+                                        'assets/images/no_connection.png'),
+                                    Text('No internet connection',
+                                        style: TextStyle(
+                                            fontSize: 13,
+                                            color: Color(0xFF595D64),
+                                            fontWeight: FontWeight.w500,
+                                            fontFamily: 'Roboto')),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
                 ),
               ),
             ),
@@ -567,7 +651,7 @@ class _MaintenanceScreenState extends State<MaintenanceScreen> {
                                           style: TextStyle(fontSize: 10),
                                           keyboardType: TextInputType.number,
                                           controller: amountController,
-                                          onChanged: (value){
+                                          onChanged: (value) {
                                             final temp = amountController.text
                                                 .replaceAll('IDR ', '')
                                                 .replaceAll('.', '');
@@ -1480,7 +1564,7 @@ class _MaintenanceScreenState extends State<MaintenanceScreen> {
                                                 setState(() {
                                                   EasyLoading.show(
                                                       status: 'Loading');
-                                                  getConnect();
+                                                  _isConnected();
                                                 });
                                                 return;
                                               }
@@ -1519,5 +1603,13 @@ class _MaintenanceScreenState extends State<MaintenanceScreen> {
         ),
       ),
     );
+  }
+}
+
+class MyBehavior extends ScrollBehavior {
+  @override
+  Widget buildOverscrollIndicator(
+      BuildContext context, Widget child, ScrollableDetails details) {
+    return child;
   }
 }

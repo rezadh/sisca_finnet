@@ -19,7 +19,7 @@ Widget customDropDownUserVp(BuildContext context, UserVp item) {
             title: Text("No item selected"),
           )
         : Container(
-            width: MediaQuery.of(context).size.width / 2,
+            width: MediaQuery.of(context).size.width,
             child: Row(
               // mainAxisAlignment: MainAxisAlignment.start,
               children: [
@@ -34,76 +34,106 @@ Widget customDropDownUserVp(BuildContext context, UserVp item) {
                     child: item.avatar == null
                         ? Image.asset(
                             'assets/images/placeholder.png',
-                            width: 20,
-                            height: 20,
+                            width: 30,
+                            height: 30,
                             fit: BoxFit.cover,
                           )
                         : Image.network(
                             BASE_URL_STORAGE + item.avatar,
-                            width: 20,
-                            height: 20,
+                            width: 30,
+                            height: 30,
                             fit: BoxFit.cover,
                           ),
                   ),
                 ),
                 SizedBox(width: 5),
-                Container(
-                  // width: MediaQuery.of(context).size.width / 2.7,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        children: [
-                          Text(
-                            '${item.username} - ' ?? '',
-                            style: TextStyle(
-                                fontSize: 9,
-                                color: Color(0xFF595D64),
-                                fontWeight: FontWeight.w400,
-                                fontFamily: 'Roboto'),
-                          ),
-                          Text(
-                            '${item.firstName} ' ?? '',
-                            style: TextStyle(
-                                fontSize: 9,
-                                color: Color(0xFF595D64),
-                                fontWeight: FontWeight.w400,
-                                fontFamily: 'Roboto'),
-                          ),
-                          Text(
-                            item?.lastName.toString() ?? '',
-                            style: TextStyle(
-                                fontSize: 9,
-                                color: Color(0xFF595D64),
-                                fontWeight: FontWeight.w400,
-                                fontFamily: 'Roboto'),
-                          ),
-                        ],
-                      ),
-                      SizedBox(height: 5),
-                      Row(
-                        children: [
-                          Text(
-                            'Level ${item.level} - ' ?? '',
-                            style: TextStyle(
-                                fontSize: 8,
-                                color: Color(0xFF595D64),
-                                fontWeight: FontWeight.w400,
-                                fontFamily: 'Roboto'),
-                          ),
-                          Text(
-                            item.userPosition.name,
-                            style: TextStyle(
-                                fontSize: 8,
-                                color: Color(0xFF595D64),
-                                fontWeight: FontWeight.w500,
-                                fontFamily: 'Roboto'),
-                          ),
-                          SizedBox(height: 5),
-                        ],
-                      ),
-                      SizedBox(height: 8),
-                    ],
+                Flexible(
+                  child: Container(
+                    // width: MediaQuery.of(context).size.width / 2.7,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          children: [
+                            Text(
+                              '${item.username} - ' ?? '',
+                              style: TextStyle(
+                                  fontSize: 9,
+                                  color: Color(0xFF595D64),
+                                  fontWeight: FontWeight.w400,
+                                  fontFamily: 'Roboto'),
+                            ),
+                            Flexible(
+                              child: RichText(
+                                overflow: TextOverflow.ellipsis,
+                                strutStyle: StrutStyle(fontSize: 9.0),
+                                text: TextSpan(
+                                  text: '${item.firstName} ' ?? '',
+                                  style: TextStyle(
+                                      fontSize: 9,
+                                      color: Color(0xFF595D64),
+                                      fontWeight: FontWeight.w400,
+                                      fontFamily: 'Roboto'),
+                                ),
+                              ),
+                            ),
+                            Flexible(
+                              child: RichText(
+                                overflow: TextOverflow.ellipsis,
+                                strutStyle: StrutStyle(fontSize: 9.0),
+                                text: TextSpan(
+                                  text: item?.lastName.toString() ?? '',
+                                  style: TextStyle(
+                                      fontSize: 9,
+                                      color: Color(0xFF595D64),
+                                      fontWeight: FontWeight.w400,
+                                      fontFamily: 'Roboto'),
+                                ),
+                              ),
+                            ),
+                            // Text(
+                            //   '${item.firstName} ' ?? '',
+                            //   style: TextStyle(
+                            //       fontSize: 9,
+                            //       color: Color(0xFF595D64),
+                            //       fontWeight: FontWeight.w400,
+                            //       fontFamily: 'Roboto'),
+                            // ),
+                            // Text(
+                            //   item?.lastName.toString() ?? '',
+                            //   style: TextStyle(
+                            //       fontSize: 9,
+                            //       color: Color(0xFF595D64),
+                            //       fontWeight: FontWeight.w400,
+                            //       fontFamily: 'Roboto'),
+                            // ),
+                          ],
+                        ),
+                        SizedBox(height: 5),
+                        Row(
+                          children: [
+                            Text(
+                              'Level ${item.level} - ' ?? '',
+                              style: TextStyle(
+                                  fontSize: 8,
+                                  color: Color(0xFF595D64),
+                                  fontWeight: FontWeight.w400,
+                                  fontFamily: 'Roboto'),
+                            ),
+                            Text(
+                              item.userPosition.name,
+                              style: TextStyle(
+                                  fontSize: 8,
+                                  color: Color(0xFF595D64),
+                                  fontWeight: FontWeight.w500,
+                                  fontFamily: 'Roboto'),
+                            ),
+                            SizedBox(height: 5),
+                          ],
+                        ),
+                        SizedBox(height: 8),
+                      ],
+                    ),
                   ),
                 ),
               ],
@@ -130,8 +160,8 @@ Widget customPopupItemBuilderUserVp(
         // mainAxisAlignment: MainAxisAlignment.start,
         children: [
           Container(
-              height: 45,
-              width: 45,
+              height: 40,
+              width: 40,
               decoration: BoxDecoration(
                 color: Color(0xFFDDDDDD),
                 border: Border.all(color: Color(0xFFDDDDDD)),
@@ -144,8 +174,8 @@ Widget customPopupItemBuilderUserVp(
                 child: item.avatar == null
                     ? Image.asset(
                         'assets/images/placeholder.png',
-                        width: 30,
-                        height: 30,
+                        width: 25,
+                        height: 25,
                       )
                     : Image.network(
                         BASE_URL_STORAGE + item.avatar,
