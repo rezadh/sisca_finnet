@@ -204,7 +204,7 @@ class Asset {
   }
 }
 
-Future<List<Asset>> postRequestAsset() async {
+Future<List<Asset>> getRequestAsset() async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
   String url = BASE_URL +
       'asset?page=1&per_page=500&with[]=latest_approval&with[]=pic&with[]=pic.user_position&with[]=latest_mutation.new_pic&appends[]=has_approval&is_project=0';
@@ -226,7 +226,7 @@ Future<List<Asset>> postRequestAsset() async {
   }
 }
 
-Future<List<Monitoring>> postRequestAssetMonitoring() async {
+Future<List<Monitoring>> getRequestAssetMonitoring() async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
   String url = BASE_URL + 'monitoring?per_page=-1&appends[]=current_budget';
   var token = prefs.getString('token');
@@ -240,6 +240,28 @@ Future<List<Monitoring>> postRequestAssetMonitoring() async {
     Map responseJson = json.decode(response.body)['data'];
     List data = responseJson['data'];
     List<Monitoring> daftar = data.map((e) => Monitoring.fromJson(e)).toList();
+    return daftar;
+  } else {
+    print(response.body);
+    return null;
+  }
+}
+
+Future<List<Monitoring>> getRequestSearchAssetMonitoring(String search) async {
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  String url = BASE_URL + 'monitoring?per_page=-1&q=$search&appends[]=current_budget';
+  var token = prefs.getString('token');
+  Map<String, String> h = {
+    'Content-Type': 'application/json',
+    'Authorization': 'Bearer $token',
+  };
+  var response = await http.get(Uri.parse(url), headers: h);
+  if (response.statusCode == 200) {
+    print(response.reasonPhrase);
+    Map responseJson = json.decode(response.body)['data'];
+    List data = responseJson['data'];
+    List<Monitoring> daftar = data.map((e) => Monitoring.fromJson(e)).toList();
+    print(responseJson);
     return daftar;
   } else {
     print(response.body);

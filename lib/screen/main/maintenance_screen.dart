@@ -598,7 +598,7 @@ class _MaintenanceScreenState extends State<MaintenanceScreen> {
                                         autoValidateMode:
                                             AutovalidateMode.onUserInteraction,
                                         onFind: (String filter) =>
-                                            postRequestAssetMonitoring(),
+                                            getRequestAssetMonitoring(),
                                         onChanged: (value) {
                                           setState(() {
                                             _idMonitoring = value.id;

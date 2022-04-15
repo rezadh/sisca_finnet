@@ -73,41 +73,7 @@ class _FormMaintenanceState extends State<FormMaintenance> {
         }
       });
     }
-
-    // setState(() {
-    //
-    //   filePath = result.files.single.path.split('/').last;
-    //   save().whenComplete(() => _file = filePath);
-    // });
   }
-
-  Future<bool> save() async {
-    return true;
-  }
-
-  Future<bool> showPopGagal(String title, String message) => showDialog(
-        barrierDismissible: false,
-        context: context,
-        builder: (context) => AlertDialog(
-          title: Text(
-            title,
-            style: TextStyle(fontSize: 18),
-          ),
-          content: Text(
-            message,
-            style: TextStyle(fontSize: 14),
-            // textAlign: TextAlign.center,
-          ),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.pop(context);
-              },
-              child: Text('TUTUP'),
-            ),
-          ],
-        ),
-      );
 
   Future getConnect() async {
     var connectivityResult = await (Connectivity().checkConnectivity());
@@ -194,7 +160,7 @@ class _FormMaintenanceState extends State<FormMaintenance> {
                       fontFamily: 'Roboto'),
                 ),
                 autoValidateMode: AutovalidateMode.onUserInteraction,
-                onFind: (String filter) => postRequestAssetMonitoring(),
+                onFind: (String filter) => getRequestAssetMonitoring(),
                 onChanged: (value) {
                   setState(() {
                     _idMonitoring = value.id;
@@ -396,6 +362,9 @@ class _FormMaintenanceState extends State<FormMaintenance> {
                   setState(() {
                     _labelTextDescription = 'Description';
                   });
+                },
+                onChanged: (value){
+                  _description = value;
                 },
                 onFieldSubmitted: (value) {
                   setState(() {

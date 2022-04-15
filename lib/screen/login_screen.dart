@@ -4,7 +4,6 @@ import 'package:flutter/services.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sisca_finnet/model/login_model.dart';
-import 'package:sisca_finnet/screen/main/asset_screen.dart';
 import 'package:sisca_finnet/screen/main/main_screen.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -213,6 +212,9 @@ class _LoginScreenState extends State<LoginScreen> {
       statusBarColor: Colors.transparent,
     ));
     final Size size = MediaQuery.of(context).size;
+    final Orientation orientation = MediaQuery.of(context).orientation;
+    final bool isLandscape = orientation == Orientation.landscape;
+
     return AbsorbPointer(
       absorbing: _loading ? true : false,
       child: Scaffold(
@@ -244,7 +246,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         child: Container(
                           padding:
                               EdgeInsets.only(left: 16, right: 16, bottom: 55),
-                          height: size.height / 2,
+                          height: isLandscape ? size.height / 1.3 : size.height / 2,
                           width: size.width,
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
