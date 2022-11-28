@@ -41,17 +41,17 @@ class Data {
 
   Data(
       {this.currentPage,
-        this.data,
-        this.firstPageUrl,
-        this.from,
-        this.lastPage,
-        this.lastPageUrl,
-        this.nextPageUrl,
-        this.path,
-        this.perPage,
-        this.prevPageUrl,
-        this.to,
-        this.total});
+      this.data,
+      this.firstPageUrl,
+      this.from,
+      this.lastPage,
+      this.lastPageUrl,
+      this.nextPageUrl,
+      this.path,
+      this.perPage,
+      this.prevPageUrl,
+      this.to,
+      this.total});
 
   Data.fromJson(Map<String, dynamic> json) {
     currentPage = json['current_page'];
@@ -107,15 +107,15 @@ class DataBawahOpname {
 
   DataBawahOpname(
       {this.id,
-        this.checkedBy,
-        this.conditionId,
-        this.description,
-        this.deletedAt,
-        this.createdAt,
-        this.updatedAt,
-        this.monitoringId,
-        this.monitoring,
-        this.condition});
+      this.checkedBy,
+      this.conditionId,
+      this.description,
+      this.deletedAt,
+      this.createdAt,
+      this.updatedAt,
+      this.monitoringId,
+      this.monitoring,
+      this.condition});
 
   DataBawahOpname.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -173,20 +173,20 @@ class MonitoringOpname {
 
   MonitoringOpname(
       {this.id,
-        this.assetId,
-        this.name,
-        this.serialNumber,
-        this.amount,
-        this.createdAt,
-        this.updatedAt,
-        this.deletedAt,
-        this.picId,
-        this.brandOrType,
-        this.startDate,
-        this.usefulLife,
-        this.evidence,
-        this.description,
-        this.employeeId});
+      this.assetId,
+      this.name,
+      this.serialNumber,
+      this.amount,
+      this.createdAt,
+      this.updatedAt,
+      this.deletedAt,
+      this.picId,
+      this.brandOrType,
+      this.startDate,
+      this.usefulLife,
+      this.evidence,
+      this.description,
+      this.employeeId});
 
   MonitoringOpname.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -240,14 +240,14 @@ class Condition {
 
   Condition(
       {this.id,
-        this.code,
-        this.name,
-        this.description,
-        this.color,
-        this.createdBy,
-        this.deletedAt,
-        this.createdAt,
-        this.updatedAt});
+      this.code,
+      this.name,
+      this.description,
+      this.color,
+      this.createdBy,
+      this.deletedAt,
+      this.createdAt,
+      this.updatedAt});
 
   Condition.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -259,6 +259,10 @@ class Condition {
     deletedAt = json['deleted_at'];
     createdAt = json['created_at'];
     updatedAt = json['updated_at'];
+  }
+
+  bool isEqual(Condition model) {
+    return this?.id == model?.id;
   }
 
   Map<String, dynamic> toJson() {
@@ -275,9 +279,11 @@ class Condition {
     return data;
   }
 }
+
 Future<List<DataBawahOpname>> getRequestOpname() async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
-  String url = BASE_URL + 'opname?page=1&per_page=500&opname=&with[]=monitoring&with[]=condition';
+  String url = BASE_URL +
+      'opname?page=1&per_page=500&opname=&with[]=monitoring&with[]=condition';
   var token = prefs.getString('token');
   Map<String, String> h = {
     'Content-Type': 'application/json',
@@ -288,8 +294,54 @@ Future<List<DataBawahOpname>> getRequestOpname() async {
     print(response.reasonPhrase);
     Map responseJson = json.decode(response.body)['data'];
     List data = responseJson['data'];
-    List<DataBawahOpname> daftar = data.map((e) => DataBawahOpname.fromJson(e)).toList();
+    List<DataBawahOpname> daftar =
+        data.map((e) => DataBawahOpname.fromJson(e)).toList();
     return daftar;
+  } else {
+    print(response.body);
+    return null;
+  }
+}
+
+Future<List<Condition>> getRequestCondition() async {
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  String url = BASE_URL + 'condition';
+  var token = prefs.getString('token');
+  Map<String, String> h = {
+    'Content-Type': 'application/json',
+    'Authorization': 'Bearer $token',
+  };
+  var response = await http.get(Uri.parse(url), headers: h);
+  if (response.statusCode == 200) {
+    print(response.reasonPhrase);
+    Map responseJson = json.decode(response.body)['data'];
+    List data = responseJson['data'];
+    List<Condition> daftar = data.map((e) => Condition.fromJson(e)).toList();
+    return daftar;
+  } else {
+    print(response.body);
+    return null;
+  }
+}
+
+Future<Condition> postRequestOpname(Map body) async {
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  String url = BASE_URL + 'opname';
+  var token = prefs.getString('token');
+  Map<String, String> h = {
+    'Content-Type': 'application/json',
+    'Authorization': 'Bearer $token',
+  };
+  var request = http.MultipartRequest('POST', Uri.parse(url));
+  request.headers.addAll(h);
+  request.fields['monitoring_id'] = body['monitoring_id'].toString();
+  request.fields['condition_id'] = body['condition_id'].toString();
+  request.fields['description'] = body['description'].toString();
+  var res = await request.send();
+  var response = await http.Response.fromStream(res);
+  if (response.statusCode == 200) {
+    print(response.body);
+    return Condition.fromJson(json.decode(response.body));
   } else {
     print(response.body);
     return null;

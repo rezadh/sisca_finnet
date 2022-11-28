@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:sisca_finnet/model/opname_model.dart';
 import 'package:sisca_finnet/model/pic_model.dart';
 import 'package:sisca_finnet/util/const.dart';
 import 'package:http/http.dart' as http;
@@ -24,6 +25,7 @@ class Data {
   String employeeId;
   String qrCode;
   Pic pic;
+  LatestOpname latestOpname;
 
   Data(
       {this.data,
@@ -43,7 +45,7 @@ class Data {
       this.description,
       this.employeeId,
       this.qrCode,
-      this.pic});
+      this.pic, this.latestOpname});
 
   Data.fromJson(Map<String, dynamic> json) {
     data = json['data'] != null ? new DataBawah.fromJson(json['data']) : null;
@@ -64,6 +66,7 @@ class Data {
     employeeId = json['employee_id'];
     qrCode = json['qr_code'];
     pic = json['pic'] != null ? new Pic.fromJson(json['pic']) : null;
+    latestOpname = json['latest_opname'] != null ? new LatestOpname.fromJson(json['latest_opname']) : null;
   }
 
   Map<String, dynamic> toJson() {
@@ -89,6 +92,9 @@ class Data {
     data['qr_code'] = this.qrCode;
     if (this.pic != null) {
       data['pic'] = this.pic.toJson();
+    }
+    if (this.latestOpname != null) {
+      data['latest_opname'] = this.latestOpname.toJson();
     }
     return data;
   }
@@ -174,7 +180,6 @@ class Asset {
   int amount;
   Pic pic;
   Data data;
-
   Asset({this.name,this.id, this.amount, this.procurement, this.code, this.pic, this.data});
 
   Asset.fromJson(Map<String, dynamic> json) {
@@ -199,6 +204,60 @@ class Asset {
     }
     if (this.data != null) {
       data['data'] = this.data.toJson();
+    }
+
+    return data;
+  }
+}
+
+class LatestOpname {
+  String id;
+  String checkedBy;
+  String conditionId;
+  String description;
+  String deletedAt;
+  String createdAt;
+  String updatedAt;
+  String monitoringId;
+  Condition condition;
+
+  LatestOpname(
+      {this.id,
+        this.checkedBy,
+        this.conditionId,
+        this.description,
+        this.deletedAt,
+        this.createdAt,
+        this.updatedAt,
+        this.monitoringId,
+        this.condition});
+
+  LatestOpname.fromJson(Map<String, dynamic> json) {
+    id = json['id'];
+    checkedBy = json['checked_by'];
+    conditionId = json['condition_id'];
+    description = json['description'];
+    deletedAt = json['deleted_at'];
+    createdAt = json['created_at'];
+    updatedAt = json['updated_at'];
+    monitoringId = json['monitoring_id'];
+    condition = json['condition'] != null
+        ? new Condition.fromJson(json['condition'])
+        : null;
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['id'] = this.id;
+    data['checked_by'] = this.checkedBy;
+    data['condition_id'] = this.conditionId;
+    data['description'] = this.description;
+    data['deleted_at'] = this.deletedAt;
+    data['created_at'] = this.createdAt;
+    data['updated_at'] = this.updatedAt;
+    data['monitoring_id'] = this.monitoringId;
+    if (this.condition != null) {
+      data['condition'] = this.condition.toJson();
     }
     return data;
   }
@@ -271,7 +330,7 @@ Future<List<Monitoring>> getRequestSearchAssetMonitoring(String search) async {
 
 Future<Asset> getRequestAssetDetail(String id) async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
-  String url = BASE_URL + 'monitoring/$id?with[]=pic';
+  String url = BASE_URL + 'monitoring/$id?with[]=pic&with[]=latest_opname.condition';
   var token = prefs.getString('token');
   Map<String, String> h = {
     'Content-Type': 'application/json',

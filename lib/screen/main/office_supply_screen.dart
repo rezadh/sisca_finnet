@@ -12,21 +12,21 @@ import 'package:sisca_finnet/util/const.dart';
 import 'package:sisca_finnet/widget/custom_dropdown_user_leader.dart';
 import 'package:sisca_finnet/widget/custom_dropdown_user_vp.dart';
 
-class VoucherScreen extends StatefulWidget {
+class OfficeSupplyScreen extends StatefulWidget {
   @override
-  _VoucherScreenState createState() => _VoucherScreenState();
+  _OfficeSupplyScreenState createState() => _OfficeSupplyScreenState();
 }
 
-class _VoucherScreenState extends State<VoucherScreen> {
+class _OfficeSupplyScreenState extends State<OfficeSupplyScreen> {
   FToast fToast;
   Future<List<DataBawahVoucher>> futureVoucher;
   final _formKey = GlobalKey<FormState>();
   TextEditingController descriptionController = TextEditingController();
-  TextEditingController voucherTotalController = TextEditingController();
+  TextEditingController officeSupplyController = TextEditingController();
   var _labelTextDescription = 'Description';
-  var _labelTextVoucherTotal = '3 Vouchers total';
+  var _labelTextOfficeSupply = '3 Items';
   String _description;
-  String _voucherTotal;
+  String _officeSupply;
   String _level;
   String _idReviewer;
   String _usernameReviewer;
@@ -158,7 +158,7 @@ class _VoucherScreenState extends State<VoucherScreen> {
         centerTitle: true,
         elevation: 0.0,
         title: Text(
-          'Voucher',
+          'Office Supply Request',
           style: TextStyle(
               fontSize: 19,
               color: Colors.white,
@@ -182,262 +182,262 @@ class _VoucherScreenState extends State<VoucherScreen> {
                   onRefresh: refreshVoucher,
                   child: _isInternetOn
                       ? Container(
-                          width: size.width,
-                          height: size.height,
-                          child: FutureBuilder<List<DataBawahVoucher>>(
-                            future: getRequestVoucher(),
-                            builder: (context, snapshot) {
-                              if (snapshot.hasData) {
-                                List<DataBawahVoucher> data = snapshot.data;
-                                return data.isNotEmpty
-                                    ? ListView.builder(
-                                        itemCount: data.length,
-                                        physics: const BouncingScrollPhysics(
-                                            parent:
-                                                AlwaysScrollableScrollPhysics()),
-                                        itemBuilder: (context, index) {
-                                          return Card(
-                                            elevation: 1,
-                                            child: Container(
-                                              padding: EdgeInsets.symmetric(
-                                                  horizontal: 15, vertical: 15),
-                                              width: size.width,
-                                              child: Row(
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.start,
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment
-                                                        .spaceBetween,
-                                                children: [
-                                                  Column(
-                                                    crossAxisAlignment:
-                                                        CrossAxisAlignment
-                                                            .start,
-                                                    children: [
-                                                      Text(
-                                                        data[index].voucher ==
-                                                                null
-                                                            ? '-'
-                                                            : data[index]
-                                                                .voucher
-                                                                .voucherType,
-                                                        style: TITLE,
-                                                      ),
-                                                      Divider(
-                                                          color: Colors.white,
-                                                          height: 8),
-                                                      data[index].voucher ==
-                                                              null
-                                                          ? Text(
-                                                              'Voucher Code : ',
-                                                              style: TITLE,
-                                                            )
-                                                          : Row(
-                                                              children: [
-                                                                Text(
-                                                                  data[index]
-                                                                      .voucher
-                                                                      .voucherCode,
-                                                                  style: TITLE,
-                                                                ),
-                                                                SizedBox(
-                                                                    width: 4),
-                                                                GestureDetector(
-                                                                  onTap: () {
-                                                                    Clipboard.setData(ClipboardData(
-                                                                        text: data[index]
-                                                                            .voucher
-                                                                            .voucherCode));
-                                                                    // showToast();
-                                                                    _showToast();
-                                                                  },
-                                                                  child: Icon(
-                                                                    Icons
-                                                                        .file_copy_outlined,
-                                                                    size: 12,
-                                                                    color: Color(
-                                                                        0xFF595D64),
-                                                                  ),
-                                                                ),
-                                                              ],
-                                                            ),
-                                                      Divider(
-                                                          color: Colors.white,
-                                                          height: 4),
-                                                      Text(
-                                                        data[index]
-                                                                .requestedDescription ??
-                                                            '',
-                                                        style: TextStyle(
-                                                            fontSize: 9,
-                                                            color: Color(
-                                                                0xFF595D64),
-                                                            fontWeight:
-                                                                FontWeight.w300,
-                                                            fontFamily:
-                                                                'Roboto'),
-                                                      ),
-                                                    ],
-                                                  ),
-                                                  Column(
-                                                    children: [
-                                                      Container(
-                                                        padding: EdgeInsets
-                                                            .symmetric(
-                                                                horizontal: 10,
-                                                                vertical: 4),
-                                                        decoration:
-                                                            BoxDecoration(
-                                                          color: Colors.white,
-                                                          border: Border.all(
-                                                            color: data[index]
-                                                                        .status
-                                                                        .color ==
-                                                                    'green'
-                                                                ? Color(
-                                                                    0xFF52C829)
-                                                                : data[index]
-                                                                            .status
-                                                                            .color ==
-                                                                        'default'
-                                                                    ? Color(
-                                                                        0xFF595D64)
-                                                                    : Color(
-                                                                        0xFF598BD7),
-                                                          ),
-                                                          borderRadius:
-                                                              BorderRadius.all(
-                                                            Radius.circular(5),
-                                                          ),
-                                                        ),
-                                                        child: Text(
-                                                          data[index]
-                                                              .status
-                                                              .name,
-                                                          style: TextStyle(
-                                                              fontSize: 10,
-                                                              color: data[index]
-                                                                          .status
-                                                                          .color ==
-                                                                      'green'
-                                                                  ? Color(
-                                                                      0xFF52C829)
-                                                                  : data[index]
-                                                                              .status
-                                                                              .color ==
-                                                                          'default'
-                                                                      ? Color(
-                                                                          0xFF595D64)
-                                                                      : Color(
-                                                                          0xFF598BD7),
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .w300,
-                                                              fontFamily:
-                                                                  'Roboto'),
-                                                        ),
-                                                      ),
-                                                      Divider(
-                                                          height: 8,
-                                                          color: Colors.white),
-                                                      Text(
-                                                        data[index].createdAt,
-                                                        style: TextStyle(
-                                                            fontSize: 10,
-                                                            color: Color(
-                                                                0xFF595D64),
-                                                            fontWeight:
-                                                                FontWeight.w400,
-                                                            fontFamily:
-                                                                'Roboto'),
-                                                      ),
-                                                    ],
-                                                  ),
-                                                ],
-                                              ),
-                                            ),
-                                          );
-                                        },
-                                      )
-                                    : Container(
-                                        padding: EdgeInsets.symmetric(
-                                            horizontal: 50),
-                                        margin: EdgeInsets.only(
-                                            top: size.height / 3),
-                                        width: size.width,
-                                        height: size.height / 2,
-                                        child: Center(
-                                          child: Column(
+                    width: size.width,
+                    height: size.height,
+                    child: FutureBuilder<List<DataBawahVoucher>>(
+                      future: getRequestVoucher(),
+                      builder: (context, snapshot) {
+                        if (snapshot.hasData) {
+                          List<DataBawahVoucher> data = snapshot.data;
+                          return data.isNotEmpty
+                              ? ListView.builder(
+                            itemCount: data.length,
+                            physics: const BouncingScrollPhysics(
+                                parent:
+                                AlwaysScrollableScrollPhysics()),
+                            itemBuilder: (context, index) {
+                              return Card(
+                                elevation: 1,
+                                child: Container(
+                                  padding: EdgeInsets.symmetric(
+                                      horizontal: 15, vertical: 15),
+                                  width: size.width,
+                                  child: Row(
+                                    crossAxisAlignment:
+                                    CrossAxisAlignment.start,
+                                    mainAxisAlignment:
+                                    MainAxisAlignment
+                                        .spaceBetween,
+                                    children: [
+                                      Column(
+                                        crossAxisAlignment:
+                                        CrossAxisAlignment
+                                            .start,
+                                        children: [
+                                          Text(
+                                            data[index].voucher ==
+                                                null
+                                                ? '-'
+                                                : data[index]
+                                                .voucher
+                                                .voucherType,
+                                            style: TITLE,
+                                          ),
+                                          Divider(
+                                              color: Colors.white,
+                                              height: 8),
+                                          data[index].voucher ==
+                                              null
+                                              ? Text(
+                                            'Voucher Code : ',
+                                            style: TITLE,
+                                          )
+                                              : Row(
                                             children: [
-                                              Image.asset(
-                                                  'assets/images/empty_data.png'),
                                               Text(
-                                                'No Requests yet..',
-                                                style: TextStyle(
-                                                    fontSize: 13,
-                                                    color: Color(0xFF595D64),
-                                                    fontWeight: FontWeight.w700,
-                                                    fontFamily: 'Roboto'),
+                                                data[index]
+                                                    .voucher
+                                                    .voucherCode,
+                                                style: TITLE,
+                                              ),
+                                              SizedBox(
+                                                  width: 4),
+                                              GestureDetector(
+                                                onTap: () {
+                                                  Clipboard.setData(ClipboardData(
+                                                      text: data[index]
+                                                          .voucher
+                                                          .voucherCode));
+                                                  // showToast();
+                                                  _showToast();
+                                                },
+                                                child: Icon(
+                                                  Icons
+                                                      .file_copy_outlined,
+                                                  size: 12,
+                                                  color: Color(
+                                                      0xFF595D64),
+                                                ),
                                               ),
                                             ],
                                           ),
-                                        ),
-                                      );
-                              } else if (snapshot.connectionState ==
-                                  ConnectionState.none) {
-                                return Container(
-                                  width: size.width,
-                                  height: size.height,
-                                  child: Center(
-                                    child: Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: [
-                                        Image.asset(
-                                            'assets/images/no_connection.png'),
-                                        Text('No internet connection',
+                                          Divider(
+                                              color: Colors.white,
+                                              height: 4),
+                                          Text(
+                                            data[index]
+                                                .requestedDescription ??
+                                                '',
                                             style: TextStyle(
-                                                fontSize: 13,
-                                                color: Color(0xFF595D64),
-                                                fontWeight: FontWeight.w500,
-                                                fontFamily: 'Roboto')),
-                                      ],
-                                    ),
+                                                fontSize: 9,
+                                                color: Color(
+                                                    0xFF595D64),
+                                                fontWeight:
+                                                FontWeight.w300,
+                                                fontFamily:
+                                                'Roboto'),
+                                          ),
+                                        ],
+                                      ),
+                                      Column(
+                                        children: [
+                                          Container(
+                                            padding: EdgeInsets
+                                                .symmetric(
+                                                horizontal: 10,
+                                                vertical: 4),
+                                            decoration:
+                                            BoxDecoration(
+                                              color: Colors.white,
+                                              border: Border.all(
+                                                color: data[index]
+                                                    .status
+                                                    .color ==
+                                                    'green'
+                                                    ? Color(
+                                                    0xFF52C829)
+                                                    : data[index]
+                                                    .status
+                                                    .color ==
+                                                    'default'
+                                                    ? Color(
+                                                    0xFF595D64)
+                                                    : Color(
+                                                    0xFF598BD7),
+                                              ),
+                                              borderRadius:
+                                              BorderRadius.all(
+                                                Radius.circular(5),
+                                              ),
+                                            ),
+                                            child: Text(
+                                              data[index]
+                                                  .status
+                                                  .name,
+                                              style: TextStyle(
+                                                  fontSize: 10,
+                                                  color: data[index]
+                                                      .status
+                                                      .color ==
+                                                      'green'
+                                                      ? Color(
+                                                      0xFF52C829)
+                                                      : data[index]
+                                                      .status
+                                                      .color ==
+                                                      'default'
+                                                      ? Color(
+                                                      0xFF595D64)
+                                                      : Color(
+                                                      0xFF598BD7),
+                                                  fontWeight:
+                                                  FontWeight
+                                                      .w300,
+                                                  fontFamily:
+                                                  'Roboto'),
+                                            ),
+                                          ),
+                                          Divider(
+                                              height: 8,
+                                              color: Colors.white),
+                                          Text(
+                                            data[index].createdAt,
+                                            style: TextStyle(
+                                                fontSize: 10,
+                                                color: Color(
+                                                    0xFF595D64),
+                                                fontWeight:
+                                                FontWeight.w400,
+                                                fontFamily:
+                                                'Roboto'),
+                                          ),
+                                        ],
+                                      ),
+                                    ],
                                   ),
-                                );
-                              } else {
-                                return Center(
-                                    child: CircularProgressIndicator());
-                              }
-                            },
-                          ),
-                        )
-                      : ScrollConfiguration(
-                          behavior: MyBehavior(),
-                          child: SingleChildScrollView(
-                            controller: _scrollController,
-                            physics: AlwaysScrollableScrollPhysics(),
-                            child: Container(
-                              width: size.width,
-                              height: size.height / 1.2,
-                              child: Center(
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Image.asset(
-                                        'assets/images/no_connection.png'),
-                                    Text('No internet connection',
-                                        style: TextStyle(
-                                            fontSize: 13,
-                                            color: Color(0xFF595D64),
-                                            fontWeight: FontWeight.w500,
-                                            fontFamily: 'Roboto')),
-                                  ],
                                 ),
+                              );
+                            },
+                          )
+                              : Container(
+                            padding: EdgeInsets.symmetric(
+                                horizontal: 50),
+                            margin: EdgeInsets.only(
+                                top: size.height / 3),
+                            width: size.width,
+                            height: size.height / 2,
+                            child: Center(
+                              child: Column(
+                                children: [
+                                  Image.asset(
+                                      'assets/images/empty_data.png'),
+                                  Text(
+                                    'No Requests yet..',
+                                    style: TextStyle(
+                                        fontSize: 13,
+                                        color: Color(0xFF595D64),
+                                        fontWeight: FontWeight.w700,
+                                        fontFamily: 'Roboto'),
+                                  ),
+                                ],
                               ),
                             ),
+                          );
+                        } else if (snapshot.connectionState ==
+                            ConnectionState.none) {
+                          return Container(
+                            width: size.width,
+                            height: size.height,
+                            child: Center(
+                              child: Column(
+                                mainAxisAlignment:
+                                MainAxisAlignment.center,
+                                children: [
+                                  Image.asset(
+                                      'assets/images/no_connection.png'),
+                                  Text('No internet connection',
+                                      style: TextStyle(
+                                          fontSize: 13,
+                                          color: Color(0xFF595D64),
+                                          fontWeight: FontWeight.w500,
+                                          fontFamily: 'Roboto')),
+                                ],
+                              ),
+                            ),
+                          );
+                        } else {
+                          return Center(
+                              child: CircularProgressIndicator());
+                        }
+                      },
+                    ),
+                  )
+                      : ScrollConfiguration(
+                    behavior: MyBehavior(),
+                    child: SingleChildScrollView(
+                      controller: _scrollController,
+                      physics: AlwaysScrollableScrollPhysics(),
+                      child: Container(
+                        width: size.width,
+                        height: size.height / 1.2,
+                        child: Center(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Image.asset(
+                                  'assets/images/no_connection.png'),
+                              Text('No internet connection',
+                                  style: TextStyle(
+                                      fontSize: 13,
+                                      color: Color(0xFF595D64),
+                                      fontWeight: FontWeight.w500,
+                                      fontFamily: 'Roboto')),
+                            ],
                           ),
                         ),
+                      ),
+                    ),
+                  ),
                 ),
               ),
             ),
@@ -447,11 +447,11 @@ class _VoucherScreenState extends State<VoucherScreen> {
               child: FloatingActionButton(
                 onPressed: () async {
                   SharedPreferences prefs =
-                      await SharedPreferences.getInstance();
+                  await SharedPreferences.getInstance();
                   setState(() {
                     _level = prefs.getString('level');
                     descriptionController.text = '';
-                    voucherTotalController.text = '';
+                    officeSupplyController.text = '';
                     _value = false;
                     _submitRequest = false;
                     showDialog(
@@ -467,11 +467,11 @@ class _VoucherScreenState extends State<VoucherScreen> {
                                     width: size.width,
                                     child: Column(
                                       crossAxisAlignment:
-                                          CrossAxisAlignment.start,
+                                      CrossAxisAlignment.start,
                                       children: [
                                         Center(
                                           child: Text(
-                                            'Voucher request form',
+                                            'Office Supply request form',
                                             style: TextStyle(
                                                 fontSize: 12,
                                                 color: Color(0xFF595D64),
@@ -505,7 +505,7 @@ class _VoucherScreenState extends State<VoucherScreen> {
                                                   color: Colors.white,
                                                   width: 5.0),
                                               borderRadius:
-                                                  BorderRadius.circular(5),
+                                              BorderRadius.circular(5),
                                             ),
                                             filled: true,
                                             fillColor: Color(0xFFFFFFFF),
@@ -513,7 +513,7 @@ class _VoucherScreenState extends State<VoucherScreen> {
                                           onTap: () {
                                             setState(() {
                                               _labelTextDescription =
-                                                  'Description';
+                                              'Description';
                                             });
                                           },
                                           onChanged: (value) {
@@ -540,11 +540,11 @@ class _VoucherScreenState extends State<VoucherScreen> {
                                         TextFormField(
                                           maxLines: 1,
                                           keyboardType: TextInputType.text,
-                                          controller: voucherTotalController,
+                                          controller: officeSupplyController,
                                           // style: TextStyle(fontSize: 10),
                                           decoration: InputDecoration(
                                             contentPadding: EdgeInsets.all(10),
-                                            labelText: _labelTextVoucherTotal,
+                                            labelText: _labelTextOfficeSupply,
                                             disabledBorder: OutlineInputBorder(
                                               borderSide: BorderSide(
                                                   color: Color(0xFFBAC1CC)),
@@ -569,22 +569,22 @@ class _VoucherScreenState extends State<VoucherScreen> {
                                           ),
                                           onTap: () {
                                             setState(() {
-                                              _labelTextVoucherTotal =
-                                              '3 Vouchers total';
+                                              _labelTextOfficeSupply =
+                                              '3 Items';
                                             });
                                           },
                                           onChanged: (value) {
-                                            _voucherTotal = value;
+                                            _officeSupply = value;
                                           },
                                           onFieldSubmitted: (value) {
                                             setState(() {
-                                              _voucherTotal = value;
+                                              _officeSupply = value;
                                               print(_description);
                                             });
                                           },
                                         ),
                                         Text(
-                                          'Input vouchers total',
+                                          'Input total items',
                                           style: TextStyle(
                                               fontSize: 8,
                                               color: Color(0xFFBAC1CC),
@@ -698,7 +698,7 @@ class _VoucherScreenState extends State<VoucherScreen> {
                                           child: Container(
                                             child: Column(
                                               crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
+                                              CrossAxisAlignment.start,
                                               children: [
                                                 DropdownSearch<UserVp>(
                                                   validator: (v) => v == null
@@ -707,26 +707,26 @@ class _VoucherScreenState extends State<VoucherScreen> {
                                                   showSelectedItems: true,
                                                   mode: Mode.MENU,
                                                   compareFn: (i, s) =>
-                                                      i?.isEqual(s) ?? false,
+                                                  i?.isEqual(s) ?? false,
                                                   dropdownSearchDecoration:
-                                                      InputDecoration(
+                                                  InputDecoration(
                                                     labelText:
-                                                        "Request approval to *",
+                                                    "Request approval to *",
                                                     hintText:
-                                                        "Request approval to *",
+                                                    "Request approval to *",
                                                     contentPadding:
-                                                        EdgeInsets.fromLTRB(
-                                                            12, 12, 0, 0),
+                                                    EdgeInsets.fromLTRB(
+                                                        12, 12, 0, 0),
                                                     border:
-                                                        OutlineInputBorder(),
+                                                    OutlineInputBorder(),
                                                     focusedBorder:
-                                                        OutlineInputBorder(
+                                                    OutlineInputBorder(
                                                       borderSide: BorderSide(
                                                           color: Color(
                                                               0xFFBAC1CC)),
                                                     ),
                                                     enabledBorder:
-                                                        OutlineInputBorder(
+                                                    OutlineInputBorder(
                                                       borderSide: BorderSide(
                                                           color: Color(
                                                               0xFFBAC1CC)),
@@ -734,14 +734,14 @@ class _VoucherScreenState extends State<VoucherScreen> {
                                                     errorStyle: TextStyle(
                                                         fontSize: 8,
                                                         color:
-                                                            Color(0xFFF12A32),
+                                                        Color(0xFFF12A32),
                                                         fontWeight:
-                                                            FontWeight.w400,
+                                                        FontWeight.w400,
                                                         fontFamily: 'Roboto'),
                                                   ),
                                                   autoValidateMode:
-                                                      AutovalidateMode
-                                                          .onUserInteraction,
+                                                  AutovalidateMode
+                                                      .onUserInteraction,
                                                   onFind: (String filter) =>
                                                       postRequestUserVp(),
                                                   onChanged: (value) {
@@ -763,9 +763,9 @@ class _VoucherScreenState extends State<VoucherScreen> {
                                                     });
                                                   },
                                                   dropdownBuilder:
-                                                      customDropDownUserVp,
+                                                  customDropDownUserVp,
                                                   popupItemBuilder:
-                                                      customPopupItemBuilderUserVp,
+                                                  customPopupItemBuilderUserVp,
                                                 ),
                                                 Divider(
                                                     color: Colors.white,
@@ -776,7 +776,7 @@ class _VoucherScreenState extends State<VoucherScreen> {
                                                       fontSize: 8,
                                                       color: Color(0xFFBAC1CC),
                                                       fontWeight:
-                                                          FontWeight.w400,
+                                                      FontWeight.w400,
                                                       fontFamily: 'Roboto'),
                                                 ),
                                               ],
@@ -796,9 +796,9 @@ class _VoucherScreenState extends State<VoucherScreen> {
                                                   left: -25,
                                                   child: Container(
                                                     width:
-                                                        MediaQuery.of(context)
-                                                            .size
-                                                            .width,
+                                                    MediaQuery.of(context)
+                                                        .size
+                                                        .width,
                                                     child: CheckboxListTile(
                                                       title: Text(
                                                         'I have reviewed this voucher request',
@@ -807,9 +807,9 @@ class _VoucherScreenState extends State<VoucherScreen> {
                                                             color: Color(
                                                                 0xFF6E7178),
                                                             fontWeight:
-                                                                FontWeight.w400,
+                                                            FontWeight.w400,
                                                             fontFamily:
-                                                                'Roboto'),
+                                                            'Roboto'),
                                                       ),
                                                       value: _value,
                                                       onChanged: (value) {
@@ -817,29 +817,29 @@ class _VoucherScreenState extends State<VoucherScreen> {
                                                           _value = value;
                                                           if (_value) {
                                                             _submitRequest =
-                                                                true;
+                                                            true;
                                                             if (!_formKey
                                                                 .currentState
                                                                 .validate()) {
                                                               _submitRequest =
-                                                                  false;
+                                                              false;
                                                               _value = false;
                                                             } else if (_formKey
                                                                 .currentState
                                                                 .validate()) {
                                                               _submitRequest =
-                                                                  true;
+                                                              true;
                                                               _value = true;
                                                             }
                                                           } else {
                                                             _submitRequest =
-                                                                false;
+                                                            false;
                                                           }
                                                         });
                                                       },
                                                       controlAffinity:
-                                                          ListTileControlAffinity
-                                                              .leading,
+                                                      ListTileControlAffinity
+                                                          .leading,
                                                     ),
                                                   ),
                                                 ),
@@ -852,13 +852,13 @@ class _VoucherScreenState extends State<VoucherScreen> {
                                         Visibility(
                                           visible: _value
                                               ? _level == '1'
-                                                  ? false
-                                                  : true
+                                              ? false
+                                              : true
                                               : false,
                                           child: Container(
                                             child: Column(
                                               crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
+                                              CrossAxisAlignment.start,
                                               children: [
                                                 Text(
                                                   'This will send notification for review & approval to : ',
@@ -866,7 +866,7 @@ class _VoucherScreenState extends State<VoucherScreen> {
                                                       fontSize: 8,
                                                       color: Color(0xFF6E7178),
                                                       fontWeight:
-                                                          FontWeight.w400,
+                                                      FontWeight.w400,
                                                       fontFamily: 'Roboto'),
                                                 ),
                                                 Divider(
@@ -1024,55 +1024,55 @@ class _VoucherScreenState extends State<VoucherScreen> {
                                                               color: Color(
                                                                   0xFF6E7178),
                                                               fontWeight:
-                                                                  FontWeight
-                                                                      .w500,
+                                                              FontWeight
+                                                                  .w500,
                                                               fontFamily:
-                                                                  'Roboto'),
+                                                              'Roboto'),
                                                         ),
                                                         SizedBox(width: 10),
                                                         Container(
                                                           child: Row(
                                                             mainAxisAlignment:
-                                                                MainAxisAlignment
-                                                                    .center,
+                                                            MainAxisAlignment
+                                                                .center,
                                                             children: [
                                                               _usernameApprover ==
-                                                                      null
+                                                                  null
                                                                   ? Container()
                                                                   : Container(
-                                                                      padding: EdgeInsets.symmetric(
-                                                                          vertical:
-                                                                              5),
-                                                                      child:
-                                                                          ClipRRect(
-                                                                        borderRadius:
-                                                                            BorderRadius.all(
-                                                                          Radius.circular(
-                                                                              50),
-                                                                        ),
-                                                                        child: _avatarApprover ==
-                                                                                null
-                                                                            ? Image.asset(
-                                                                                'assets/images/placeholder.png',
-                                                                                width: 30,
-                                                                                height: 30,
-                                                                                fit: BoxFit.cover,
-                                                                              )
-                                                                            : Image.network(
-                                                                                BASE_URL_STORAGE + _avatarApprover,
-                                                                                width: 30,
-                                                                                height: 30,
-                                                                                fit: BoxFit.cover,
-                                                                              ),
-                                                                      ),
-                                                                    ),
+                                                                padding: EdgeInsets.symmetric(
+                                                                    vertical:
+                                                                    5),
+                                                                child:
+                                                                ClipRRect(
+                                                                  borderRadius:
+                                                                  BorderRadius.all(
+                                                                    Radius.circular(
+                                                                        50),
+                                                                  ),
+                                                                  child: _avatarApprover ==
+                                                                      null
+                                                                      ? Image.asset(
+                                                                    'assets/images/placeholder.png',
+                                                                    width: 30,
+                                                                    height: 30,
+                                                                    fit: BoxFit.cover,
+                                                                  )
+                                                                      : Image.network(
+                                                                    BASE_URL_STORAGE + _avatarApprover,
+                                                                    width: 30,
+                                                                    height: 30,
+                                                                    fit: BoxFit.cover,
+                                                                  ),
+                                                                ),
+                                                              ),
                                                               SizedBox(
                                                                   width: 5),
                                                               Container(
                                                                 child: Column(
                                                                   crossAxisAlignment:
-                                                                      CrossAxisAlignment
-                                                                          .start,
+                                                                  CrossAxisAlignment
+                                                                      .start,
                                                                   children: [
                                                                     Row(
                                                                       children: [
@@ -1111,7 +1111,7 @@ class _VoucherScreenState extends State<VoucherScreen> {
                                                                         color: Colors
                                                                             .white,
                                                                         height:
-                                                                            5),
+                                                                        5),
                                                                     Row(
                                                                       children: [
                                                                         Text(
@@ -1154,21 +1154,21 @@ class _VoucherScreenState extends State<VoucherScreen> {
                                         ),
                                         Container(
                                           width:
-                                              MediaQuery.of(context).size.width,
+                                          MediaQuery.of(context).size.width,
                                           height: 44,
                                           child: TextButton(
                                             style: ButtonStyle(
                                               shape: MaterialStateProperty.all(
                                                 RoundedRectangleBorder(
                                                     borderRadius:
-                                                        BorderRadius.circular(
-                                                            8.0)),
+                                                    BorderRadius.circular(
+                                                        8.0)),
                                               ),
                                               backgroundColor:
-                                                  MaterialStateProperty.all(
-                                                      _submitRequest == false
-                                                          ? Color(0xFF95989A)
-                                                          : Color(0xFFF12A32)),
+                                              MaterialStateProperty.all(
+                                                  _submitRequest == false
+                                                      ? Color(0xFF95989A)
+                                                      : Color(0xFFF12A32)),
                                             ),
                                             child: Text(
                                               'Submit request',

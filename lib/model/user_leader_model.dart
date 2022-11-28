@@ -52,7 +52,7 @@ class UserLeader {
   String username;
   String firstName;
   String lastName;
-  int level;
+  String level;
   String avatar;
   UserPosition userPosition;
 

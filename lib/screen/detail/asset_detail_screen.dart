@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sisca_finnet/model/asset_model.dart';
+import 'package:sisca_finnet/screen/report_opname_form_screen.dart';
 
 class AssetDetailScreen extends StatefulWidget {
   final id;
@@ -22,12 +23,16 @@ class _AssetDetailScreenState extends State<AssetDetailScreen> {
   String _email;
   String _brandOrType;
   String _startDate;
+  String _lastOpnameCondition;
+  String _colorLastOpnameCondition;
   int _usefulLife;
   int _amount;
   String _description;
   bool _loading = true;
   bool _isInternetOn = true;
   bool _data = true;
+  TextEditingController descriptionController = TextEditingController();
+
 
   _getWidget() async {
     _getConnect();
@@ -35,7 +40,6 @@ class _AssetDetailScreenState extends State<AssetDetailScreen> {
     var statusCode = prefs.getInt('status_asset');
     await getRequestAssetDetail(widget.id).then((value) {
       if (mounted) {
-        print(statusCode);
         if (statusCode == 400) {
           setState(() {
             _data = false;
@@ -56,9 +60,17 @@ class _AssetDetailScreenState extends State<AssetDetailScreen> {
             _usefulLife = value.data.usefulLife;
             _amount = value.data.amount;
             _description = value.data.description;
+            print(value.data.latestOpname);
+            if (value.data.latestOpname == null) {
+              _lastOpnameCondition = null;
+              _colorLastOpnameCondition = null;
+            } else {
+              _lastOpnameCondition = value.data.latestOpname.condition.name;
+              var parts = value.data.latestOpname.condition.color.split('#');
+              _colorLastOpnameCondition = '0xFF${parts[1].trim()}';
+            }
           });
         }
-        print(_data);
       }
     });
   }
@@ -181,7 +193,8 @@ class _AssetDetailScreenState extends State<AssetDetailScreen> {
                                                     fontFamily: 'Roboto'),
                                               ),
                                               Divider(
-                                                  color: Colors.white, height: 4),
+                                                  color: Colors.white,
+                                                  height: 4),
                                               Text(
                                                 _email ?? '',
                                                 style: TextStyle(
@@ -225,7 +238,8 @@ class _AssetDetailScreenState extends State<AssetDetailScreen> {
                                               ),
                                             ],
                                           ),
-                                          Divider(color: Colors.white, height: 8),
+                                          Divider(
+                                              color: Colors.white, height: 8),
                                           Row(
                                             mainAxisAlignment:
                                                 MainAxisAlignment.spaceBetween,
@@ -248,7 +262,8 @@ class _AssetDetailScreenState extends State<AssetDetailScreen> {
                                               ),
                                             ],
                                           ),
-                                          Divider(color: Colors.white, height: 8),
+                                          Divider(
+                                              color: Colors.white, height: 8),
                                           Row(
                                             mainAxisAlignment:
                                                 MainAxisAlignment.spaceBetween,
@@ -264,10 +279,12 @@ class _AssetDetailScreenState extends State<AssetDetailScreen> {
                                               Row(
                                                 children: [
                                                   Text(
-                                                    _usefulLife.toString() ?? '',
+                                                    _usefulLife.toString() ??
+                                                        '',
                                                     style: TextStyle(
                                                         fontSize: 11,
-                                                        color: Color(0xFF595D64),
+                                                        color:
+                                                            Color(0xFF595D64),
                                                         fontWeight:
                                                             FontWeight.w400,
                                                         fontFamily: 'Roboto'),
@@ -278,7 +295,8 @@ class _AssetDetailScreenState extends State<AssetDetailScreen> {
                                                         : ' Year',
                                                     style: TextStyle(
                                                         fontSize: 11,
-                                                        color: Color(0xFF595D64),
+                                                        color:
+                                                            Color(0xFF595D64),
                                                         fontWeight:
                                                             FontWeight.w400,
                                                         fontFamily: 'Roboto'),
@@ -287,7 +305,8 @@ class _AssetDetailScreenState extends State<AssetDetailScreen> {
                                               ),
                                             ],
                                           ),
-                                          Divider(color: Colors.white, height: 8),
+                                          Divider(
+                                              color: Colors.white, height: 8),
                                           Row(
                                             mainAxisAlignment:
                                                 MainAxisAlignment.spaceBetween,
@@ -315,8 +334,11 @@ class _AssetDetailScreenState extends State<AssetDetailScreen> {
                                               ),
                                             ],
                                           ),
-                                          Divider(color: Colors.white, height: 8),
+                                          Divider(
+                                              color: Colors.white, height: 8),
                                           Row(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
                                             mainAxisAlignment:
                                                 MainAxisAlignment.spaceBetween,
                                             children: [
@@ -329,7 +351,7 @@ class _AssetDetailScreenState extends State<AssetDetailScreen> {
                                                     fontFamily: 'Roboto'),
                                               ),
                                               Container(
-                                                width: 148,
+                                                width: size.width / 2.2,
                                                 child: Text(
                                                   _description == 'null'
                                                       ? ''
@@ -338,13 +360,91 @@ class _AssetDetailScreenState extends State<AssetDetailScreen> {
                                                   style: TextStyle(
                                                       fontSize: 11,
                                                       color: Color(0xFF595D64),
-                                                      fontWeight: FontWeight.w400,
+                                                      fontWeight:
+                                                          FontWeight.w400,
                                                       fontFamily: 'Roboto'),
                                                 ),
                                               ),
                                             ],
                                           ),
-                                          Divider(color: Colors.white, height: 8),
+                                          Divider(
+                                              color: Colors.white, height: 16),
+                                          Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              Text(
+                                                'Last Opname Condition : ',
+                                                style: TextStyle(
+                                                    fontSize: 11,
+                                                    color: Color(0xFF595D64),
+                                                    fontWeight: FontWeight.w600,
+                                                    fontFamily: 'Roboto'),
+                                              ),
+                                              Row(
+                                                children: [
+                                                  Container(
+                                                    width: 13,
+                                                    height: 13,
+                                                    decoration: BoxDecoration(
+                                                      color: _colorLastOpnameCondition ==
+                                                              null
+                                                          ? Colors.white
+                                                          : Color(num.parse(
+                                                              _colorLastOpnameCondition)),
+                                                      borderRadius:
+                                                          BorderRadius.all(
+                                                        Radius.circular(20),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                  SizedBox(width: 5),
+                                                  Text(
+                                                    _lastOpnameCondition == null
+                                                        ? ''
+                                                        : _lastOpnameCondition,
+                                                    style: TextStyle(
+                                                        fontSize: 11,
+                                                        color:
+                                                            Color(0xFF595D64),
+                                                        fontWeight:
+                                                            FontWeight.w700,
+                                                        fontFamily: 'Roboto'),
+                                                  ),
+                                                  SizedBox(width: 5),
+                                                  Container(
+                                                    height: 35,
+                                                    child: TextButton(
+                                                      style:
+                                                          TextButton.styleFrom(
+                                                        backgroundColor:
+                                                            Color(0xFFDB1C23),
+                                                      ),
+                                                      child: Text(
+                                                        'Report Opname',
+                                                        style: TextStyle(
+                                                            fontSize: 11,
+                                                            color: Color(
+                                                                0xFFFFFFFF),
+                                                            fontWeight:
+                                                                FontWeight.w400,
+                                                            fontFamily:
+                                                                'Roboto'),
+                                                      ),
+                                                      onPressed: () {
+                                                        Navigator.push(
+                                                            context,
+                                                            MaterialPageRoute(
+                                                                builder:
+                                                                    (context) =>
+                                                                    ReportOpnameFormScreen()));
+                                                      },
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            ],
+                                          ),
                                         ],
                                       ),
                                     ),

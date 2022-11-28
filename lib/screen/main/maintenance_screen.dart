@@ -113,7 +113,7 @@ class _MaintenanceScreenState extends State<MaintenanceScreen> {
       'requested_description': _description ?? '',
       'maintenance_option': 'logistic_support',
       'requested_to': _idReviewer,
-      'reviewed_to': _idApprover,
+      'reviewed_to': 2,
       'requested_evidence': _filePath,
     };
     print(body);
@@ -530,20 +530,6 @@ class _MaintenanceScreenState extends State<MaintenanceScreen> {
                     _filePath = '';
                     _value = false;
                     _submitRequest = false;
-                    // Navigator.push(
-                    //   context,
-                    //   MaterialPageRoute(
-                    //       builder: (context) => TestScreen()),
-                    // );
-                    // Navigator.push(
-                    //   context,
-                    //   MaterialPageRoute(
-                    //       builder: (context) => AlertPopUp()),
-                    // );
-                    // showPopRequestData(context);
-                    // showDialog(
-                    //     context: context,
-                    //     builder: (context) => FormMaintenance());
                     showDialog(
                         context: context,
                         builder: (context) {
@@ -1019,96 +1005,96 @@ class _MaintenanceScreenState extends State<MaintenanceScreen> {
                                             fontFamily: 'Roboto'),
                                       ),
                                       Divider(color: Colors.white),
+                                      // Visibility(
+                                      //   visible: _usernameReviewer == null
+                                      //       ? false
+                                      //       : true,
+                                      //   child: Container(
+                                      //     child: Column(
+                                      //       crossAxisAlignment:
+                                      //           CrossAxisAlignment.start,
+                                      //       children: [
+                                      //         DropdownSearch<UserVp>(
+                                      //           validator: (v) => v == null
+                                      //               ? "Required Field"
+                                      //               : null,
+                                      //           showSelectedItems: true,
+                                      //           mode: Mode.MENU,
+                                      //           compareFn: (i, s) =>
+                                      //               i?.isEqual(s) ?? false,
+                                      //           dropdownSearchDecoration:
+                                      //               InputDecoration(
+                                      //             labelText:
+                                      //                 "Request approval to *",
+                                      //             hintText:
+                                      //                 "Request approval to *",
+                                      //             contentPadding:
+                                      //                 EdgeInsets.fromLTRB(
+                                      //                     12, 12, 0, 0),
+                                      //             border: OutlineInputBorder(),
+                                      //             focusedBorder:
+                                      //                 OutlineInputBorder(
+                                      //               borderSide: BorderSide(
+                                      //                   color:
+                                      //                       Color(0xFFBAC1CC)),
+                                      //             ),
+                                      //             enabledBorder:
+                                      //                 OutlineInputBorder(
+                                      //               borderSide: BorderSide(
+                                      //                   color:
+                                      //                       Color(0xFFBAC1CC)),
+                                      //             ),
+                                      //             errorStyle: TextStyle(
+                                      //                 fontSize: 8,
+                                      //                 color: Color(0xFFF12A32),
+                                      //                 fontWeight:
+                                      //                     FontWeight.w400,
+                                      //                 fontFamily: 'Roboto'),
+                                      //           ),
+                                      //           autoValidateMode:
+                                      //               AutovalidateMode
+                                      //                   .onUserInteraction,
+                                      //           onFind: (String filter) =>
+                                      //               postRequestUserVp(),
+                                      //           onChanged: (value) {
+                                      //             setState(() {
+                                      //               _idApprover = value.id;
+                                      //               _avatarApprover =
+                                      //                   value.avatar;
+                                      //               _usernameApprover =
+                                      //                   value.username;
+                                      //               _firstnameApprover =
+                                      //                   value.firstName;
+                                      //               _lastnameApprover =
+                                      //                   value.lastName;
+                                      //               _levelApprover =
+                                      //                   value.level;
+                                      //               _userPositionApprover =
+                                      //                   value.userPosition.name;
+                                      //             });
+                                      //           },
+                                      //           dropdownBuilder:
+                                      //               customDropDownUserVp,
+                                      //           popupItemBuilder:
+                                      //               customPopupItemBuilderUserVp,
+                                      //         ),
+                                      //         Divider(
+                                      //             color: Colors.white,
+                                      //             height: 5),
+                                      //         Text(
+                                      //           'Choose to whom request to be approved',
+                                      //           style: TextStyle(
+                                      //               fontSize: 8,
+                                      //               color: Color(0xFFBAC1CC),
+                                      //               fontWeight: FontWeight.w400,
+                                      //               fontFamily: 'Roboto'),
+                                      //         ),
+                                      //       ],
+                                      //     ),
+                                      //   ),
+                                      // ),
                                       Visibility(
                                         visible: _usernameReviewer == null
-                                            ? false
-                                            : true,
-                                        child: Container(
-                                          child: Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              DropdownSearch<UserVp>(
-                                                validator: (v) => v == null
-                                                    ? "Required Field"
-                                                    : null,
-                                                showSelectedItems: true,
-                                                mode: Mode.MENU,
-                                                compareFn: (i, s) =>
-                                                    i?.isEqual(s) ?? false,
-                                                dropdownSearchDecoration:
-                                                    InputDecoration(
-                                                  labelText:
-                                                      "Request approval to *",
-                                                  hintText:
-                                                      "Request approval to *",
-                                                  contentPadding:
-                                                      EdgeInsets.fromLTRB(
-                                                          12, 12, 0, 0),
-                                                  border: OutlineInputBorder(),
-                                                  focusedBorder:
-                                                      OutlineInputBorder(
-                                                    borderSide: BorderSide(
-                                                        color:
-                                                            Color(0xFFBAC1CC)),
-                                                  ),
-                                                  enabledBorder:
-                                                      OutlineInputBorder(
-                                                    borderSide: BorderSide(
-                                                        color:
-                                                            Color(0xFFBAC1CC)),
-                                                  ),
-                                                  errorStyle: TextStyle(
-                                                      fontSize: 8,
-                                                      color: Color(0xFFF12A32),
-                                                      fontWeight:
-                                                          FontWeight.w400,
-                                                      fontFamily: 'Roboto'),
-                                                ),
-                                                autoValidateMode:
-                                                    AutovalidateMode
-                                                        .onUserInteraction,
-                                                onFind: (String filter) =>
-                                                    postRequestUserVp(),
-                                                onChanged: (value) {
-                                                  setState(() {
-                                                    _idApprover = value.id;
-                                                    _avatarApprover =
-                                                        value.avatar;
-                                                    _usernameApprover =
-                                                        value.username;
-                                                    _firstnameApprover =
-                                                        value.firstName;
-                                                    _lastnameApprover =
-                                                        value.lastName;
-                                                    _levelApprover =
-                                                        value.level;
-                                                    _userPositionApprover =
-                                                        value.userPosition.name;
-                                                  });
-                                                },
-                                                dropdownBuilder:
-                                                    customDropDownUserVp,
-                                                popupItemBuilder:
-                                                    customPopupItemBuilderUserVp,
-                                              ),
-                                              Divider(
-                                                  color: Colors.white,
-                                                  height: 5),
-                                              Text(
-                                                'Choose to whom request to be approved',
-                                                style: TextStyle(
-                                                    fontSize: 8,
-                                                    color: Color(0xFFBAC1CC),
-                                                    fontWeight: FontWeight.w400,
-                                                    fontFamily: 'Roboto'),
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                      ),
-                                      Visibility(
-                                        visible: _usernameApprover == null
                                             ? false
                                             : true,
                                         child: Container(
@@ -1353,171 +1339,171 @@ class _MaintenanceScreenState extends State<MaintenanceScreen> {
                                               Divider(
                                                   color: Colors.white,
                                                   height: 10),
-                                              Container(
-                                                child: Row(
-                                                  children: [
-                                                    Text(
-                                                      'Approver : ',
-                                                      style: TextStyle(
-                                                          fontSize: 8,
-                                                          color:
-                                                              Color(0xFF6E7178),
-                                                          fontWeight:
-                                                              FontWeight.w500,
-                                                          fontFamily: 'Roboto'),
-                                                    ),
-                                                    SizedBox(width: 10),
-                                                    Container(
-                                                      child: Row(
-                                                        mainAxisAlignment:
-                                                            MainAxisAlignment
-                                                                .center,
-                                                        children: [
-                                                          _usernameApprover ==
-                                                                  null
-                                                              ? Container()
-                                                              : Container(
-                                                                  padding: EdgeInsets
-                                                                      .symmetric(
-                                                                          vertical:
-                                                                              5),
-                                                                  child:
-                                                                      ClipRRect(
-                                                                    borderRadius:
-                                                                        BorderRadius
-                                                                            .all(
-                                                                      Radius.circular(
-                                                                          50),
-                                                                    ),
-                                                                    child: _avatarApprover ==
-                                                                            null
-                                                                        ? Image
-                                                                            .asset(
-                                                                            'assets/images/placeholder.png',
-                                                                            width:
-                                                                                30,
-                                                                            height:
-                                                                                30,
-                                                                            fit:
-                                                                                BoxFit.cover,
-                                                                          )
-                                                                        : Image
-                                                                            .network(
-                                                                            BASE_URL_STORAGE +
-                                                                                _avatarApprover,
-                                                                            width:
-                                                                                30,
-                                                                            height:
-                                                                                30,
-                                                                            fit:
-                                                                                BoxFit.cover,
-                                                                          ),
-                                                                  ),
-                                                                ),
-                                                          SizedBox(width: 5),
-                                                          Container(
-                                                            child: Column(
-                                                              crossAxisAlignment:
-                                                                  CrossAxisAlignment
-                                                                      .start,
-                                                              children: [
-                                                                Row(
-                                                                  children: [
-                                                                    Text(
-                                                                      _usernameApprover ==
-                                                                              null
-                                                                          ? ''
-                                                                          : '$_usernameApprover - ',
-                                                                      style: TextStyle(
-                                                                          fontSize:
-                                                                              10,
-                                                                          color: Color(
-                                                                              0xFF595D64),
-                                                                          fontWeight: FontWeight
-                                                                              .w400,
-                                                                          fontFamily:
-                                                                              'Roboto'),
-                                                                    ),
-                                                                    Text(
-                                                                      _firstnameApprover ==
-                                                                              null
-                                                                          ? ''
-                                                                          : '$_firstnameApprover ',
-                                                                      style: TextStyle(
-                                                                          fontSize:
-                                                                              10,
-                                                                          color: Color(
-                                                                              0xFF595D64),
-                                                                          fontWeight: FontWeight
-                                                                              .w400,
-                                                                          fontFamily:
-                                                                              'Roboto'),
-                                                                    ),
-                                                                    Text(
-                                                                      _lastnameApprover ??
-                                                                          '',
-                                                                      style: TextStyle(
-                                                                          fontSize:
-                                                                              10,
-                                                                          color: Color(
-                                                                              0xFF595D64),
-                                                                          fontWeight: FontWeight
-                                                                              .w400,
-                                                                          fontFamily:
-                                                                              'Roboto'),
-                                                                    ),
-                                                                  ],
-                                                                ),
-                                                                Divider(
-                                                                    color: Colors
-                                                                        .white,
-                                                                    height: 5),
-                                                                Row(
-                                                                  children: [
-                                                                    Text(
-                                                                      _levelApprover ==
-                                                                              null
-                                                                          ? ''
-                                                                          : 'Level $_levelApprover - ',
-                                                                      style: TextStyle(
-                                                                          fontSize:
-                                                                              8,
-                                                                          color: Color(
-                                                                              0xFF595D64),
-                                                                          fontWeight: FontWeight
-                                                                              .w400,
-                                                                          fontFamily:
-                                                                              'Roboto'),
-                                                                    ),
-                                                                    Text(
-                                                                      _userPositionApprover ??
-                                                                          '',
-                                                                      style: TextStyle(
-                                                                          fontSize:
-                                                                              8,
-                                                                          color: Color(
-                                                                              0xFF595D64),
-                                                                          fontWeight: FontWeight
-                                                                              .w500,
-                                                                          fontFamily:
-                                                                              'Roboto'),
-                                                                    ),
-                                                                  ],
-                                                                ),
-                                                              ],
-                                                            ),
-                                                          ),
-                                                        ],
-                                                      ),
-                                                    ),
-                                                  ],
-                                                ),
-                                              ),
+                                              // Container(
+                                              //   child: Row(
+                                              //     children: [
+                                              //       Text(
+                                              //         'Approver : ',
+                                              //         style: TextStyle(
+                                              //             fontSize: 8,
+                                              //             color:
+                                              //                 Color(0xFF6E7178),
+                                              //             fontWeight:
+                                              //                 FontWeight.w500,
+                                              //             fontFamily: 'Roboto'),
+                                              //       ),
+                                              //       SizedBox(width: 10),
+                                              //       Container(
+                                              //         child: Row(
+                                              //           mainAxisAlignment:
+                                              //               MainAxisAlignment
+                                              //                   .center,
+                                              //           children: [
+                                              //             _usernameApprover ==
+                                              //                     null
+                                              //                 ? Container()
+                                              //                 : Container(
+                                              //                     padding: EdgeInsets
+                                              //                         .symmetric(
+                                              //                             vertical:
+                                              //                                 5),
+                                              //                     child:
+                                              //                         ClipRRect(
+                                              //                       borderRadius:
+                                              //                           BorderRadius
+                                              //                               .all(
+                                              //                         Radius.circular(
+                                              //                             50),
+                                              //                       ),
+                                              //                       child: _avatarApprover ==
+                                              //                               null
+                                              //                           ? Image
+                                              //                               .asset(
+                                              //                               'assets/images/placeholder.png',
+                                              //                               width:
+                                              //                                   30,
+                                              //                               height:
+                                              //                                   30,
+                                              //                               fit:
+                                              //                                   BoxFit.cover,
+                                              //                             )
+                                              //                           : Image
+                                              //                               .network(
+                                              //                               BASE_URL_STORAGE +
+                                              //                                   _avatarApprover,
+                                              //                               width:
+                                              //                                   30,
+                                              //                               height:
+                                              //                                   30,
+                                              //                               fit:
+                                              //                                   BoxFit.cover,
+                                              //                             ),
+                                              //                     ),
+                                              //                   ),
+                                              //             SizedBox(width: 5),
+                                              //             Container(
+                                              //               child: Column(
+                                              //                 crossAxisAlignment:
+                                              //                     CrossAxisAlignment
+                                              //                         .start,
+                                              //                 children: [
+                                              //                   Row(
+                                              //                     children: [
+                                              //                       Text(
+                                              //                         _usernameApprover ==
+                                              //                                 null
+                                              //                             ? ''
+                                              //                             : '$_usernameApprover - ',
+                                              //                         style: TextStyle(
+                                              //                             fontSize:
+                                              //                                 10,
+                                              //                             color: Color(
+                                              //                                 0xFF595D64),
+                                              //                             fontWeight: FontWeight
+                                              //                                 .w400,
+                                              //                             fontFamily:
+                                              //                                 'Roboto'),
+                                              //                       ),
+                                              //                       Text(
+                                              //                         _firstnameApprover ==
+                                              //                                 null
+                                              //                             ? ''
+                                              //                             : '$_firstnameApprover ',
+                                              //                         style: TextStyle(
+                                              //                             fontSize:
+                                              //                                 10,
+                                              //                             color: Color(
+                                              //                                 0xFF595D64),
+                                              //                             fontWeight: FontWeight
+                                              //                                 .w400,
+                                              //                             fontFamily:
+                                              //                                 'Roboto'),
+                                              //                       ),
+                                              //                       Text(
+                                              //                         _lastnameApprover ??
+                                              //                             '',
+                                              //                         style: TextStyle(
+                                              //                             fontSize:
+                                              //                                 10,
+                                              //                             color: Color(
+                                              //                                 0xFF595D64),
+                                              //                             fontWeight: FontWeight
+                                              //                                 .w400,
+                                              //                             fontFamily:
+                                              //                                 'Roboto'),
+                                              //                       ),
+                                              //                     ],
+                                              //                   ),
+                                              //                   Divider(
+                                              //                       color: Colors
+                                              //                           .white,
+                                              //                       height: 5),
+                                              //                   Row(
+                                              //                     children: [
+                                              //                       Text(
+                                              //                         _levelApprover ==
+                                              //                                 null
+                                              //                             ? ''
+                                              //                             : 'Level $_levelApprover - ',
+                                              //                         style: TextStyle(
+                                              //                             fontSize:
+                                              //                                 8,
+                                              //                             color: Color(
+                                              //                                 0xFF595D64),
+                                              //                             fontWeight: FontWeight
+                                              //                                 .w400,
+                                              //                             fontFamily:
+                                              //                                 'Roboto'),
+                                              //                       ),
+                                              //                       Text(
+                                              //                         _userPositionApprover ??
+                                              //                             '',
+                                              //                         style: TextStyle(
+                                              //                             fontSize:
+                                              //                                 8,
+                                              //                             color: Color(
+                                              //                                 0xFF595D64),
+                                              //                             fontWeight: FontWeight
+                                              //                                 .w500,
+                                              //                             fontFamily:
+                                              //                                 'Roboto'),
+                                              //                       ),
+                                              //                     ],
+                                              //                   ),
+                                              //                 ],
+                                              //               ),
+                                              //             ),
+                                              //           ],
+                                              //         ),
+                                              //       ),
+                                              //     ],
+                                              //   ),
+                                              // ),
                                             ],
                                           ),
                                         ),
                                       ),
-                                      Divider(color: Colors.white, height: 30),
+                                      // Divider(color: Colors.white, height: 30),
                                       Container(
                                         width:
                                             MediaQuery.of(context).size.width,

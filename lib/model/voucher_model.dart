@@ -40,7 +40,7 @@ class Data {
   int total;
   String requestedBy;
   String requestedDescription;
-  int requestedLevelSnapshot;
+  String requestedLevelSnapshot;
   String requestedPositionIdSnapshot;
   String reviewedTo;
   int reviewedLevelSnapshot;
@@ -48,7 +48,7 @@ class Data {
   String requestedTo;
   String reviewedStatus;
   String reviewedAt;
-  int respondedLevelSnapshot;
+  String respondedLevelSnapshot;
   String respondedPositionIdSnapshot;
   String id;
   String updatedAt;
@@ -358,7 +358,7 @@ class UserCurrentProgress {
   String updatedAt;
   String deletedAt;
   String positionId;
-  int level;
+  String level;
 
   UserCurrentProgress(
       {this.id,

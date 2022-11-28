@@ -409,7 +409,7 @@ class UserCurrentProgress {
   String jobTitle;
   String department;
   String division;
-  int level;
+  String level;
   String avatar;
   String lastLoggedIn;
   String emailVerifiedAt;

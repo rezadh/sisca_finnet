@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:intl/intl.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sisca_finnet/model/asset_model.dart';
 import 'package:sisca_finnet/model/opname_model.dart';
 import 'package:sisca_finnet/screen/asset_scan_screen.dart';
@@ -112,6 +113,7 @@ class _AssetScreenState extends State<AssetScreen> {
       ),
       body: Container(
         height: size.height - 60,
+        color: Colors.white,
         child: Stack(
           children: [
             Positioned(
@@ -131,6 +133,7 @@ class _AssetScreenState extends State<AssetScreen> {
                             ? Container(
                                 width: size.width,
                                 height: size.height,
+                                color: Colors.white,
                                 child: SingleChildScrollView(
                                   physics: const BouncingScrollPhysics(
                                       parent: AlwaysScrollableScrollPhysics()),
@@ -148,7 +151,9 @@ class _AssetScreenState extends State<AssetScreen> {
                                             shrinkWrap: true,
                                             itemBuilder: (context, index) {
                                               return GestureDetector(
-                                                onTap: () {
+                                                onTap: () async {
+                                                  SharedPreferences prefs = await SharedPreferences.getInstance();
+                                                  prefs.setString('asset_detail_id', data[index].id);
                                                   Navigator.push(
                                                       context,
                                                       MaterialPageRoute(
@@ -358,6 +363,7 @@ class _AssetScreenState extends State<AssetScreen> {
                         onRefresh: _refreshOpname,
                         child: _isInternetOn
                             ? Container(
+                                color: Colors.white,
                                 width: size.width,
                                 height: size.height,
                                 child: SingleChildScrollView(
@@ -590,7 +596,7 @@ class _AssetScreenState extends State<AssetScreen> {
                                   bottomLeft: Radius.circular(20)),
                             ),
                             child: Text(
-                              'ASSET INFORMATION',
+                              'ASSET INFO',
                               textAlign: TextAlign.center,
                               style: TextStyle(
                                   fontSize: 12,
@@ -655,7 +661,7 @@ class _AssetScreenState extends State<AssetScreen> {
                                     bottomLeft: Radius.circular(20)),
                               ),
                               child: Text(
-                                'ASSET INFORMATION',
+                                'ASSET INFO',
                                 textAlign: TextAlign.center,
                                 style: TextStyle(
                                     fontSize: 12,
@@ -698,10 +704,12 @@ class _AssetScreenState extends State<AssetScreen> {
               right: 22,
               child: FloatingActionButton(
                 onPressed: () {
-                  _value == 0 ? Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => AssetScanScreen())) : Container();
+                  _value == 0
+                      ? Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => AssetScanScreen()))
+                      : Container();
                 },
                 child: _value == 0 ? Icon(Icons.qr_code) : Icon(Icons.add),
                 backgroundColor: Color(0xFFF12A32),

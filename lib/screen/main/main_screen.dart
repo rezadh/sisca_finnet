@@ -3,6 +3,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:sisca_finnet/screen/main/account_screen.dart';
 import 'package:sisca_finnet/screen/main/asset_screen.dart';
 import 'package:sisca_finnet/screen/main/maintenance_screen.dart';
+import 'package:sisca_finnet/screen/main/procurement_screen.dart';
 import 'package:sisca_finnet/screen/main/voucher_screen.dart';
 
 class MainScreen extends StatefulWidget {
@@ -22,7 +23,7 @@ class _MainScreenState extends State<MainScreen> {
   final tabs = [
     AssetScreen(),
     MaintenanceScreen(),
-    VoucherScreen(),
+    ProcurementScreen(),
     AccountScreen(),
   ];
 
@@ -45,8 +46,8 @@ class _MainScreenState extends State<MainScreen> {
           BottomNavigationBarItem(
               icon: Container(
                   padding: EdgeInsets.symmetric(vertical: 5),
-                  child: FaIcon(FontAwesomeIcons.ticketAlt)),
-              label: 'Voucher'),
+                  child: FaIcon(FontAwesomeIcons.cartPlus)),
+              label: 'Procurement'),
           BottomNavigationBarItem(
               icon: Container(
                   padding: EdgeInsets.symmetric(vertical: 5),
