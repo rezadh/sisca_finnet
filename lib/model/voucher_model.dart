@@ -180,6 +180,7 @@ class DataBawahVoucher {
   String requestedBy;
   String requestedTo;
   String requestedDescription;
+  String voucherDescription;
   String reviewedTo;
   String reviewedStatus;
   String reviewedAt;
@@ -196,6 +197,8 @@ class DataBawahVoucher {
   String deletedAt;
   String createdAt;
   String updatedAt;
+  String voucherPurpose;
+  int active;
   Status status;
   VoucherData voucher;
   UserCurrentProgress userRequestedTo;
@@ -225,10 +228,12 @@ class DataBawahVoucher {
       this.createdAt,
       this.updatedAt,
       this.status,
+      this.active,
       this.voucher,
       this.userRequestedTo,
       this.userRequestedBy,
-      this.userReviewedTo});
+      this.userReviewedTo,
+      this.voucherDescription});
 
   DataBawahVoucher.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -249,9 +254,12 @@ class DataBawahVoucher {
     respondedLevelSnapshot = json['responded_level_snapshot'];
     reviewedPositionIdSnapshot = json['reviewed_position_id_snapshot'];
     reviewedLevelSnapshot = json['reviewed_level_snapshot'];
+    voucherPurpose = json['voucher_purpose'];
+    voucherDescription = json['voucher_description'];
     deletedAt = json['deleted_at'];
     createdAt = json['created_at'];
     updatedAt = json['updated_at'];
+    active = json['active'];
     status =
         json['status'] != null ? new Status.fromJson(json['status']) : null;
     voucher = json['voucher'] != null
@@ -288,9 +296,12 @@ class DataBawahVoucher {
     data['responded_level_snapshot'] = this.respondedLevelSnapshot;
     data['reviewed_position_id_snapshot'] = this.reviewedPositionIdSnapshot;
     data['reviewed_level_snapshot'] = this.reviewedLevelSnapshot;
+    data['voucher_description'] = this.voucherDescription;
+    data['voucher_purpose'] = this.voucherPurpose;
     data['deleted_at'] = this.deletedAt;
     data['created_at'] = this.createdAt;
     data['updated_at'] = this.updatedAt;
+    data['active'] = this.active;
     if (this.status != null) {
       data['status'] = this.status.toJson();
     }
@@ -477,7 +488,7 @@ class VoucherData {
 Future<List<DataBawahVoucher>> getRequestVoucher() async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
   String url = BASE_URL +
-      'voucher-requests?page=1&per_page=500&q=&is_requester=1&with[]=voucher&with[]=user_requested_to&with[]=user_requested_by';
+      'voucher-requests?page=1&per_page=500&is_requester=1&with[]=voucher&with[]=user_requested_to&with[]=user_requested_by';
   var token = prefs.getString('token');
   Map<String, String> h = {
     'Content-Type': 'application/json',
@@ -513,6 +524,27 @@ Future<Voucher> postRequestStoreVoucher(Map body) async {
   if (body['reviewed_to'] != null) {
     request.fields['reviewed_to'] = body['reviewed_to'].toString();
   }
+  var res = await request.send();
+  var response = await http.Response.fromStream(res);
+  if (response.statusCode == 200) {
+    print(response.body);
+    return Voucher.fromJson(json.decode(response.body));
+  } else {
+    print(response.body);
+    return null;
+  }
+}
+Future<Voucher> putStoreVoucher() async {
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  var voucherId = prefs.getString('voucher id');
+  String url = BASE_URL + 'voucher-request/$voucherId/use';
+  var token = prefs.getString('token');
+  Map<String, String> h = {
+    'Content-Type': 'application/json',
+    'Authorization': 'Bearer $token',
+  };
+  var request = http.MultipartRequest('PUT', Uri.parse(url));
+  request.headers.addAll(h);
   var res = await request.send();
   var response = await http.Response.fromStream(res);
   if (response.statusCode == 200) {

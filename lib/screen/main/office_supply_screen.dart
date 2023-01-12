@@ -5,10 +5,12 @@ import 'package:flutter/services.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:sisca_finnet/model/office_supply_model.dart';
 import 'package:sisca_finnet/model/user_leader_model.dart';
 import 'package:sisca_finnet/model/user_vp_model.dart';
 import 'package:sisca_finnet/model/voucher_model.dart';
 import 'package:sisca_finnet/util/const.dart';
+import 'package:sisca_finnet/widget/custom_dropdown_office_supply.dart';
 import 'package:sisca_finnet/widget/custom_dropdown_user_leader.dart';
 import 'package:sisca_finnet/widget/custom_dropdown_user_vp.dart';
 
@@ -19,12 +21,14 @@ class OfficeSupplyScreen extends StatefulWidget {
 
 class _OfficeSupplyScreenState extends State<OfficeSupplyScreen> {
   FToast fToast;
-  Future<List<DataBawahVoucher>> futureVoucher;
+  Future<List<DataBawahOfficeSupply>> futureOfficeSupply;
   final _formKey = GlobalKey<FormState>();
-  TextEditingController descriptionController = TextEditingController();
-  TextEditingController officeSupplyController = TextEditingController();
-  var _labelTextDescription = 'Description';
-  var _labelTextOfficeSupply = '3 Items';
+  TextEditingController keperluanController = TextEditingController();
+  TextEditingController voucherTotalController = TextEditingController();
+  var _labelTextKeperluan = 'Keperluan';
+  var _labelTextVoucherTotal = 'Jumlah voucher';
+  String _keperluan;
+  String _voucherTotal;
   String _description;
   String _officeSupply;
   String _level;
@@ -36,6 +40,9 @@ class _OfficeSupplyScreenState extends State<OfficeSupplyScreen> {
   var _levelReviewer;
   String _userPositionReviewer;
   String _idApprover;
+  String _idOfficeSupply;
+  String _nameOfficeSupply;
+  String _codeOfficeSupply;
   String _usernameApprover;
   String _avatarApprover;
   String _firstnameApprover;
@@ -71,25 +78,26 @@ class _OfficeSupplyScreenState extends State<OfficeSupplyScreen> {
     } else {
       setState(() {
         _isInternetOn = true;
-        _postStoreVoucher();
+        _postStoreOfficeSupply();
       });
     }
   }
 
-  void _postStoreVoucher() async {
+  void _postStoreOfficeSupply() async {
     Map body = {
-      'requested_description': _description ?? '',
-      'requested_to': _idApprover,
-      'reviewed_to': 3,
+      'office_supply_description': _keperluan ?? '',
+      'reviewed_to': _idReviewer,
+      'office_supply_quantity': _voucherTotal ?? 0,
+      'office_supply_id': _idOfficeSupply,
     };
     print(body);
-    await postRequestStoreVoucher(body).then((value) {
+    await postRequestOfficeSupply(body).then((value) {
       EasyLoading.dismiss();
       if (value.data != null) {
         EasyLoading.showSuccess('Sukses');
         Navigator.pop(context, true);
         setState(() {
-          getRequestVoucher();
+          getRequestOfficeSupply();
         });
         return;
       } else {
@@ -99,7 +107,7 @@ class _OfficeSupplyScreenState extends State<OfficeSupplyScreen> {
     });
   }
 
-  Future<void> refreshVoucher() async {
+  Future<void> refreshOfficeSupply() async {
     // await postRequestMaintenance();
     // await Future.delayed(Duration(seconds: 2));
     var connectivityResult = await (Connectivity().checkConnectivity());
@@ -108,13 +116,13 @@ class _OfficeSupplyScreenState extends State<OfficeSupplyScreen> {
         _isInternetOn = false;
       });
     } else {
-      await getRequestVoucher();
+      await getRequestOfficeSupply();
       setState(() {
         _isInternetOn = true;
       });
     }
     setState(() {
-      futureVoucher = getRequestVoucher();
+      futureOfficeSupply = getRequestOfficeSupply();
     });
   }
 
@@ -123,7 +131,7 @@ class _OfficeSupplyScreenState extends State<OfficeSupplyScreen> {
     super.initState();
     setState(() {
       getConnect();
-      futureVoucher = getRequestVoucher();
+      futureOfficeSupply = getRequestOfficeSupply();
     });
     fToast = FToast();
     fToast.init(context);
@@ -179,16 +187,16 @@ class _OfficeSupplyScreenState extends State<OfficeSupplyScreen> {
                 height: size.height,
                 padding: EdgeInsets.only(left: 15, right: 15, top: 100),
                 child: RefreshIndicator(
-                  onRefresh: refreshVoucher,
+                  onRefresh: refreshOfficeSupply,
                   child: _isInternetOn
                       ? Container(
                     width: size.width,
                     height: size.height,
-                    child: FutureBuilder<List<DataBawahVoucher>>(
-                      future: getRequestVoucher(),
+                    child: FutureBuilder<List<DataBawahOfficeSupply>>(
+                      future: getRequestOfficeSupply(),
                       builder: (context, snapshot) {
                         if (snapshot.hasData) {
-                          List<DataBawahVoucher> data = snapshot.data;
+                          List<DataBawahOfficeSupply> data = snapshot.data;
                           return data.isNotEmpty
                               ? ListView.builder(
                             itemCount: data.length,
@@ -196,6 +204,12 @@ class _OfficeSupplyScreenState extends State<OfficeSupplyScreen> {
                                 parent:
                                 AlwaysScrollableScrollPhysics()),
                             itemBuilder: (context, index) {
+                              String item;
+                              if(int.parse(data[index].officeSupplyQuantity) > 1){
+                                item = 'items';
+                              }else {
+                                item = 'item';
+                              }
                               return Card(
                                 elevation: 1,
                                 child: Container(
@@ -215,67 +229,32 @@ class _OfficeSupplyScreenState extends State<OfficeSupplyScreen> {
                                             .start,
                                         children: [
                                           Text(
-                                            data[index].voucher ==
+                                            data[index].officeSupplyName ==
                                                 null
                                                 ? '-'
                                                 : data[index]
-                                                .voucher
-                                                .voucherType,
+                                                .officeSupplyName,
                                             style: TITLE,
                                           ),
                                           Divider(
                                               color: Colors.white,
-                                              height: 8),
-                                          data[index].voucher ==
+                                              height: 5),
+                                          data[index].officeSupplyQuantity ==
                                               null
-                                              ? Text(
-                                            'Voucher Code : ',
+                                              ? Text('-', style: TITLE) : Text(
+                                            '${data[index].officeSupplyQuantity} $item',
                                             style: TITLE,
-                                          )
-                                              : Row(
-                                            children: [
-                                              Text(
-                                                data[index]
-                                                    .voucher
-                                                    .voucherCode,
-                                                style: TITLE,
-                                              ),
-                                              SizedBox(
-                                                  width: 4),
-                                              GestureDetector(
-                                                onTap: () {
-                                                  Clipboard.setData(ClipboardData(
-                                                      text: data[index]
-                                                          .voucher
-                                                          .voucherCode));
-                                                  // showToast();
-                                                  _showToast();
-                                                },
-                                                child: Icon(
-                                                  Icons
-                                                      .file_copy_outlined,
-                                                  size: 12,
-                                                  color: Color(
-                                                      0xFF595D64),
-                                                ),
-                                              ),
-                                            ],
                                           ),
                                           Divider(
                                               color: Colors.white,
-                                              height: 4),
+                                              height: 5),
                                           Text(
-                                            data[index]
-                                                .requestedDescription ??
-                                                '',
-                                            style: TextStyle(
-                                                fontSize: 9,
-                                                color: Color(
-                                                    0xFF595D64),
-                                                fontWeight:
-                                                FontWeight.w300,
-                                                fontFamily:
-                                                'Roboto'),
+                                            data[index].officeSupplyDescription ==
+                                                null
+                                                ? '-'
+                                                : data[index]
+                                                .officeSupplyDescription,
+                                            style: TITLE,
                                           ),
                                         ],
                                       ),
@@ -290,20 +269,21 @@ class _OfficeSupplyScreenState extends State<OfficeSupplyScreen> {
                                             BoxDecoration(
                                               color: Colors.white,
                                               border: Border.all(
-                                                color: data[index]
-                                                    .status
-                                                    .color ==
-                                                    'green'
-                                                    ? Color(
-                                                    0xFF52C829)
-                                                    : data[index]
-                                                    .status
-                                                    .color ==
-                                                    'default'
-                                                    ? Color(
-                                                    0xFF595D64)
-                                                    : Color(
-                                                    0xFF598BD7),
+                                                color: Color(0xFF595D64),
+                                                // color: data[index]
+                                                //             .status
+                                                //             .color ==
+                                                //         'green'
+                                                //     ? Color(
+                                                //         0xFF52C829)
+                                                //     : data[index]
+                                                //                 .status
+                                                //                 .color ==
+                                                //             'default'
+                                                //         ? Color(
+                                                //             0xFF595D64)
+                                                //         : Color(
+                                                //             0xFF598BD7),
                                               ),
                                               borderRadius:
                                               BorderRadius.all(
@@ -311,25 +291,27 @@ class _OfficeSupplyScreenState extends State<OfficeSupplyScreen> {
                                               ),
                                             ),
                                             child: Text(
+                                              // 'Under Review',
                                               data[index]
                                                   .status
                                                   .name,
                                               style: TextStyle(
-                                                  fontSize: 10,
+                                                  fontSize: 9,
+                                                  // color: Color(0xFF595D64),
                                                   color: data[index]
-                                                      .status
-                                                      .color ==
-                                                      'green'
+                                                              .status
+                                                              .color ==
+                                                          'green'
                                                       ? Color(
-                                                      0xFF52C829)
+                                                          0xFF52C829)
                                                       : data[index]
-                                                      .status
-                                                      .color ==
-                                                      'default'
-                                                      ? Color(
-                                                      0xFF595D64)
-                                                      : Color(
-                                                      0xFF598BD7),
+                                                                  .status
+                                                                  .color ==
+                                                              'default'
+                                                          ? Color(
+                                                              0xFF595D64)
+                                                          : Color(
+                                                              0xFF598BD7),
                                                   fontWeight:
                                                   FontWeight
                                                       .w300,
@@ -337,6 +319,62 @@ class _OfficeSupplyScreenState extends State<OfficeSupplyScreen> {
                                                   'Roboto'),
                                             ),
                                           ),
+                                          // Container(
+                                          //   padding: EdgeInsets
+                                          //       .symmetric(
+                                          //       horizontal: 10,
+                                          //       vertical: 4),
+                                          //   decoration:
+                                          //   BoxDecoration(
+                                          //     color: Colors.white,
+                                          //     border: Border.all(
+                                          //       color: data[index]
+                                          //           .status
+                                          //           .color ==
+                                          //           'green'
+                                          //           ? Color(
+                                          //           0xFF52C829)
+                                          //           : data[index]
+                                          //           .status
+                                          //           .color ==
+                                          //           'default'
+                                          //           ? Color(
+                                          //           0xFF595D64)
+                                          //           : Color(
+                                          //           0xFF598BD7),
+                                          //     ),
+                                          //     borderRadius:
+                                          //     BorderRadius.all(
+                                          //       Radius.circular(5),
+                                          //     ),
+                                          //   ),
+                                          //   child: Text(
+                                          //     data[index]
+                                          //         .status
+                                          //         .name,
+                                          //     style: TextStyle(
+                                          //         fontSize: 10,
+                                          //         color: data[index]
+                                          //             .status
+                                          //             .color ==
+                                          //             'green'
+                                          //             ? Color(
+                                          //             0xFF52C829)
+                                          //             : data[index]
+                                          //             .status
+                                          //             .color ==
+                                          //             'default'
+                                          //             ? Color(
+                                          //             0xFF595D64)
+                                          //             : Color(
+                                          //             0xFF598BD7),
+                                          //         fontWeight:
+                                          //         FontWeight
+                                          //             .w300,
+                                          //         fontFamily:
+                                          //         'Roboto'),
+                                          //   ),
+                                          // ),
                                           Divider(
                                               height: 8,
                                               color: Colors.white),
@@ -450,8 +488,8 @@ class _OfficeSupplyScreenState extends State<OfficeSupplyScreen> {
                   await SharedPreferences.getInstance();
                   setState(() {
                     _level = prefs.getString('level');
-                    descriptionController.text = '';
-                    officeSupplyController.text = '';
+                    keperluanController.text = '';
+                    voucherTotalController.text = '';
                     _value = false;
                     _submitRequest = false;
                     showDialog(
@@ -480,71 +518,79 @@ class _OfficeSupplyScreenState extends State<OfficeSupplyScreen> {
                                           ),
                                         ),
                                         Divider(color: Colors.white),
-                                        TextFormField(
-                                          maxLines: 4,
-                                          keyboardType: TextInputType.text,
-                                          controller: descriptionController,
-                                          // style: TextStyle(fontSize: 10),
-                                          decoration: InputDecoration(
-                                            contentPadding: EdgeInsets.all(10),
-                                            labelText: _labelTextDescription,
-                                            disabledBorder: OutlineInputBorder(
+                                        DropdownSearch<OfficeSupplyAsset>(
+                                          validator: (v) => v == null
+                                              ? "Required Field"
+                                              : null,
+                                          showSelectedItems: true,
+                                          mode: Mode.MENU,
+                                          compareFn: (i, s) =>
+                                          i?.isEqual(s) ?? false,
+                                          dropdownSearchDecoration:
+                                          InputDecoration(
+                                            labelText:
+                                            "Office Supply",
+                                            hintText:
+                                            "Office Supply",
+                                            contentPadding:
+                                            EdgeInsets.fromLTRB(
+                                                12, 12, 0, 0),
+                                            border: OutlineInputBorder(),
+                                            focusedBorder:
+                                            OutlineInputBorder(
                                               borderSide: BorderSide(
-                                                  color: Color(0xFFBAC1CC)),
+                                                  color:
+                                                  Color(0xFFBAC1CC)),
                                             ),
-                                            focusedBorder: OutlineInputBorder(
+                                            enabledBorder:
+                                            OutlineInputBorder(
                                               borderSide: BorderSide(
-                                                  color: Color(0xFFBAC1CC)),
+                                                  color:
+                                                  Color(0xFFBAC1CC)),
                                             ),
-                                            enabledBorder: OutlineInputBorder(
-                                              borderSide: BorderSide(
-                                                  color: Color(0xFFBAC1CC)),
-                                            ),
-                                            border: OutlineInputBorder(
-                                              borderSide: BorderSide(
-                                                  color: Colors.white,
-                                                  width: 5.0),
-                                              borderRadius:
-                                              BorderRadius.circular(5),
-                                            ),
-                                            filled: true,
-                                            fillColor: Color(0xFFFFFFFF),
+                                            errorStyle: TextStyle(
+                                                fontSize: 8,
+                                                color: Color(0xFFF12A32),
+                                                fontWeight:
+                                                FontWeight.w400,
+                                                fontFamily: 'Roboto'),
                                           ),
-                                          onTap: () {
-                                            setState(() {
-                                              _labelTextDescription =
-                                              'Description';
-                                            });
-                                          },
+                                          autoValidateMode:
+                                          AutovalidateMode
+                                              .onUserInteraction,
+                                          onFind: (String filter) =>
+                                              getRequestAssetOfficeSupply(),
                                           onChanged: (value) {
-                                            _description = value;
-                                          },
-                                          onFieldSubmitted: (value) {
                                             setState(() {
-                                              _description = value;
-                                              print(_description);
+                                              print(value.id);
+                                              _idOfficeSupply = value.id;
+                                              _nameOfficeSupply = value.name;
+                                              _codeOfficeSupply = value.code;
                                             });
                                           },
+                                          dropdownBuilder:
+                                          customDropDownOfficeSupply,
+                                          popupItemBuilder:
+                                          customPopupItemBuilderOfficeSupply,
                                         ),
                                         Divider(color: Colors.white, height: 5),
                                         Text(
-                                          'Additional information related to voucher request',
+                                          'Click to choose Office Supply',
                                           style: TextStyle(
                                               fontSize: 8,
                                               color: Color(0xFFBAC1CC),
                                               fontWeight: FontWeight.w400,
                                               fontFamily: 'Roboto'),
                                         ),
-                                        Divider(color: Colors.white, height: 5),
-
+                                        Divider(color: Colors.white, height: 15),
                                         TextFormField(
-                                          maxLines: 1,
+                                          maxLines: 2,
                                           keyboardType: TextInputType.text,
-                                          controller: officeSupplyController,
+                                          controller: keperluanController,
                                           // style: TextStyle(fontSize: 10),
                                           decoration: InputDecoration(
                                             contentPadding: EdgeInsets.all(10),
-                                            labelText: _labelTextOfficeSupply,
+                                            labelText: _labelTextKeperluan,
                                             disabledBorder: OutlineInputBorder(
                                               borderSide: BorderSide(
                                                   color: Color(0xFFBAC1CC)),
@@ -569,22 +615,77 @@ class _OfficeSupplyScreenState extends State<OfficeSupplyScreen> {
                                           ),
                                           onTap: () {
                                             setState(() {
-                                              _labelTextOfficeSupply =
-                                              '3 Items';
+                                              _labelTextKeperluan =
+                                              'Keperluan';
                                             });
                                           },
                                           onChanged: (value) {
-                                            _officeSupply = value;
+                                            _keperluan = value;
                                           },
                                           onFieldSubmitted: (value) {
                                             setState(() {
-                                              _officeSupply = value;
-                                              print(_description);
+                                              _keperluan = value;
+                                            });
+                                          },
+                                        ),
+                                        Divider(color: Colors.white, height: 5),
+                                        Text(
+                                          'Ex. Daily Operational ...',
+                                          style: TextStyle(
+                                              fontSize: 8,
+                                              color: Color(0xFFBAC1CC),
+                                              fontWeight: FontWeight.w400,
+                                              fontFamily: 'Roboto'),
+                                        ),
+                                        Divider(color: Colors.white, height: 15),
+
+                                        TextFormField(
+                                          maxLines: 1,
+                                          keyboardType: TextInputType.number,
+                                          controller: voucherTotalController,
+                                          // style: TextStyle(fontSize: 10),
+                                          decoration: InputDecoration(
+                                            contentPadding: EdgeInsets.all(10),
+                                            labelText: _labelTextVoucherTotal,
+                                            disabledBorder: OutlineInputBorder(
+                                              borderSide: BorderSide(
+                                                  color: Color(0xFFBAC1CC)),
+                                            ),
+                                            focusedBorder: OutlineInputBorder(
+                                              borderSide: BorderSide(
+                                                  color: Color(0xFFBAC1CC)),
+                                            ),
+                                            enabledBorder: OutlineInputBorder(
+                                              borderSide: BorderSide(
+                                                  color: Color(0xFFBAC1CC)),
+                                            ),
+                                            border: OutlineInputBorder(
+                                              borderSide: BorderSide(
+                                                  color: Colors.white,
+                                                  width: 5.0),
+                                              borderRadius:
+                                              BorderRadius.circular(5),
+                                            ),
+                                            filled: true,
+                                            fillColor: Color(0xFFFFFFFF),
+                                          ),
+                                          onTap: () {
+                                            setState(() {
+                                              _labelTextVoucherTotal =
+                                              'Jumlah';
+                                            });
+                                          },
+                                          onChanged: (value) {
+                                            _voucherTotal = value;
+                                          },
+                                          onFieldSubmitted: (value) {
+                                            setState(() {
+                                              _voucherTotal = value;
                                             });
                                           },
                                         ),
                                         Text(
-                                          'Input total items',
+                                          'Masukan Jumlah Yang Dibutuhkan',
                                           style: TextStyle(
                                               fontSize: 8,
                                               color: Color(0xFFBAC1CC),
@@ -594,7 +695,7 @@ class _OfficeSupplyScreenState extends State<OfficeSupplyScreen> {
                                         Divider(
                                             color: Colors.white, height: 24),
                                         Text(
-                                          'Voucher request approval',
+                                          'Office Supply Review',
                                           style: TextStyle(
                                               fontSize: 12,
                                               color: Color(0xFF595D64),
@@ -603,186 +704,184 @@ class _OfficeSupplyScreenState extends State<OfficeSupplyScreen> {
                                         ),
                                         Divider(
                                             color: Colors.white, height: 16),
-                                        // Visibility(
-                                        //   visible: _level == '1'
-                                        //       ? false
-                                        //       : _level == '2'
-                                        //           ? false
-                                        //           : true,
-                                        //   child: Column(
-                                        //     crossAxisAlignment:
-                                        //         CrossAxisAlignment.start,
-                                        //     children: [
-                                        //       DropdownSearch<UserLeader>(
-                                        //         validator: (v) => v == null
-                                        //             ? "Required Field"
-                                        //             : null,
-                                        //         showSelectedItems: true,
-                                        //         mode: Mode.MENU,
-                                        //         compareFn: (i, s) =>
-                                        //             i?.isEqual(s) ?? false,
-                                        //         dropdownSearchDecoration:
-                                        //             InputDecoration(
-                                        //           labelText:
-                                        //               "Request review to *",
-                                        //           hintText:
-                                        //               "Request review to *",
-                                        //           contentPadding:
-                                        //               EdgeInsets.fromLTRB(
-                                        //                   12, 12, 0, 0),
-                                        //           border: OutlineInputBorder(),
-                                        //           focusedBorder:
-                                        //               OutlineInputBorder(
-                                        //             borderSide: BorderSide(
-                                        //                 color:
-                                        //                     Color(0xFFBAC1CC)),
-                                        //           ),
-                                        //           enabledBorder:
-                                        //               OutlineInputBorder(
-                                        //             borderSide: BorderSide(
-                                        //                 color:
-                                        //                     Color(0xFFBAC1CC)),
-                                        //           ),
-                                        //           errorStyle: TextStyle(
-                                        //               fontSize: 8,
-                                        //               color: Color(0xFFF12A32),
-                                        //               fontWeight:
-                                        //                   FontWeight.w400,
-                                        //               fontFamily: 'Roboto'),
-                                        //         ),
-                                        //         autoValidateMode:
-                                        //             AutovalidateMode
-                                        //                 .onUserInteraction,
-                                        //         onFind: (String filter) =>
-                                        //             postRequestUserLeader(),
-                                        //         onChanged: (value) {
-                                        //           setState(() {
-                                        //             print(value.id);
-                                        //             _idReviewer = value.id;
-                                        //             _avatarReviewer =
-                                        //                 value.avatar;
-                                        //             _usernameReviewer =
-                                        //                 value.username;
-                                        //             _firstnameReviewer =
-                                        //                 value.firstName;
-                                        //             _lastnameReviewer =
-                                        //                 value.lastName;
-                                        //             _levelReviewer =
-                                        //                 value.level;
-                                        //             _userPositionReviewer =
-                                        //                 value.userPosition.name;
-                                        //           });
-                                        //         },
-                                        //         dropdownBuilder:
-                                        //             customDropDownUserLeader,
-                                        //         popupItemBuilder:
-                                        //             customPopupItemBuilderUserLeader,
-                                        //       ),
-                                        //       Divider(
-                                        //           color: Colors.white,
-                                        //           height: 5),
-                                        //       Text(
-                                        //         'Choose to whom request to be reviewed',
-                                        //         style: TextStyle(
-                                        //             fontSize: 8,
-                                        //             color: Color(0xFFBAC1CC),
-                                        //             fontWeight: FontWeight.w400,
-                                        //             fontFamily: 'Roboto'),
-                                        //       ),
-                                        //       Divider(color: Colors.white),
-                                        //     ],
-                                        //   ),
-                                        // ),
                                         Visibility(
-                                          visible: _level == '1' ? false : true,
-                                          child: Container(
-                                            child: Column(
-                                              crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                              children: [
-                                                DropdownSearch<UserVp>(
-                                                  validator: (v) => v == null
-                                                      ? "Required Field"
-                                                      : null,
-                                                  showSelectedItems: true,
-                                                  mode: Mode.MENU,
-                                                  compareFn: (i, s) =>
-                                                  i?.isEqual(s) ?? false,
-                                                  dropdownSearchDecoration:
-                                                  InputDecoration(
-                                                    labelText:
-                                                    "Request approval to *",
-                                                    hintText:
-                                                    "Request approval to *",
-                                                    contentPadding:
-                                                    EdgeInsets.fromLTRB(
-                                                        12, 12, 0, 0),
-                                                    border:
-                                                    OutlineInputBorder(),
-                                                    focusedBorder:
-                                                    OutlineInputBorder(
-                                                      borderSide: BorderSide(
-                                                          color: Color(
-                                                              0xFFBAC1CC)),
-                                                    ),
-                                                    enabledBorder:
-                                                    OutlineInputBorder(
-                                                      borderSide: BorderSide(
-                                                          color: Color(
-                                                              0xFFBAC1CC)),
-                                                    ),
-                                                    errorStyle: TextStyle(
-                                                        fontSize: 8,
+                                          visible: _level == '2'
+                                                  ? true
+                                                  : true,
+                                          child: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              DropdownSearch<UserLeader>(
+                                                validator: (v) => v == null
+                                                    ? "Required Field"
+                                                    : null,
+                                                showSelectedItems: true,
+                                                mode: Mode.MENU,
+                                                compareFn: (i, s) =>
+                                                    i?.isEqual(s) ?? false,
+                                                dropdownSearchDecoration:
+                                                    InputDecoration(
+                                                  labelText:
+                                                      "Request review to *",
+                                                  hintText:
+                                                      "Request review to *",
+                                                  contentPadding:
+                                                      EdgeInsets.fromLTRB(
+                                                          12, 12, 0, 0),
+                                                  border: OutlineInputBorder(),
+                                                  focusedBorder:
+                                                      OutlineInputBorder(
+                                                    borderSide: BorderSide(
                                                         color:
-                                                        Color(0xFFF12A32),
-                                                        fontWeight:
-                                                        FontWeight.w400,
-                                                        fontFamily: 'Roboto'),
+                                                            Color(0xFFBAC1CC)),
                                                   ),
-                                                  autoValidateMode:
-                                                  AutovalidateMode
-                                                      .onUserInteraction,
-                                                  onFind: (String filter) =>
-                                                      postRequestUserVp(),
-                                                  onChanged: (value) {
-                                                    setState(() {
-                                                      _idApprover = value.id;
-                                                      _avatarApprover =
-                                                          value.avatar;
-                                                      _usernameApprover =
-                                                          value.username;
-                                                      _firstnameApprover =
-                                                          value.firstName;
-                                                      _lastnameApprover =
-                                                          value.lastName;
-                                                      _levelApprover =
-                                                          value.level;
-                                                      _userPositionApprover =
-                                                          value.userPosition
-                                                              .name;
-                                                    });
-                                                  },
-                                                  dropdownBuilder:
-                                                  customDropDownUserVp,
-                                                  popupItemBuilder:
-                                                  customPopupItemBuilderUserVp,
-                                                ),
-                                                Divider(
-                                                    color: Colors.white,
-                                                    height: 5),
-                                                Text(
-                                                  'Choose to whom request to be approved',
-                                                  style: TextStyle(
+                                                  enabledBorder:
+                                                      OutlineInputBorder(
+                                                    borderSide: BorderSide(
+                                                        color:
+                                                            Color(0xFFBAC1CC)),
+                                                  ),
+                                                  errorStyle: TextStyle(
                                                       fontSize: 8,
-                                                      color: Color(0xFFBAC1CC),
+                                                      color: Color(0xFFF12A32),
                                                       fontWeight:
-                                                      FontWeight.w400,
+                                                          FontWeight.w400,
                                                       fontFamily: 'Roboto'),
                                                 ),
-                                              ],
-                                            ),
+                                                autoValidateMode:
+                                                    AutovalidateMode
+                                                        .onUserInteraction,
+                                                onFind: (String filter) =>
+                                                    postRequestUserLeader(),
+                                                onChanged: (value) {
+                                                  setState(() {
+                                                    print(value.id);
+                                                    _idReviewer = value.id;
+                                                    _avatarReviewer =
+                                                        value.avatar;
+                                                    _usernameReviewer =
+                                                        value.username;
+                                                    _firstnameReviewer =
+                                                        value.firstName;
+                                                    _lastnameReviewer =
+                                                        value.lastName;
+                                                    _levelReviewer =
+                                                        value.level;
+                                                    _userPositionReviewer =
+                                                        value.userPosition.name;
+                                                  });
+                                                },
+                                                dropdownBuilder:
+                                                    customDropDownUserLeader,
+                                                popupItemBuilder:
+                                                    customPopupItemBuilderUserLeader,
+                                              ),
+                                              Divider(
+                                                  color: Colors.white,
+                                                  height: 5),
+                                              Text(
+                                                'Choose to whom request to be reviewed',
+                                                style: TextStyle(
+                                                    fontSize: 8,
+                                                    color: Color(0xFFBAC1CC),
+                                                    fontWeight: FontWeight.w400,
+                                                    fontFamily: 'Roboto'),
+                                              ),
+                                              Divider(color: Colors.white),
+                                            ],
                                           ),
                                         ),
+                                        // Visibility(
+                                        //   visible: _level == '1' ? false : true,
+                                        //   child: Container(
+                                        //     child: Column(
+                                        //       crossAxisAlignment:
+                                        //       CrossAxisAlignment.start,
+                                        //       children: [
+                                        //         DropdownSearch<UserVp>(
+                                        //           validator: (v) => v == null
+                                        //               ? "Required Field"
+                                        //               : null,
+                                        //           showSelectedItems: true,
+                                        //           mode: Mode.MENU,
+                                        //           compareFn: (i, s) =>
+                                        //           i?.isEqual(s) ?? false,
+                                        //           dropdownSearchDecoration:
+                                        //           InputDecoration(
+                                        //             labelText:
+                                        //             "Request approval to *",
+                                        //             hintText:
+                                        //             "Request approval to *",
+                                        //             contentPadding:
+                                        //             EdgeInsets.fromLTRB(
+                                        //                 12, 12, 0, 0),
+                                        //             border:
+                                        //             OutlineInputBorder(),
+                                        //             focusedBorder:
+                                        //             OutlineInputBorder(
+                                        //               borderSide: BorderSide(
+                                        //                   color: Color(
+                                        //                       0xFFBAC1CC)),
+                                        //             ),
+                                        //             enabledBorder:
+                                        //             OutlineInputBorder(
+                                        //               borderSide: BorderSide(
+                                        //                   color: Color(
+                                        //                       0xFFBAC1CC)),
+                                        //             ),
+                                        //             errorStyle: TextStyle(
+                                        //                 fontSize: 8,
+                                        //                 color:
+                                        //                 Color(0xFFF12A32),
+                                        //                 fontWeight:
+                                        //                 FontWeight.w400,
+                                        //                 fontFamily: 'Roboto'),
+                                        //           ),
+                                        //           autoValidateMode:
+                                        //           AutovalidateMode
+                                        //               .onUserInteraction,
+                                        //           onFind: (String filter) =>
+                                        //               postRequestUserVp(),
+                                        //           onChanged: (value) {
+                                        //             setState(() {
+                                        //               _idApprover = value.id;
+                                        //               _avatarApprover =
+                                        //                   value.avatar;
+                                        //               _usernameApprover =
+                                        //                   value.username;
+                                        //               _firstnameApprover =
+                                        //                   value.firstName;
+                                        //               _lastnameApprover =
+                                        //                   value.lastName;
+                                        //               _levelApprover =
+                                        //                   value.level;
+                                        //               _userPositionApprover =
+                                        //                   value.userPosition
+                                        //                       .name;
+                                        //             });
+                                        //           },
+                                        //           dropdownBuilder:
+                                        //           customDropDownUserVp,
+                                        //           popupItemBuilder:
+                                        //           customPopupItemBuilderUserVp,
+                                        //         ),
+                                        //         Divider(
+                                        //             color: Colors.white,
+                                        //             height: 5),
+                                        //         Text(
+                                        //           'Choose to whom request to be approved',
+                                        //           style: TextStyle(
+                                        //               fontSize: 8,
+                                        //               color: Color(0xFFBAC1CC),
+                                        //               fontWeight:
+                                        //               FontWeight.w400,
+                                        //               fontFamily: 'Roboto'),
+                                        //         ),
+                                        //       ],
+                                        //     ),
+                                        //   ),
+                                        // ),
                                         Visibility(
                                           visible: true,
                                           child: Container(
@@ -851,8 +950,8 @@ class _OfficeSupplyScreenState extends State<OfficeSupplyScreen> {
                                             color: Colors.white, height: 15),
                                         Visibility(
                                           visible: _value
-                                              ? _level == '1'
-                                              ? false
+                                              ? _level == '2'
+                                              ? true
                                               : true
                                               : false,
                                           child: Container(
@@ -872,214 +971,76 @@ class _OfficeSupplyScreenState extends State<OfficeSupplyScreen> {
                                                 Divider(
                                                     color: Colors.white,
                                                     height: 5),
-                                                // Visibility(
-                                                //   visible: _level == '3'
-                                                //       ? true
-                                                //       : false,
-                                                //   child: Container(
-                                                //     child: Row(
-                                                //       children: [
-                                                //         Text(
-                                                //           'Reviewer : ',
-                                                //           style: TextStyle(
-                                                //               fontSize: 8,
-                                                //               color: Color(
-                                                //                   0xFF6E7178),
-                                                //               fontWeight:
-                                                //                   FontWeight
-                                                //                       .w500,
-                                                //               fontFamily:
-                                                //                   'Roboto'),
-                                                //         ),
-                                                //         SizedBox(width: 10),
-                                                //         Container(
-                                                //           child: Row(
-                                                //             mainAxisAlignment:
-                                                //                 MainAxisAlignment
-                                                //                     .center,
-                                                //             children: [
-                                                //               _usernameReviewer ==
-                                                //                       null
-                                                //                   ? Container()
-                                                //                   : Container(
-                                                //                       padding: EdgeInsets.symmetric(
-                                                //                           vertical:
-                                                //                               5),
-                                                //                       child:
-                                                //                           ClipRRect(
-                                                //                         borderRadius:
-                                                //                             BorderRadius.all(
-                                                //                           Radius.circular(
-                                                //                               50),
-                                                //                         ),
-                                                //                         child: _avatarReviewer ==
-                                                //                                 null
-                                                //                             ? Image.asset(
-                                                //                                 'assets/images/placeholder.png',
-                                                //                                 width: 30,
-                                                //                                 height: 30,
-                                                //                                 fit: BoxFit.cover,
-                                                //                               )
-                                                //                             : Image.network(
-                                                //                                 BASE_URL_STORAGE + _avatarReviewer,
-                                                //                                 width: 30,
-                                                //                                 height: 30,
-                                                //                                 fit: BoxFit.cover,
-                                                //                               ),
-                                                //                       ),
-                                                //                     ),
-                                                //               SizedBox(
-                                                //                   width: 5),
-                                                //               Container(
-                                                //                 child: Column(
-                                                //                   crossAxisAlignment:
-                                                //                       CrossAxisAlignment
-                                                //                           .start,
-                                                //                   children: [
-                                                //                     Row(
-                                                //                       children: [
-                                                //                         Text(
-                                                //                           _usernameReviewer == null
-                                                //                               ? ''
-                                                //                               : '$_usernameReviewer - ',
-                                                //                           style: TextStyle(
-                                                //                               fontSize: 10,
-                                                //                               color: Color(0xFF595D64),
-                                                //                               fontWeight: FontWeight.w400,
-                                                //                               fontFamily: 'Roboto'),
-                                                //                         ),
-                                                //                         Text(
-                                                //                           _firstnameReviewer == null
-                                                //                               ? ''
-                                                //                               : '$_firstnameReviewer ',
-                                                //                           style: TextStyle(
-                                                //                               fontSize: 10,
-                                                //                               color: Color(0xFF595D64),
-                                                //                               fontWeight: FontWeight.w400,
-                                                //                               fontFamily: 'Roboto'),
-                                                //                         ),
-                                                //                         Text(
-                                                //                           _lastnameReviewer ??
-                                                //                               '',
-                                                //                           style: TextStyle(
-                                                //                               fontSize: 10,
-                                                //                               color: Color(0xFF595D64),
-                                                //                               fontWeight: FontWeight.w400,
-                                                //                               fontFamily: 'Roboto'),
-                                                //                         ),
-                                                //                       ],
-                                                //                     ),
-                                                //                     Divider(
-                                                //                         color: Colors
-                                                //                             .white,
-                                                //                         height:
-                                                //                             5),
-                                                //                     Row(
-                                                //                       children: [
-                                                //                         Text(
-                                                //                           _levelReviewer == null
-                                                //                               ? ''
-                                                //                               : 'Level $_levelReviewer - ',
-                                                //                           style: TextStyle(
-                                                //                               fontSize: 8,
-                                                //                               color: Color(0xFF595D64),
-                                                //                               fontWeight: FontWeight.w400,
-                                                //                               fontFamily: 'Roboto'),
-                                                //                         ),
-                                                //                         Text(
-                                                //                           _userPositionReviewer ??
-                                                //                               '',
-                                                //                           style: TextStyle(
-                                                //                               fontSize: 8,
-                                                //                               color: Color(0xFF595D64),
-                                                //                               fontWeight: FontWeight.w500,
-                                                //                               fontFamily: 'Roboto'),
-                                                //                         ),
-                                                //                       ],
-                                                //                     ),
-                                                //                   ],
-                                                //                 ),
-                                                //               ),
-                                                //             ],
-                                                //           ),
-                                                //         ),
-                                                //       ],
-                                                //     ),
-                                                //   ),
-                                                // ),
-                                                // Divider(
-                                                //     color: Colors.white,
-                                                //     height: 10),
                                                 Visibility(
-                                                  visible: _level == '1'
-                                                      ? false
+                                                  visible: _level == '2'
+                                                      ? true
                                                       : true,
                                                   child: Container(
                                                     child: Row(
                                                       children: [
                                                         Text(
-                                                          'Approver : ',
+                                                          'Reviewer : ',
                                                           style: TextStyle(
                                                               fontSize: 8,
                                                               color: Color(
                                                                   0xFF6E7178),
                                                               fontWeight:
-                                                              FontWeight
-                                                                  .w500,
+                                                                  FontWeight
+                                                                      .w500,
                                                               fontFamily:
-                                                              'Roboto'),
+                                                                  'Roboto'),
                                                         ),
                                                         SizedBox(width: 10),
                                                         Container(
                                                           child: Row(
                                                             mainAxisAlignment:
-                                                            MainAxisAlignment
-                                                                .center,
+                                                                MainAxisAlignment
+                                                                    .center,
                                                             children: [
-                                                              _usernameApprover ==
-                                                                  null
+                                                              _usernameReviewer ==
+                                                                      null
                                                                   ? Container()
                                                                   : Container(
-                                                                padding: EdgeInsets.symmetric(
-                                                                    vertical:
-                                                                    5),
-                                                                child:
-                                                                ClipRRect(
-                                                                  borderRadius:
-                                                                  BorderRadius.all(
-                                                                    Radius.circular(
-                                                                        50),
-                                                                  ),
-                                                                  child: _avatarApprover ==
-                                                                      null
-                                                                      ? Image.asset(
-                                                                    'assets/images/placeholder.png',
-                                                                    width: 30,
-                                                                    height: 30,
-                                                                    fit: BoxFit.cover,
-                                                                  )
-                                                                      : Image.network(
-                                                                    BASE_URL_STORAGE + _avatarApprover,
-                                                                    width: 30,
-                                                                    height: 30,
-                                                                    fit: BoxFit.cover,
-                                                                  ),
-                                                                ),
-                                                              ),
+                                                                      padding: EdgeInsets.symmetric(
+                                                                          vertical:
+                                                                              5),
+                                                                      child:
+                                                                          ClipRRect(
+                                                                        borderRadius:
+                                                                            BorderRadius.all(
+                                                                          Radius.circular(
+                                                                              50),
+                                                                        ),
+                                                                        child: _avatarReviewer ==
+                                                                                null
+                                                                            ? Image.asset(
+                                                                                'assets/images/placeholder.png',
+                                                                                width: 30,
+                                                                                height: 30,
+                                                                                fit: BoxFit.cover,
+                                                                              )
+                                                                            : Image.network(
+                                                                                BASE_URL_STORAGE + _avatarReviewer,
+                                                                                width: 30,
+                                                                                height: 30,
+                                                                                fit: BoxFit.cover,
+                                                                              ),
+                                                                      ),
+                                                                    ),
                                                               SizedBox(
                                                                   width: 5),
                                                               Container(
                                                                 child: Column(
                                                                   crossAxisAlignment:
-                                                                  CrossAxisAlignment
-                                                                      .start,
+                                                                      CrossAxisAlignment
+                                                                          .start,
                                                                   children: [
                                                                     Row(
                                                                       children: [
                                                                         Text(
-                                                                          _usernameApprover == null
+                                                                          _usernameReviewer == null
                                                                               ? ''
-                                                                              : '$_usernameApprover - ',
+                                                                              : '$_usernameReviewer - ',
                                                                           style: TextStyle(
                                                                               fontSize: 10,
                                                                               color: Color(0xFF595D64),
@@ -1087,9 +1048,9 @@ class _OfficeSupplyScreenState extends State<OfficeSupplyScreen> {
                                                                               fontFamily: 'Roboto'),
                                                                         ),
                                                                         Text(
-                                                                          _firstnameApprover == null
+                                                                          _firstnameReviewer == null
                                                                               ? ''
-                                                                              : '$_firstnameApprover ',
+                                                                              : '$_firstnameReviewer ',
                                                                           style: TextStyle(
                                                                               fontSize: 10,
                                                                               color: Color(0xFF595D64),
@@ -1097,7 +1058,7 @@ class _OfficeSupplyScreenState extends State<OfficeSupplyScreen> {
                                                                               fontFamily: 'Roboto'),
                                                                         ),
                                                                         Text(
-                                                                          _lastnameApprover ??
+                                                                          _lastnameReviewer ??
                                                                               '',
                                                                           style: TextStyle(
                                                                               fontSize: 10,
@@ -1111,13 +1072,13 @@ class _OfficeSupplyScreenState extends State<OfficeSupplyScreen> {
                                                                         color: Colors
                                                                             .white,
                                                                         height:
-                                                                        5),
+                                                                            5),
                                                                     Row(
                                                                       children: [
                                                                         Text(
-                                                                          _levelApprover == null
+                                                                          _levelReviewer == null
                                                                               ? ''
-                                                                              : 'Level $_levelApprover - ',
+                                                                              : 'Level $_levelReviewer - ',
                                                                           style: TextStyle(
                                                                               fontSize: 8,
                                                                               color: Color(0xFF595D64),
@@ -1125,7 +1086,7 @@ class _OfficeSupplyScreenState extends State<OfficeSupplyScreen> {
                                                                               fontFamily: 'Roboto'),
                                                                         ),
                                                                         Text(
-                                                                          _userPositionApprover ??
+                                                                          _userPositionReviewer ??
                                                                               '',
                                                                           style: TextStyle(
                                                                               fontSize: 8,
@@ -1145,6 +1106,144 @@ class _OfficeSupplyScreenState extends State<OfficeSupplyScreen> {
                                                     ),
                                                   ),
                                                 ),
+                                                // Divider(
+                                                //     color: Colors.white,
+                                                //     height: 10),
+                                                // Visibility(
+                                                //   visible: _level == '1'
+                                                //       ? false
+                                                //       : true,
+                                                //   child: Container(
+                                                //     child: Row(
+                                                //       children: [
+                                                //         Text(
+                                                //           'Approver : ',
+                                                //           style: TextStyle(
+                                                //               fontSize: 8,
+                                                //               color: Color(
+                                                //                   0xFF6E7178),
+                                                //               fontWeight:
+                                                //               FontWeight
+                                                //                   .w500,
+                                                //               fontFamily:
+                                                //               'Roboto'),
+                                                //         ),
+                                                //         SizedBox(width: 10),
+                                                //         Container(
+                                                //           child: Row(
+                                                //             mainAxisAlignment:
+                                                //             MainAxisAlignment
+                                                //                 .center,
+                                                //             children: [
+                                                //               _usernameApprover ==
+                                                //                   null
+                                                //                   ? Container()
+                                                //                   : Container(
+                                                //                 padding: EdgeInsets.symmetric(
+                                                //                     vertical:
+                                                //                     5),
+                                                //                 child:
+                                                //                 ClipRRect(
+                                                //                   borderRadius:
+                                                //                   BorderRadius.all(
+                                                //                     Radius.circular(
+                                                //                         50),
+                                                //                   ),
+                                                //                   child: _avatarApprover ==
+                                                //                       null
+                                                //                       ? Image.asset(
+                                                //                     'assets/images/placeholder.png',
+                                                //                     width: 30,
+                                                //                     height: 30,
+                                                //                     fit: BoxFit.cover,
+                                                //                   )
+                                                //                       : Image.network(
+                                                //                     BASE_URL_STORAGE + _avatarApprover,
+                                                //                     width: 30,
+                                                //                     height: 30,
+                                                //                     fit: BoxFit.cover,
+                                                //                   ),
+                                                //                 ),
+                                                //               ),
+                                                //               SizedBox(
+                                                //                   width: 5),
+                                                //               Container(
+                                                //                 child: Column(
+                                                //                   crossAxisAlignment:
+                                                //                   CrossAxisAlignment
+                                                //                       .start,
+                                                //                   children: [
+                                                //                     Row(
+                                                //                       children: [
+                                                //                         Text(
+                                                //                           _usernameApprover == null
+                                                //                               ? ''
+                                                //                               : '$_usernameApprover - ',
+                                                //                           style: TextStyle(
+                                                //                               fontSize: 10,
+                                                //                               color: Color(0xFF595D64),
+                                                //                               fontWeight: FontWeight.w400,
+                                                //                               fontFamily: 'Roboto'),
+                                                //                         ),
+                                                //                         Text(
+                                                //                           _firstnameApprover == null
+                                                //                               ? ''
+                                                //                               : '$_firstnameApprover ',
+                                                //                           style: TextStyle(
+                                                //                               fontSize: 10,
+                                                //                               color: Color(0xFF595D64),
+                                                //                               fontWeight: FontWeight.w400,
+                                                //                               fontFamily: 'Roboto'),
+                                                //                         ),
+                                                //                         Text(
+                                                //                           _lastnameApprover ??
+                                                //                               '',
+                                                //                           style: TextStyle(
+                                                //                               fontSize: 10,
+                                                //                               color: Color(0xFF595D64),
+                                                //                               fontWeight: FontWeight.w400,
+                                                //                               fontFamily: 'Roboto'),
+                                                //                         ),
+                                                //                       ],
+                                                //                     ),
+                                                //                     Divider(
+                                                //                         color: Colors
+                                                //                             .white,
+                                                //                         height:
+                                                //                         5),
+                                                //                     Row(
+                                                //                       children: [
+                                                //                         Text(
+                                                //                           _levelApprover == null
+                                                //                               ? ''
+                                                //                               : 'Level $_levelApprover - ',
+                                                //                           style: TextStyle(
+                                                //                               fontSize: 8,
+                                                //                               color: Color(0xFF595D64),
+                                                //                               fontWeight: FontWeight.w400,
+                                                //                               fontFamily: 'Roboto'),
+                                                //                         ),
+                                                //                         Text(
+                                                //                           _userPositionApprover ??
+                                                //                               '',
+                                                //                           style: TextStyle(
+                                                //                               fontSize: 8,
+                                                //                               color: Color(0xFF595D64),
+                                                //                               fontWeight: FontWeight.w500,
+                                                //                               fontFamily: 'Roboto'),
+                                                //                         ),
+                                                //                       ],
+                                                //                     ),
+                                                //                   ],
+                                                //                 ),
+                                                //               ),
+                                                //             ],
+                                                //           ),
+                                                //         ),
+                                                //       ],
+                                                //     ),
+                                                //   ),
+                                                // ),
                                                 Divider(
                                                     height: 33,
                                                     color: Colors.white),

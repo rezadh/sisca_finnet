@@ -34,6 +34,10 @@ dependencies:
   flutter_native_timezone: ^2.0.0
   fluttertoast: ^7.1.8
   qr_code_scanner: ^0.5.2
+  flutter_cupertino_datetime_picker: ^3.0.0
+  flutter_datetime_picker: ^1.5.1
+  device_info: ^2.0.3
+  flutter_jailbreak_detection: ^1.8.0
 
 dev_dependencies:
   flutter_test:

@@ -607,7 +607,7 @@ class _MaintenanceDetailScreenState extends State<MaintenanceDetailScreen> {
                             ),
                           ),
                           Text(
-                            'Reviewer by',
+                            'Reviewed by',
                             style: TextStyle(
                                 fontSize: 10,
                                 color: Color(0xFF595D64),
@@ -618,110 +618,110 @@ class _MaintenanceDetailScreenState extends State<MaintenanceDetailScreen> {
                       ),
                     ),
                     Divider(color: Colors.white, height: 10),
-                    Container(
-                      padding: EdgeInsets.symmetric(horizontal: 16),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Container(
-                            child: Row(
-                              children: [
-                                Container(
-                                  width: 40,
-                                  height: 40,
-                                  child: ClipRRect(
-                                      borderRadius: BorderRadius.all(
-                                        Radius.circular(50),
-                                      ),
-                                      child: _userApproveAvatar == null
-                                          ? Image.asset(
-                                              'assets/images/placeholder.png',
-                                              fit: BoxFit.cover,
-                                            )
-                                          : Image.network(
-                                              BASE_URL_STORAGE +
-                                                  _userApproveAvatar,
-                                              fit: BoxFit.cover,
-                                            )),
-                                ),
-                                SizedBox(width: 15),
-                                Container(
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Row(
-                                        children: [
-                                          Text(
-                                            _userApproveUsername == null
-                                                ? ''
-                                                : '$_userApproveUsername - ',
-                                            style: TextStyle(
-                                                fontSize: 10,
-                                                color: Color(0xFF595D64),
-                                                fontWeight: FontWeight.w400,
-                                                fontFamily: 'Roboto'),
-                                          ),
-                                          Text(
-                                            _userApproveFirstname == null
-                                                ? ''
-                                                : '$_userApproveFirstname ',
-                                            style: TextStyle(
-                                                fontSize: 10,
-                                                color: Color(0xFF595D64),
-                                                fontWeight: FontWeight.w400,
-                                                fontFamily: 'Roboto'),
-                                          ),
-                                          Text(
-                                            _userApproveLastname ?? '',
-                                            style: TextStyle(
-                                                fontSize: 10,
-                                                color: Color(0xFF595D64),
-                                                fontWeight: FontWeight.w400,
-                                                fontFamily: 'Roboto'),
-                                          ),
-                                        ],
-                                      ),
-                                      Divider(color: Colors.white, height: 5),
-                                      Row(
-                                        children: [
-                                          Text(
-                                            _userApproveLevel == null
-                                                ? ''
-                                                : 'Level $_userApproveLevel - ',
-                                            style: TextStyle(
-                                                fontSize: 8,
-                                                color: Color(0xFF595D64),
-                                                fontWeight: FontWeight.w400,
-                                                fontFamily: 'Roboto'),
-                                          ),
-                                          Text(
-                                            _userApprovePositionName ?? '',
-                                            style: TextStyle(
-                                                fontSize: 8,
-                                                color: Color(0xFF595D64),
-                                                fontWeight: FontWeight.w500,
-                                                fontFamily: 'Roboto'),
-                                          ),
-                                        ],
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                          Text(
-                            'Approval by',
-                            style: TextStyle(
-                                fontSize: 10,
-                                color: Color(0xFF595D64),
-                                fontWeight: FontWeight.w400,
-                                fontFamily: 'Roboto'),
-                          ),
-                        ],
-                      ),
-                    ),
+                    // Container(
+                    //   padding: EdgeInsets.symmetric(horizontal: 16),
+                    //   child: Row(
+                    //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    //     children: [
+                    //       Container(
+                    //         child: Row(
+                    //           children: [
+                    //             Container(
+                    //               width: 40,
+                    //               height: 40,
+                    //               child: ClipRRect(
+                    //                   borderRadius: BorderRadius.all(
+                    //                     Radius.circular(50),
+                    //                   ),
+                    //                   child: _userApproveAvatar == null
+                    //                       ? Image.asset(
+                    //                           'assets/images/placeholder.png',
+                    //                           fit: BoxFit.cover,
+                    //                         )
+                    //                       : Image.network(
+                    //                           BASE_URL_STORAGE +
+                    //                               _userApproveAvatar,
+                    //                           fit: BoxFit.cover,
+                    //                         )),
+                    //             ),
+                    //             SizedBox(width: 15),
+                    //             Container(
+                    //               child: Column(
+                    //                 crossAxisAlignment:
+                    //                     CrossAxisAlignment.start,
+                    //                 children: [
+                    //                   Row(
+                    //                     children: [
+                    //                       Text(
+                    //                         _userApproveUsername == null
+                    //                             ? ''
+                    //                             : '$_userApproveUsername - ',
+                    //                         style: TextStyle(
+                    //                             fontSize: 10,
+                    //                             color: Color(0xFF595D64),
+                    //                             fontWeight: FontWeight.w400,
+                    //                             fontFamily: 'Roboto'),
+                    //                       ),
+                    //                       Text(
+                    //                         _userApproveFirstname == null
+                    //                             ? ''
+                    //                             : '$_userApproveFirstname ',
+                    //                         style: TextStyle(
+                    //                             fontSize: 10,
+                    //                             color: Color(0xFF595D64),
+                    //                             fontWeight: FontWeight.w400,
+                    //                             fontFamily: 'Roboto'),
+                    //                       ),
+                    //                       Text(
+                    //                         _userApproveLastname ?? '',
+                    //                         style: TextStyle(
+                    //                             fontSize: 10,
+                    //                             color: Color(0xFF595D64),
+                    //                             fontWeight: FontWeight.w400,
+                    //                             fontFamily: 'Roboto'),
+                    //                       ),
+                    //                     ],
+                    //                   ),
+                    //                   Divider(color: Colors.white, height: 5),
+                    //                   Row(
+                    //                     children: [
+                    //                       Text(
+                    //                         _userApproveLevel == null
+                    //                             ? ''
+                    //                             : 'Level $_userApproveLevel - ',
+                    //                         style: TextStyle(
+                    //                             fontSize: 8,
+                    //                             color: Color(0xFF595D64),
+                    //                             fontWeight: FontWeight.w400,
+                    //                             fontFamily: 'Roboto'),
+                    //                       ),
+                    //                       Text(
+                    //                         _userApprovePositionName ?? '',
+                    //                         style: TextStyle(
+                    //                             fontSize: 8,
+                    //                             color: Color(0xFF595D64),
+                    //                             fontWeight: FontWeight.w500,
+                    //                             fontFamily: 'Roboto'),
+                    //                       ),
+                    //                     ],
+                    //                   ),
+                    //                 ],
+                    //               ),
+                    //             ),
+                    //           ],
+                    //         ),
+                    //       ),
+                    //       Text(
+                    //         'Approval by',
+                    //         style: TextStyle(
+                    //             fontSize: 10,
+                    //             color: Color(0xFF595D64),
+                    //             fontWeight: FontWeight.w400,
+                    //             fontFamily: 'Roboto'),
+                    //       ),
+                    //     ],
+                    //   ),
+                    // ),
                   ],
                 ),
               ),
