@@ -92,12 +92,6 @@ class _MaintenanceDetailScreenState extends State<MaintenanceDetailScreen> {
   var _userReviewLastname;
   var _userReviewLevel;
   var _userReviewPositionName;
-  var _userApproveAvatar;
-  var _userApproveUsername;
-  var _userApproveFirstname;
-  var _userApproveLastname;
-  var _userApproveLevel;
-  var _userApprovePositionName;
 
   void _getWidgetDetail() {
     _id = widget.id;
@@ -117,15 +111,9 @@ class _MaintenanceDetailScreenState extends State<MaintenanceDetailScreen> {
     _userReviewAvatar = widget.userReviewAvatar;
     _userReviewUsername = widget.userReviewUsername;
     _userReviewFirstname = widget.userReviewFirstname;
-    _userReviewLastname = widget.userRequestLastname;
+    _userReviewLastname = widget.userReviewLastname;
     _userReviewLevel = widget.userReviewLevel;
     _userReviewPositionName = widget.userReviewPositionName;
-    _userApproveAvatar = widget.userApproveAvatar;
-    _userApproveUsername = widget.userApproveUsername;
-    _userApproveFirstname = widget.userApproveFirstname;
-    _userApproveLastname = widget.userApproveLastname;
-    _userApproveLevel = widget.userApproveLevel;
-    _userApprovePositionName = widget.userApprovePositionName;
   }
 
   Future download(String url) async {

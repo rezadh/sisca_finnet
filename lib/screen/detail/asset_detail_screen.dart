@@ -4,6 +4,7 @@ import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sisca_finnet/model/asset_model.dart';
 import 'package:sisca_finnet/screen/report_opname_form_screen.dart';
+import 'package:sisca_finnet/util/const.dart';
 
 class AssetDetailScreen extends StatefulWidget {
   final id;
@@ -25,6 +26,7 @@ class _AssetDetailScreenState extends State<AssetDetailScreen> {
   String _startDate;
   String _lastOpnameCondition;
   String _colorLastOpnameCondition;
+  String _avatar;
   int _usefulLife;
   int _amount;
   String _description;
@@ -32,7 +34,6 @@ class _AssetDetailScreenState extends State<AssetDetailScreen> {
   bool _isInternetOn = true;
   bool _data = true;
   TextEditingController descriptionController = TextEditingController();
-
 
   _getWidget() async {
     _getConnect();
@@ -55,6 +56,7 @@ class _AssetDetailScreenState extends State<AssetDetailScreen> {
             _firstName = value.data.pic.firstName;
             _lastName = value.data.pic.lastName;
             _email = value.data.pic.email;
+            _avatar = value.data.pic.avatar;
             _brandOrType = value.data.brandOrType;
             _startDate = value.data.startDate;
             _usefulLife = value.data.usefulLife;
@@ -170,14 +172,24 @@ class _AssetDetailScreenState extends State<AssetDetailScreen> {
                                             width: 40,
                                             height: 40,
                                             child: ClipRRect(
-                                              borderRadius: BorderRadius.all(
-                                                Radius.circular(50),
-                                              ),
-                                              child: Image.asset(
-                                                'assets/images/placeholder.png',
-                                                fit: BoxFit.cover,
-                                              ),
-                                            ),
+                                                borderRadius: BorderRadius.all(
+                                                  Radius.circular(50),
+                                                ),
+                                                child: _avatar == null
+                                                    ? Image.asset(
+                                                        'assets/images/placeholder.png',
+                                                        fit: BoxFit.cover,
+                                                      )
+                                                    : _avatar == ''
+                                                        ? Image.asset(
+                                                            'assets/images/placeholder.png',
+                                                            fit: BoxFit.cover,
+                                                          )
+                                                        : Image.network(
+                                                            BASE_URL_STORAGE +
+                                                                _avatar,
+                                                            fit: BoxFit.cover,
+                                                          )),
                                           ),
                                           SizedBox(width: 15),
                                           Column(
@@ -437,7 +449,7 @@ class _AssetDetailScreenState extends State<AssetDetailScreen> {
                                                             MaterialPageRoute(
                                                                 builder:
                                                                     (context) =>
-                                                                    ReportOpnameFormScreen()));
+                                                                        ReportOpnameFormScreen()));
                                                       },
                                                     ),
                                                   ),

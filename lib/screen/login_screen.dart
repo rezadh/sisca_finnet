@@ -232,11 +232,11 @@ class _LoginScreenState extends State<LoginScreen> {
                     children: [
                       SizedBox(height: 69),
                       Image.asset(
-                        'assets/images/logo.png',
-                        width: 111,
-                        height: 65,
+                        'assets/images/fast_text.png',
+                        width: 192,
+                        height: 73,
                       ),
-                      SizedBox(height: 35),
+                      SizedBox(height: 20),
                       Card(
                         margin: EdgeInsets.symmetric(horizontal: 23),
                         shape: RoundedRectangleBorder(
@@ -516,33 +516,21 @@ class _LoginScreenState extends State<LoginScreen> {
                       ),
                       SizedBox(height: 21),
                       Text(
-                        'Asset Management System - PT Finnet Indonesia',
+                        'Fasicilty & Asset Touchpoint',
                         style: TextStyle(
                             fontSize: 14,
                             color: Color(0xFF595D64),
                             fontWeight: FontWeight.w700,
                             fontFamily: 'Roboto'),
                       ),
-                      SizedBox(height: 8),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(
-                            'Powered by',
-                            style: TextStyle(
-                                fontSize: 10,
-                                color: Color(0xFF595D64),
-                                fontWeight: FontWeight.w500,
-                                fontFamily: 'Roboto'),
-                          ),
-                          SizedBox(width: 5),
-                          Image.asset(
-                            'assets/images/logo_name_color.png',
-                            width: 53,
-                            height: 18,
-                            color: Color(0xFFD71A21),
-                          ),
-                        ],
+                      SizedBox(height: 6),
+                      Text(
+                        'v0.0.9 - 2022',
+                        style: TextStyle(
+                            fontSize: 14,
+                            color: Color(0xFF595D64),
+                            fontWeight: FontWeight.w700,
+                            fontFamily: 'Roboto'),
                       ),
                     ],
                   ),

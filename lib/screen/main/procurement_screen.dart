@@ -4,7 +4,6 @@ import 'package:flutter/services.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:sisca_finnet/screen/main/office_supply_screen.dart';
-import 'package:sisca_finnet/screen/main/search_asset_screen.dart';
 import 'package:sisca_finnet/screen/main/trip_screen.dart';
 import 'package:sisca_finnet/screen/main/voucher_screen.dart';
 
@@ -16,19 +15,19 @@ class ProcurementScreen extends StatefulWidget {
 }
 
 class _ProcurementScreenState extends State<ProcurementScreen> {
-  bool _isInternetOn = true;
-  final _scrollController = ScrollController();
-  int _value = 0;
+  // bool _isInternetOn = true;
+  // final _scrollController = ScrollController();
+  // int _value = 0;
   Future getConnect() async {
     var connectivityResult = await (Connectivity().checkConnectivity());
     if (connectivityResult == ConnectivityResult.none) {
       setState(() {
-        _isInternetOn = false;
+        // _isInternetOn = false;
         EasyLoading.showError('No Connection');
       });
     } else {
       setState(() {
-        _isInternetOn = true;
+        // _isInternetOn = true;
       });
     }
   }
@@ -52,14 +51,14 @@ class _ProcurementScreenState extends State<ProcurementScreen> {
               fontFamily: 'Roboto'),
         ),
         actions: [
-          IconButton(
-              onPressed: () {
-                // Navigator.push(
-                //     context,
-                //     MaterialPageRoute(
-                //         builder: (context) => SearchAssetScreen()));
-              },
-              icon: Icon(Icons.search)),
+          // IconButton(
+          //     onPressed: () {
+          //       // Navigator.push(
+          //       //     context,
+          //       //     MaterialPageRoute(
+          //       //         builder: (context) => SearchAssetScreen()));
+          //     },
+          //     icon: Icon(Icons.search)),
         ],
         backgroundColor: Colors.transparent,
       ),

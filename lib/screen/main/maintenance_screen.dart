@@ -9,12 +9,10 @@ import 'package:intl/intl.dart';
 import 'package:sisca_finnet/model/asset_model.dart';
 import 'package:sisca_finnet/model/maintenance_model.dart';
 import 'package:sisca_finnet/model/user_leader_model.dart';
-import 'package:sisca_finnet/model/user_vp_model.dart';
 import 'package:sisca_finnet/screen/detail/maintenance_detail_screen.dart';
 import 'package:sisca_finnet/util/const.dart';
 import 'package:sisca_finnet/widget/custom_dropdown_unit.dart';
 import 'package:sisca_finnet/widget/custom_dropdown_user_leader.dart';
-import 'package:sisca_finnet/widget/custom_dropdown_user_vp.dart';
 
 class MaintenanceScreen extends StatefulWidget {
   @override
@@ -40,13 +38,6 @@ class _MaintenanceScreenState extends State<MaintenanceScreen> {
   String _lastnameReviewer;
   var _levelReviewer;
   String _userPositionReviewer;
-  String _idApprover;
-  String _usernameApprover;
-  String _avatarApprover;
-  String _firstnameApprover;
-  String _lastnameApprover;
-  var _levelApprover;
-  String _userPositionApprover;
   String _description;
   int _currentBudget = 0;
   int _requestAmount = 0;
@@ -112,8 +103,7 @@ class _MaintenanceScreenState extends State<MaintenanceScreen> {
       'requested_amount': _temp,
       'requested_description': _description ?? '',
       'maintenance_option': 'logistic_support',
-      'requested_to': _idReviewer,
-      'reviewed_to': 2,
+      'reviewed_to': _idReviewer,
       'requested_evidence': _filePath,
     };
     print(body);
@@ -217,112 +207,85 @@ class _MaintenanceScreenState extends State<MaintenanceScreen> {
                                         itemBuilder: (context, index) {
                                           return GestureDetector(
                                             onTap: () {
+                                              print(data[index]
+                                                  .userReviewedTo
+                                                  .lastname);
                                               Navigator.push(
-                                                  context,
-                                                  MaterialPageRoute(
-                                                      builder: (context) =>
-                                                          MaintenanceDetailScreen(
-                                                            id: data[index].id,
-                                                            name: data[index]
-                                                                .monitoringMaintenance
-                                                                .name,
-                                                            serialNumber: data[
-                                                                    index]
-                                                                .monitoringMaintenance
-                                                                .serialNumber,
-                                                            requestAmount: data[
-                                                                    index]
-                                                                .requestedAmount,
-                                                            statusName:
-                                                                data[index]
-                                                                    .status
-                                                                    .name,
-                                                            statusColor:
-                                                                data[index]
-                                                                    .status
-                                                                    .color,
-                                                            description: data[
-                                                                    index]
-                                                                .description,
-                                                            evidenceDownload: data[
-                                                                    index]
-                                                                .requestEvidence,
-                                                            userRequestAvatar:
-                                                                data[index]
-                                                                    .userRequestedBy
-                                                                    .avatar,
-                                                            userRequestUsername:
-                                                                data[index]
-                                                                    .userRequestedBy
-                                                                    .username,
-                                                            userRequestFirstname:
-                                                                data[index]
-                                                                    .userRequestedBy
-                                                                    .firstname,
-                                                            userRequestLastname:
-                                                                data[index]
-                                                                    .userRequestedBy
-                                                                    .lastname,
-                                                            userRequestLevel: data[
-                                                                    index]
-                                                                .userRequestedBy
-                                                                .level,
-                                                            userRequestPositionName:
-                                                                data[index]
-                                                                    .userRequestedBy
-                                                                    .userPosition
-                                                                    .name,
-                                                            userReviewAvatar:
-                                                                data[index]
-                                                                    .userReviewedTo
-                                                                    .avatar,
-                                                            userReviewUsername:
-                                                                data[index]
-                                                                    .userReviewedTo
-                                                                    .username,
-                                                            userReviewFirstname:
-                                                                data[index]
-                                                                    .userReviewedTo
-                                                                    .firstname,
-                                                            userReviewLastname:
-                                                                data[index]
-                                                                    .userReviewedTo
-                                                                    .lastname,
-                                                            userReviewLevel: data[
-                                                                    index]
-                                                                .userReviewedTo
-                                                                .level,
-                                                            userReviewPositionName:
-                                                                data[index]
-                                                                    .userReviewedTo
-                                                                    .userPosition
-                                                                    .name,
-                                                            userApproveAvatar:
-                                                                data[index]
-                                                                    .userRequestedTo
-                                                                    .avatar,
-                                                            userApproveUsername:
-                                                                data[index]
-                                                                    .userRequestedTo
-                                                                    .username,
-                                                            userApproveFirstname:
-                                                                data[index]
-                                                                    .userRequestedTo
-                                                                    .firstname,
-                                                            userApproveLastname:
-                                                                data[index]
-                                                                    .userRequestedTo
-                                                                    .lastname,
-                                                            userApproveLevel: data[
-                                                                    index]
-                                                                .userRequestedTo
-                                                                .level,
-                                                            userApprovePositionName:
-                                                                data[index]
-                                                                    .userRequestedTo
-                                                                    .userPosition
-                                                                    .name,
-                                                          )));
+                                                context,
+                                                MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      MaintenanceDetailScreen(
+                                                    id: data[index].id,
+                                                    name: data[index]
+                                                        .monitoringMaintenance
+                                                        .name,
+                                                    serialNumber: data[index]
+                                                        .monitoringMaintenance
+                                                        .serialNumber,
+                                                    requestAmount: data[index]
+                                                        .requestedAmount,
+                                                    statusName:
+                                                        data[index].status.name,
+                                                    statusColor: data[index]
+                                                        .status
+                                                        .color,
+                                                    description:
+                                                        data[index].description,
+                                                    evidenceDownload:
+                                                        data[index]
+                                                            .requestEvidence,
+                                                    userRequestAvatar:
+                                                        data[index]
+                                                            .userRequestedBy
+                                                            .avatar,
+                                                    userRequestUsername:
+                                                        data[index]
+                                                            .userRequestedBy
+                                                            .username,
+                                                    userRequestFirstname:
+                                                        data[index]
+                                                            .userRequestedBy
+                                                            .firstname,
+                                                    userRequestLastname:
+                                                        data[index]
+                                                            .userRequestedBy
+                                                            .lastname,
+                                                    userRequestLevel:
+                                                        data[index]
+                                                            .userRequestedBy
+                                                            .level,
+                                                    userRequestPositionName:
+                                                        data[index]
+                                                            .userRequestedBy
+                                                            .userPosition
+                                                            .name,
+                                                    userReviewAvatar:
+                                                        data[index]
+                                                            .userReviewedTo
+                                                            .avatar,
+                                                    userReviewUsername:
+                                                        data[index]
+                                                            .userReviewedTo
+                                                            .username,
+                                                    userReviewFirstname:
+                                                        data[index]
+                                                            .userReviewedTo
+                                                            .firstname,
+                                                    userReviewLastname:
+                                                        data[index]
+                                                            .userReviewedTo
+                                                            .lastname,
+                                                    userReviewLevel: data[index]
+                                                        .userReviewedTo
+                                                        .level,
+                                                    userReviewPositionName:
+                                                        data[index]
+                                                            .userReviewedTo
+                                                            .userPosition
+                                                            .name,
+                                                  ),
+                                                ),
+                                              );
                                             },
                                             child: Card(
                                               elevation: 1,

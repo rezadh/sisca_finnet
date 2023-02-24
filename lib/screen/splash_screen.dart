@@ -53,17 +53,23 @@ class _SplashScreenState extends State<SplashScreen> {
           // padding: EdgeInsets.only(bottom: 41),
           child: Column(
             children: [
-              SizedBox(height: MediaQuery.of(context).size.height / 2),
-              Image.asset('assets/images/logo.png', width: 111, height: 65, color: Colors.white,),
-              SizedBox(height: 194),
-              Text(
-                'Asset Management System',
-                style: TextStyle(
-                    fontSize: 12,
-                    color: Colors.white,
-                    fontWeight: FontWeight.w700,
-                    fontFamily: 'Roboto'),
+              SizedBox(height: MediaQuery.of(context).size.height / 3.5),
+              Image.asset(
+                'assets/images/fast_logo.png',
+                width: 107,
+                height: 107,
+                color: Colors.white,
               ),
+              SizedBox(
+                height: 15
+              ),
+              Image.asset(
+                'assets/images/fast_text.png',
+                width: 205,
+                height: 72,
+                color: Colors.white,
+              ),
+              SizedBox(height: 187),
               Text(
                 'PT Finnet Indonesia',
                 style: TextStyle(
@@ -72,22 +78,12 @@ class _SplashScreenState extends State<SplashScreen> {
                     fontWeight: FontWeight.w700,
                     fontFamily: 'Roboto'),
               ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    'Powered by',
-                    style: TextStyle(
-                        fontSize: 12,
-                        color: Colors.white,
-                        fontWeight: FontWeight.w500,
-                        fontFamily: 'Roboto'),
-                  ),
-                  Image.asset(
-                    'assets/images/logo_name.png',
-                    width: 52,
-                  ),
-                ],
+              SizedBox(height: 6),
+              Image.asset(
+                'assets/images/2022.png',
+                width: 37,
+                height: 14,
+                color: Colors.white,
               ),
             ],
           ),
